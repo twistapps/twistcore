@@ -1,3 +1,11 @@
+# [0.2.0](https://github.com/twistapps/twistcore/compare/0.1.0...0.2.0) (2022-10-22)
+
+
+### Features
+
+* CodeGen save to any file ([f7c9608](https://github.com/twistapps/twistcore/commit/f7c9608c09a6e44fbfc7645b1dd822c8214ecfb9))
+* CodeGen variables QoL ([6b18618](https://github.com/twistapps/twistcore/commit/6b18618bcc56ee6f187b42fe5661b85c61fff48b))
+
 # [0.1.0](https://github.com/twistapps/twistcore/compare/0.0.2...0.1.0) (2022-10-22)
 
 
