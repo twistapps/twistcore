@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/twistapps/twistcore/compare/0.6.0...0.7.0) (2022-10-22)
+
+
+### Features
+
+* Retrieve git version on startup ([a7d25a7](https://github.com/twistapps/twistcore/commit/a7d25a7b09cdea1e5645a13df9110255290e1440))
+* settings window ([c383af2](https://github.com/twistapps/twistcore/commit/c383af29d6b74ab16eee9149bd2813cc7e38283c))
+* Unpack core to any in-dev package ([ff00545](https://github.com/twistapps/twistcore/commit/ff00545521dc822410bfc4b25b444f8dbc114985))
+
 # [0.6.0](https://github.com/twistapps/twistcore/compare/0.5.0...0.6.0) (2022-10-22)
 
 
