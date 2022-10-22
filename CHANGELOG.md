@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/twistapps/twistcore/compare/0.3.0...0.4.0) (2022-10-22)
+
+
+### Features
+
+* Add package template for creation tool ([aca2a51](https://github.com/twistapps/twistcore/commit/aca2a5186edc1612c78ff6f481363ae54ae6d377))
+* Json-compatible pkg data object ([17d6673](https://github.com/twistapps/twistcore/commit/17d6673f5e8d73610eb5f221e42ff4cf59237dfe))
+* Package creation ([d057706](https://github.com/twistapps/twistcore/commit/d057706fbf0d123e5e809105ce398ee774a74b53))
+
 # [0.3.0](https://github.com/twistapps/twistcore/compare/0.2.1...0.3.0) (2022-10-22)
 
 
