@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/twistapps/twistcore/compare/0.2.0...0.2.1) (2022-10-22)
+
+
+### Bug Fixes
+
+* namespaces/using ([9be24c9](https://github.com/twistapps/twistcore/commit/9be24c9a732fd28bb12e93efd1844ae800d552de))
+
 # [0.2.0](https://github.com/twistapps/twistcore/compare/0.1.0...0.2.0) (2022-10-22)
 
 
