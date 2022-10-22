@@ -1,0 +1,21 @@
+{
+  "name": "com.twistapps.twistcore",
+  "displayName": "Twist Core",
+  "description": "Core library for Twist! Apps assets.",
+  "version": "0.1.0",
+  "unity": "2020.3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twistapps/twistcore.git"
+  },
+  "author": {
+    "name": "Twist! Apps",
+    "email": "twistappscontact@gmail.com",
+    "url": "https://github.com/twistapps"
+  },
+  "keywords": [
+    "core",
+	"library"
+  ],
+  "type": "utility"
+}
