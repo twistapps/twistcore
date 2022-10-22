@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using RequestForMirror.Utils;
+using TwistCore.Utils;
 using UnityEditor;
 
 namespace RequestForMirror.Editor
@@ -15,7 +15,7 @@ namespace RequestForMirror.Editor
 
     public class CodeGenBuilder
     {
-        protected const char SeparatorSymbol = '$';
+        public const char SeparatorSymbol = '$';
         private const char Indent = ' ';
         private const int IndentAmountPerStep = 4;
         protected readonly StringBuilder stringBuilder;
@@ -125,9 +125,15 @@ namespace RequestForMirror.Editor
 
         public void SaveToCsFile(string path, bool keepBuilderDirty = false)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-            File.WriteAllText(path, stringBuilder.ToString());
+            path = Path.ChangeExtension(path, ".cs");
+            SaveToFile(path, keepBuilderDirty);
             AssetDatabase.Refresh();
+        }
+
+        public void SaveToFile(string path, bool keepBuilderDirty = false)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, stringBuilder.ToString());
             if (!keepBuilderDirty) Clear();
         }
 
