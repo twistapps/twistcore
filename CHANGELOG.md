@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/twistapps/twistcore/compare/0.7.0...0.7.1) (2022-10-22)
+
+
+### Bug Fixes
+
+* Add missing meta files ([3baba36](https://github.com/twistapps/twistcore/commit/3baba36c9348a6fdc760f13c0f0404d55b5c2db0))
+
 # [0.7.0](https://github.com/twistapps/twistcore/compare/0.6.0...0.7.0) (2022-10-22)
 
 
