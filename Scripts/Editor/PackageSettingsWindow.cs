@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using RequestForMirror.Utils;
+using TwistCore.Utils;
 using UnityEditor;
 using UnityEngine;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.Editor
 {
     public abstract class PackageSettingsWindow<TSettings> : EditorWindow where TSettings : SettingsAsset
     {
+        private const int DefaultLabelWidth = 150;
         private const int HorizontalButtonsMargin = 10;
         protected static TSettings Settings;
 
@@ -43,7 +44,7 @@ namespace RequestForMirror.Editor
 
             return thisType;
         }
-
+        
         protected static void ShowWindow()
         {
             Settings = SettingsUtility.Load<TSettings>();
@@ -62,13 +63,36 @@ namespace RequestForMirror.Editor
             _settingsEditor = UnityEditor.Editor.CreateEditor(Settings);
         }
 
-        protected void BeginSection(string heading, bool addDivider = false)
+        protected Section CurrentSection;
+
+        protected void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1)
         {
             EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
             if (addDivider) EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             EditorGUILayout.LabelField(heading, new GUIStyle("BoldLabel"));
             EditorGUI.indentLevel++;
-            ChangeLabelWidth(250);
+            ChangeLabelWidth(width == -1 ? DefaultLabelWidth : width);
+            CurrentSection = new Section() {Disabled = forceDisabled};
+        }
+
+        protected void BeginSection(string heading, ref bool enabled, bool addDivider = false, Action<bool> onEnabledChange = null, int width = -1)
+        {
+            EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
+            if (addDivider) EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            using (var l = new EditorGUILayout.HorizontalScope())
+            {
+                ChangeLabelWidth(width == -1 ? DefaultLabelWidth : width);
+                EditorGUILayout.LabelField(heading, new GUIStyle("BoldLabel"));
+                RestoreLabelWidth();
+                GUILayout.FlexibleSpace();
+                ChangeLabelWidth(90);
+                Checkbox("enable section: ", ref enabled, onEnabledChange, true);
+                RestoreLabelWidth();
+            }
+            
+            EditorGUI.indentLevel++;
+            ChangeLabelWidth(width == -1 ? DefaultLabelWidth : width);
+            CurrentSection = new Section() {Disabled = !enabled};
         }
 
         protected void EndSection()
@@ -78,60 +102,72 @@ namespace RequestForMirror.Editor
             GUILayout.Space(20);
 
             EditorGUILayout.EndVertical();
+            CurrentSection = null;
         }
 
-        protected void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null)
+        protected void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null, bool forceEnabled = false)
         {
-            var oldValue = value;
-            value = EditorGUILayout.Toggle(text, value);
-            if (oldValue != value) onValueChanged?.Invoke(value);
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
+            {
+                var oldValue = value;
+                value = EditorGUILayout.Toggle(text, value);
+                if (oldValue != value) onValueChanged?.Invoke(value);
+            }
         }
 
-        protected void EnumPopup<T>(string text, ref T value, Action<T> onValueChanged = null) where T : Enum
+        protected void EnumPopup<T>(string text, ref T value, Action<T> onValueChanged = null, bool forceEnabled = false) where T : Enum
         {
-            var oldValue = value;
-            value = (T)EditorGUILayout.EnumPopup(text, value);
-            if (!Equals(oldValue, value)) onValueChanged?.Invoke(value);
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
+            {
+                var oldValue = value;
+                value = (T)EditorGUILayout.EnumPopup(text, value);
+                if (!Equals(oldValue, value)) onValueChanged?.Invoke(value);
+            }
         }
 
-        protected void InputField(string text, ref string value)
+        protected void InputField(string text, ref string value, bool forceEnabled = false)
         {
-            EditorGUILayout.LabelField(text);
-            EditorGUI.indentLevel++;
-            value = EditorGUILayout.TextField(value);
-            EditorGUI.indentLevel--;
-            GUILayout.Space(5);
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
+            {
+                EditorGUILayout.LabelField(text);
+                EditorGUI.indentLevel++;
+                value = EditorGUILayout.TextField(value);
+                EditorGUI.indentLevel--;
+                GUILayout.Space(5);
+            }
         }
 
-        protected void InputField(string text)
+        protected void InputField(string text, bool disabled = false)
         {
             var empty = "";
-            InputField(text, ref empty);
+            InputField(text, ref empty, disabled);
         }
 
         protected void HorizontalButtons(params Button[] buttons)
         {
-            GUILayout.Space(HorizontalButtonsMargin);
-            // Horizontally centered
-            using (var l = new EditorGUILayout.HorizontalScope())
+            using (new EditorGUI.DisabledScope(CurrentSection.Disabled))
             {
-                GUILayout.FlexibleSpace();
-                foreach (var button in buttons)
+                GUILayout.Space(HorizontalButtonsMargin);
+                // Horizontally centered
+                using (var l = new EditorGUILayout.HorizontalScope())
                 {
-                    button.Construct();
-                    GUILayout.Space(5);
-                }
+                    GUILayout.FlexibleSpace();
+                    foreach (var button in buttons)
+                    {
+                        button.Construct();
+                        GUILayout.Space(5);
+                    }
 
-                GUILayout.FlexibleSpace();
+                    GUILayout.FlexibleSpace();
+                }
             }
-            //GUILayout.Space(HorizontalButtonsMargin);
         }
 
         protected void CallToAction(string heading, params Button[] buttons)
         {
             GUILayout.Space(-25);
             EditorGUILayout.BeginVertical(new GUIStyle("NotificationBackground"));
-            GUILayout.Space(-20);
+            GUILayout.Space(-25);
             EditorGUI.indentLevel -= 2;
             EditorGUILayout.LabelField(heading, new GUIStyle("PR Label"));
             EditorGUI.indentLevel += 2;
@@ -177,7 +213,16 @@ namespace RequestForMirror.Editor
 
         public void Construct()
         {
-            if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton"), GUILayout.Width(120))) _onClick?.Invoke();
+            using (new EditorGUI.DisabledScope(_onClick == null))
+            {
+                if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton")))
+                    _onClick?.Invoke();
+            }
         }
+    }
+
+    public class Section
+    {
+        public bool Disabled;
     }
 }
