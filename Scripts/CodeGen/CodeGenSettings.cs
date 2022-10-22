@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TwistCore;
 
 //[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/SpawnManagerScriptableObject", order = 1)]
 namespace RequestForMirror
@@ -12,6 +13,11 @@ namespace RequestForMirror
         public override string GetEditorWindowTitle()
         {
             return "CodeGen Settings";
+        }
+
+        public override string GetPackageName()
+        {
+            return "com.twistapps.codegen";
         }
     }
 }
