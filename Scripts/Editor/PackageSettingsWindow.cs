@@ -211,11 +211,11 @@ namespace TwistCore.Editor
             _onClick = onClick;
         }
 
-        public void Construct()
+        public void Construct(int width=120)
         {
             using (new EditorGUI.DisabledScope(_onClick == null))
             {
-                if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton")))
+                if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton"), GUILayout.Width(width)))
                     _onClick?.Invoke();
             }
         }
