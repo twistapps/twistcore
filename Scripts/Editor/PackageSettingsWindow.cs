@@ -136,6 +136,50 @@ namespace TwistCore.Editor
                 GUILayout.Space(5);
             }
         }
+        
+        protected void StatusLabel(string text, string status, GUIStyle statusStyle, string iconId, params Button[] buttons)
+        {
+            var memLabelWidth = EditorGUIUtility.labelWidth;
+            RestoreLabelWidth();
+            ChangeLabelWidth(1);
+            using (var l = new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.LabelField(text);
+                //GUILayout.FlexibleSpace();
+                
+                var content = EditorGUIUtility.IconContent(iconId);
+                content.text = status;
+                EditorGUILayout.LabelField(content, statusStyle);
+                if (buttons.Length > 0)
+                {
+                    foreach (var button in buttons)
+                    {
+                        button.Construct(50);
+                        GUILayout.Space(3);
+                    }
+                }
+            }
+            RestoreLabelWidth();
+            ChangeLabelWidth(memLabelWidth);
+        }
+
+        protected void LabelSuccess(string text, string status, bool suppressColor = false, params Button[] buttons)
+        {
+            var statusStyle = !suppressColor ? GUIStyles.SuccessLabel : GUIStyles.DefaultLabel;
+            StatusLabel(text, status, statusStyle, GUIStyles.IconSuccess, buttons);
+        }
+        
+        protected void LabelFailure(string text, string status, bool suppressColor = false, params Button[] buttons)
+        {
+            var statusStyle = !suppressColor ? GUIStyles.FailureLabel : GUIStyles.DefaultLabel;
+            StatusLabel(text, status, statusStyle, GUIStyles.IconError, buttons);
+        }
+        
+        protected void LabelWarning(string text, string status, bool suppressColor = false, params Button[] buttons)
+        {
+            var statusStyle = !suppressColor ? GUIStyles.WarningLabel : GUIStyles.DefaultLabel;
+            StatusLabel(text, status, statusStyle, GUIStyles.IconWarning, buttons);
+        }
 
         protected void InputField(string text, bool disabled = false)
         {
