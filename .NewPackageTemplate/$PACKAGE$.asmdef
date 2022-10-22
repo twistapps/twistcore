@@ -1,0 +1,16 @@
+{
+    "name": "$NAME$",
+    "rootNamespace": "$NAME$",
+    "references": [
+        "GUID:a014060d3306b9046bd366f709ec225e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
