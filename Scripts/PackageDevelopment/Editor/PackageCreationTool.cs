@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using RequestForMirror.Editor;
 using TwistCore.Utils;
@@ -82,8 +83,9 @@ namespace TwistCore
         /// <param name="path"></param>
         /// <param name="newRootPath">New root directory. Has to be a part of initial path.</param>
         /// <returns></returns>
-        private static string TrimRoot(string path, string newRootPath)
+        public static string TrimRoot(string path, string newRootPath)
         {
+            var index = path.IndexOf(newRootPath, StringComparison.Ordinal);
             var newRoot = path.Substring(newRootPath.Length);
             return newRoot.StartsWith(Path.DirectorySeparatorChar.ToString()) ? newRoot.Substring(1) : newRoot;
         }
