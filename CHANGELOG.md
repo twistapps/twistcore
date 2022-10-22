@@ -1,3 +1,19 @@
+# [0.5.0](https://github.com/twistapps/twistcore/compare/0.4.0...0.5.0) (2022-10-22)
+
+
+### Bug Fixes
+
+* Create asmdef ([f146e00](https://github.com/twistapps/twistcore/commit/f146e00ef72fb568504163eb9429e15db4c97608))
+* Namespace ([db60471](https://github.com/twistapps/twistcore/commit/db60471ed95afea0f3d2e821baec971afc95b4a9))
+
+
+### Features
+
+* Add third party lib (Json.NET) ([1b21691](https://github.com/twistapps/twistcore/commit/1b21691a35faabd78ea98d59c8604807ce0a4bac))
+* Fetch and deserialize package.json from url ([d92fd20](https://github.com/twistapps/twistcore/commit/d92fd20830848b9968037625ff2de393cc5854a8))
+* FW Extensions for PackageInfo/PackageData ([ac681fb](https://github.com/twistapps/twistcore/commit/ac681fba6b1b09a40aa15a6dfdd3c1f45cc678d3))
+* Inquire package source from lockfile ([2907c14](https://github.com/twistapps/twistcore/commit/2907c148201b4195eeb56ac883350956a00205e9))
+
 # [0.4.0](https://github.com/twistapps/twistcore/compare/0.3.0...0.4.0) (2022-10-22)
 
 
