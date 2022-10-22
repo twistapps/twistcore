@@ -1,3 +1,18 @@
+# [0.6.0](https://github.com/twistapps/twistcore/compare/0.5.0...0.6.0) (2022-10-22)
+
+
+### Bug Fixes
+
+* ShowWindow now has out Window arg ([5d0463f](https://github.com/twistapps/twistcore/commit/5d0463fdd8f65ac3411993a5cbdd18ee1adf4a09))
+
+
+### Features
+
+* Create element: StatusLabel ([1b6fc6c](https://github.com/twistapps/twistcore/commit/1b6fc6c43128cf2a9abf36345d2c332e3dd2a1d1))
+* Customize buttons' width ([15e64bf](https://github.com/twistapps/twistcore/commit/15e64bf2ff0dcbcfe5384b402c2050ff6c628045))
+* Disable/add toggle to sections ([575c25f](https://github.com/twistapps/twistcore/commit/575c25f1000d6cffe979fb01b3f672614bac828a))
+* QoL: Singular horizontal button section ([6ed1a02](https://github.com/twistapps/twistcore/commit/6ed1a027587411c849dfc542f4e30aba80ffe0ed))
+
 # [0.5.0](https://github.com/twistapps/twistcore/compare/0.4.0...0.5.0) (2022-10-22)
 
 
