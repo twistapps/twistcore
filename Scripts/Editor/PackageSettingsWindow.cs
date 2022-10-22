@@ -44,12 +44,18 @@ namespace TwistCore.Editor
 
             return thisType;
         }
-        
-        protected static void ShowWindow()
+
+        protected static void ShowWindow(out EditorWindow window, bool utility = false, Vector2 minSize = default)
         {
             Settings = SettingsUtility.Load<TSettings>();
-            var window = GetWindow(TraceCallingType(), false, Settings.GetEditorWindowTitle());
-            window.minSize = new Vector2(420, 300);
+            window = GetWindow(TraceCallingType(), utility, Settings.GetEditorWindowTitle());
+            if (minSize != default) window.minSize = minSize;
+        }
+        
+        protected static void ShowWindow(bool utility = false, Vector2 minSize = default)
+        {
+            //minSize = new Vector2(420, 300);
+            ShowWindow(out _, utility, minSize);
         }
 
         /// <summary>
@@ -105,12 +111,14 @@ namespace TwistCore.Editor
             CurrentSection = null;
         }
 
-        protected void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null, bool forceEnabled = false)
+        protected void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null, bool forceEnabled = false, GUIStyle style = null)
         {
             using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
             {
                 var oldValue = value;
-                value = EditorGUILayout.Toggle(text, value);
+                value = style == null 
+                    ? EditorGUILayout.Toggle(text, value) 
+                    : EditorGUILayout.Toggle(text, value, style);
                 if (oldValue != value) onValueChanged?.Invoke(value);
             }
         }
@@ -125,18 +133,6 @@ namespace TwistCore.Editor
             }
         }
 
-        protected void InputField(string text, ref string value, bool forceEnabled = false)
-        {
-            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
-            {
-                EditorGUILayout.LabelField(text);
-                EditorGUI.indentLevel++;
-                value = EditorGUILayout.TextField(value);
-                EditorGUI.indentLevel--;
-                GUILayout.Space(5);
-            }
-        }
-        
         protected void StatusLabel(string text, string status, GUIStyle statusStyle, string iconId, params Button[] buttons)
         {
             var memLabelWidth = EditorGUIUtility.labelWidth;
@@ -181,6 +177,18 @@ namespace TwistCore.Editor
             StatusLabel(text, status, statusStyle, GUIStyles.IconWarning, buttons);
         }
 
+        protected void InputField(string text, ref string value, bool forceEnabled = false)
+        {
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
+            {
+                EditorGUILayout.LabelField(text);
+                EditorGUI.indentLevel++;
+                value = EditorGUILayout.TextField(value);
+                EditorGUI.indentLevel--;
+                GUILayout.Space(5);
+            }
+        }
+
         protected void InputField(string text, bool disabled = false)
         {
             var empty = "";
@@ -206,7 +214,7 @@ namespace TwistCore.Editor
                 }
             }
         }
-        
+
         protected void HorizontalButton(Button button)
         {
             HorizontalButtons(button);
