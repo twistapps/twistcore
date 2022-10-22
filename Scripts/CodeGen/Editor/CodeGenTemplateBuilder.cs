@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using RequestForMirror.Utils;
+using System.Linq;
+using TwistCore.Utils;
 using UnityEngine;
 
 namespace RequestForMirror.Editor
@@ -12,6 +13,7 @@ namespace RequestForMirror.Editor
         public const string GenericArgumentSlug = "GENERIC_ARGUMENT";
         public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
 
+        public string[] VariableNames => Variables.Keys.ToArray();
         //todo: move so called 'cursor' to position of a variable and ability to perform standard Builder's actions from that position,
         // then reset cursor
         private string _mem;
@@ -22,6 +24,11 @@ namespace RequestForMirror.Editor
                 Variables[key] = replacementValue;
             else
                 Variables.Add(key, replacementValue);
+        }
+
+        public string GetVariable(string key)
+        {
+            return Variables[key];
         }
 
         public void SetVariablesForType(Type type)
