@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace RequestForMirror.Utils
+namespace TwistCore.Utils
 {
     public static class SettingsUtility
     {
