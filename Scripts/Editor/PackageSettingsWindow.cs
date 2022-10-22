@@ -162,6 +162,11 @@ namespace TwistCore.Editor
                 }
             }
         }
+        
+        protected void HorizontalButton(Button button)
+        {
+            HorizontalButtons(button);
+        }
 
         protected void CallToAction(string heading, params Button[] buttons)
         {
