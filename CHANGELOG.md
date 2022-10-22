@@ -1,3 +1,11 @@
+# [0.3.0](https://github.com/twistapps/twistcore/compare/0.2.1...0.3.0) (2022-10-22)
+
+
+### Features
+
+* Compare local pkg version with GitHub ([a225e40](https://github.com/twistapps/twistcore/commit/a225e40a9584cc5d9466ae2526953f9b50298c8d))
+* UPM interface and utils ([099cffd](https://github.com/twistapps/twistcore/commit/099cffd3dd44b7751b2855508d1477d602206f47))
+
 ## [0.2.1](https://github.com/twistapps/twistcore/compare/0.2.0...0.2.1) (2022-10-22)
 
 
