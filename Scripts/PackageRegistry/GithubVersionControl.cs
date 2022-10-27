@@ -15,7 +15,7 @@ namespace TwistCore
             return url;
         }
         
-        public static VersionComparison CompareVersion(PackageInfo localPackage)
+        public static VersionComparison FetchUpdates(PackageInfo localPackage)
         {
             var url = GetGithubURLByPackageName(localPackage.name);
             var githubPackage = PackageFetch.Get(url);
@@ -28,10 +28,10 @@ namespace TwistCore
 
         }
 
-        public static VersionComparison CompareVersion(string packageName)
+        public static VersionComparison FetchUpdates(string packageName)
         {
             var localPackage = PackageRegistry.Get(packageName);
-            return CompareVersion(localPackage);
+            return FetchUpdates(localPackage);
         }
     }
 }
