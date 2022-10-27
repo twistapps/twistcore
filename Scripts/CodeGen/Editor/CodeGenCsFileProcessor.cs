@@ -23,7 +23,7 @@ namespace RequestForMirror.Editor
                 var deletedFileName = Path.GetFileName(deletedAsset);
                 if (!generatedFileNames.Contains(deletedFileName)) continue;
 
-                var generatedAsset = new ScriptInfo(PathDefinitions.GeneratedFolder, deletedFileName);
+                var generatedAsset = new ScriptInfo(CodeGenDefinitions.GeneratedFolder, deletedFileName);
                 if (generatedAsset.Delete())
                 {
                     settings.generatedFiles.RemoveAll(asset => asset == generatedAsset.CsPath);

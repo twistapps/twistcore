@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using TwistCore;
 
 namespace RequestForMirror.Editor
 {
-    public static class PathDefinitions
+    public static class CodeGenDefinitions
     {
         private const string PackageName = "com.twistapps.request-for-mirror";
         private static string TwistappsFolder => Path.Combine("Assets", "TwistApps");

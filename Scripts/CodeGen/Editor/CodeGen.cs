@@ -31,10 +31,10 @@ namespace RequestForMirror.Editor
             var hasGenericTypes = int.TryParse(parts.LastOrDefault(), out var genericArgsAmount);
     
             var genericSpecificTemplate =
-                GetTxtPath(PathDefinitions.TemplatesFolder, $"{parentClassName}`{genericArgsAmount}");
+                GetTxtPath(CodeGenDefinitions.TemplatesFolder, $"{parentClassName}`{genericArgsAmount}");
     
             var basicTemplateForClass =
-                GetTxtPath(PathDefinitions.TemplatesFolder, parentClassName ?? PathDefinitions.DefaultTemplate);
+                GetTxtPath(CodeGenDefinitions.TemplatesFolder, parentClassName ?? CodeGenDefinitions.DefaultTemplate);
     
             if (hasGenericTypes && genericArgsAmount > 0 && File.Exists(genericSpecificTemplate))
                 return genericSpecificTemplate;
@@ -43,7 +43,7 @@ namespace RequestForMirror.Editor
     
         private static string GetOutputCsPath(Type type)
         {
-            return Path.ChangeExtension(Path.Combine(PathDefinitions.GeneratedFolder, type.Name), ".cs");
+            return Path.ChangeExtension(Path.Combine(CodeGenDefinitions.GeneratedFolder, type.Name), ".cs");
         }
     
         private static CodeGenSettings LoadSettingsAsset()
@@ -156,8 +156,8 @@ namespace RequestForMirror.Editor
     
         private static void CleanupFolder()
         {
-            if (!Directory.Exists(PathDefinitions.GeneratedFolder)) return;
-            var files = Directory.GetFiles(PathDefinitions.GeneratedFolder, "*.cs");
+            if (!Directory.Exists(CodeGenDefinitions.GeneratedFolder)) return;
+            var files = Directory.GetFiles(CodeGenDefinitions.GeneratedFolder, "*.cs");
             var types = GetTypes();
             foreach (var file in files)
             {
