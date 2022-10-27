@@ -1,3 +1,8 @@
-TwistCore.asmdef.meta
-/.github
-/.NewPackageTemplate
+*.meta
+*.dll
+*.asmdef
+*.asmdef.meta
+.git/*
+.github/*
+.NewPackageTemplate/*
+*SettingsWindow.cs !except *PackageSettingsWindow.cs
