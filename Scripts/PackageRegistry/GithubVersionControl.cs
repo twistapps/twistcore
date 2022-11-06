@@ -5,20 +5,10 @@ namespace TwistCore
 {
     public static class GithubVersionControl
     {
-        public static string GetGithubURLByPackageName(string packageName)
-        {
-            var parts = packageName.Split('.');
-            var organization = parts[1];
-            var package = parts[2];
-
-            var url = $"https://raw.githubusercontent.com/{organization}/{package}/main/package.json";
-            return url;
-        }
-
         public static VersionComparison FetchUpdates(PackageInfo localPackage)
         {
-            var url = GetGithubURLByPackageName(localPackage.name);
-            var githubPackage = PackageFetch.Get(url);
+            var url = Github.GetPackageJsonURL(localPackage.name);
+            var githubPackage = WebRequestUtility.FetchJSON<PackageData>(url);
 
             if (githubPackage == null) return new VersionComparison();
             if (githubPackage.version == localPackage.version) return new VersionComparison();
