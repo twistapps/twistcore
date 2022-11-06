@@ -1,3 +1,10 @@
+# [0.10.0](https://github.com/twistapps/twistcore/compare/0.9.0...0.10.0) (2022-11-06)
+
+
+### Features
+
+* Core Unpack task ([ab24e79](https://github.com/twistapps/twistcore/commit/ab24e791f9e72994af9fe3032a1ee6ff8a22add0))
+
 # [0.9.0](https://github.com/twistapps/twistcore/compare/0.8.0...0.9.0) (2022-11-06)
 
 
