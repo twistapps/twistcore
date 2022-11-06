@@ -36,10 +36,10 @@ namespace TwistCore
                 }
             }
 
-            foreach (var package in filteredPackages)
-            {
-                Debug.Log($"{package.assetPath} | DevMode: {PackagesLock.IsInDevelopmentMode(package.name)}");
-            }
+            // foreach (var package in filteredPackages)
+            // {
+            //     Debug.Log($"{package.assetPath} | DevMode: {PackagesLock.IsInDevelopmentMode(package.name)}");
+            // }
 
             _collection = filteredPackages;
             return filteredPackages;
