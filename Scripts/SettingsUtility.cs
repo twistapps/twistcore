@@ -11,7 +11,6 @@ namespace TwistCore.Utils
     public static class SettingsUtility
     {
         private static readonly Dictionary<Type, SettingsAsset> Settings = new Dictionary<Type, SettingsAsset>();
-        private static string TwistappsFolder => Path.Combine("Assets", "TwistApps", "Resources", "Settings");
 
         public static T Load<T>() where T : SettingsAsset
         {
@@ -37,8 +36,8 @@ namespace TwistCore.Utils
 
             //if settings file not found at desired location
             asset = ScriptableObject.CreateInstance<T>();
-            var assetPath = Path.Combine(TwistappsFolder, type.Name) + ".asset";
-            Directory.CreateDirectory(TwistappsFolder);
+            var assetPath = Path.Combine(TwistCore.SettingsFolder, type.Name) + ".asset";
+            Directory.CreateDirectory(TwistCore.SettingsFolder);
             AssetDatabase.CreateAsset(asset, assetPath);
             AssetDatabase.SaveAssets();
 
