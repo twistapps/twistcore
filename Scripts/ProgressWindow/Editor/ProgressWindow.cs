@@ -14,7 +14,7 @@ namespace TwistCore.ProgressWindow.Editor
             if (currentTask != null)
                 statusText =
                     $"{currentTask.Description}: [{currentTask.Progress.CurrentStep}/{currentTask.Progress.TotalSteps}]";
-            else if (TaskManager.Queue.Count < 1)
+            else if (TaskManager.Queue.Count < 1 && TaskManager.QueueRunnerCoroutine == null)
                 Close();
 
             EditorGUI.ProgressBar(progressBarRect, currentTask?.ProgressAmount ?? 0, statusText);
