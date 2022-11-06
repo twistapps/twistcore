@@ -20,7 +20,9 @@ namespace TwistCore.Editor
         private void OnGUI()
         {
             if (Settings == null) Settings = SettingsUtility.Load<TSettings>();
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             Draw();
+            EditorGUILayout.EndScrollView();
             WatchChangesAbove();
         }
 
