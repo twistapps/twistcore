@@ -116,8 +116,6 @@ namespace RequestForMirror.Editor
             AppendLine("}");
         }
 
-        //public abstract void Build();
-
         public void Endfile()
         {
             while (_indent > 0) CloseCurly();

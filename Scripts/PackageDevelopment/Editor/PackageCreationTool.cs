@@ -23,12 +23,11 @@ namespace TwistCore
 
         private static TwistCoreSettings Settings => SettingsUtility.Load<TwistCoreSettings>();
 
-        internal static void CreatePackage()
+        internal static void CreatePackageBasedOnSettings()
         {
             var newPackageFolder = Path.Combine("Packages", Settings.newPackageName.ToLower());
             Directory.CreateDirectory(newPackageFolder);
             GitCmd.ExecuteCommand(newPackageFolder, "init");
-            //var files = Directory.GetFiles(TwistCoreDefinitions.PackageTemplateFolder);
 
             var files = Directory
                 .EnumerateFiles(TwistCore.PackageTemplateFolder, "*.*", SearchOption.AllDirectories)
@@ -63,8 +62,6 @@ namespace TwistCore
                 }
             }
 
-            //AssetDatabase.Refresh();
-            // CompilationPipeline.RequestScriptCompilation();
             Client.Resolve();
         }
 

@@ -49,8 +49,7 @@ namespace TwistCore
                 if (!Settings.packageDevelopment)
                     HorizontalButton(new Button("Enter Development Mode", () => { Settings.packageDevelopment = true; },
                         150));
-
-
+                
                 if (Settings.packageDevelopment)
                     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
                         150));
@@ -61,7 +60,7 @@ namespace TwistCore
             InputField("Displayname", ref Settings.newPackageDisplayname);
             InputField("Description", ref Settings.newPackageDescription);
 
-            HorizontalButton(new Button("Create Package", PackageCreationTool.CreatePackage));
+            HorizontalButton(new Button("Create Package", PackageCreationTool.CreatePackageBasedOnSettings));
             EndSection();
 
             BeginSection("Packages in Project");

@@ -5,7 +5,7 @@ using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore
 {
-    public static class FrameworkExtensions
+    public static class PackageDataExtensions
     {
         public static string Alias(this PackageInfo package)
         {

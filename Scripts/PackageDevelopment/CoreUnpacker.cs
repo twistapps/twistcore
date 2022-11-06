@@ -18,15 +18,15 @@ namespace TwistCore
         {
             Debug.Log(packageName);
             //var packageInfo = PackageRegistry.Collection.FirstOrDefault(p => p.name == packageName);
-            var packageInfo = PackagesLock.GetInfo(packageName);
+            var packageInfo = PackageLock.GetInfo(packageName);
             if (packageInfo == null) return null;
 
-            if (!PackagesLock.IsInDevelopmentMode(packageName)) return null;
+            if (!PackageLock.IsInDevelopmentMode(packageName)) return null;
 
             var coreDir = Path.Combine(packageInfo.assetPath, UnpackedCoreDirName);
             if (!Directory.Exists(coreDir)) return null;
 
-            var corePackage = PackagesLock.GetInfoByPath(coreDir);
+            var corePackage = PackageLock.GetInfoByPath(coreDir);
             if (corePackage != null) corePackage.assetPath = coreDir;
             return corePackage;
         }
@@ -34,7 +34,7 @@ namespace TwistCore
         public static void UnpackIntoPackageFolder(string packageName, string packageToUnpack,
             string outputDirectoryName)
         {
-            if (!PackagesLock.IsInDevelopmentMode(packageName)) //requested package is not in development mode 
+            if (!PackageLock.IsInDevelopmentMode(packageName)) //requested package is not in development mode 
             {
                 Debug.LogError(
                     $"The requested package '{packageName}' is not in development mode so it won't be modified.");
@@ -107,7 +107,7 @@ namespace TwistCore
             // 3 - remove asmdef dependency of core lib
             var progress = new TaskProgress(4);
 
-            if (!PackagesLock.IsInDevelopmentMode(packageName)) //requested package is not in development mode 
+            if (!PackageLock.IsInDevelopmentMode(packageName)) //requested package is not in development mode 
             {
                 Debug.LogError(
                     $"The requested package '{packageName}' is not in development mode so it won't be modified.");
@@ -188,7 +188,7 @@ namespace TwistCore
             yield return progress.Next().Sleep(1);
 
             yield return progress.Next("Requesting asset db refresh...").Sleep(.5f);
-            TaskManager.AddAfterCompletionAction(AssetDatabase.Refresh);
+            TaskManager.ExecuteOnCompletion(AssetDatabase.Refresh);
         }
 
         public static IEnumerator<TaskProgress> RemoveUnpacked(string packageName, string unpackedPackage,
@@ -226,7 +226,7 @@ namespace TwistCore
 
             AddAsmdefDependency(packageName, unpackedPackage);
             progress.Log("Requesting asset db refresh...");
-            TaskManager.AddAfterCompletionAction(AssetDatabase.Refresh);
+            TaskManager.ExecuteOnCompletion(AssetDatabase.Refresh);
             yield return progress.Next().Sleep(.5f);
         }
 
@@ -235,7 +235,7 @@ namespace TwistCore
             var package = PackageRegistry.Get(packageName);
             var asmdef = package.Asmdef();
 
-            if (!PackagesLock.IsInDevelopmentMode(package)) //requested package is not in development mode
+            if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
             var dependencyGuid = "GUID:" + PackageRegistry.Get(dependencyName).AsmdefGuid();
@@ -256,7 +256,7 @@ namespace TwistCore
         {
             var package = PackageRegistry.Get(packageName);
 
-            if (!PackagesLock.IsInDevelopmentMode(package)) //requested package is not in development mode
+            if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
             var asmdef = package.Asmdef();

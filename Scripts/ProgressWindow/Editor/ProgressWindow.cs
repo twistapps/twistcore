@@ -17,7 +17,7 @@ namespace TwistCore.ProgressWindow.Editor
             else if (TaskManager.Queue.Count < 1)
                 Close();
 
-            EditorGUI.ProgressBar(progressBarRect, currentTask?.ProgressPercentage ?? 0, statusText);
+            EditorGUI.ProgressBar(progressBarRect, currentTask?.ProgressAmount ?? 0, statusText);
             EditorGUILayout.Space(40);
 
             var logs = TaskManager.Logs;

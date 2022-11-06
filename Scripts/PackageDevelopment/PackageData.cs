@@ -3,13 +3,13 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnassignedField.Global
 
 namespace TwistCore
 {
     public class PackageData
     {
         private Version _versionInfo;
-
 
         public string assetPath;
 

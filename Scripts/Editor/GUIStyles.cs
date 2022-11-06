@@ -9,6 +9,7 @@ namespace TwistCore.Editor
         public const string IconError = "console.erroricon.sml@2x";
         public const string IconWarning = "console.warnicon.sml@2x";
         public const string IconInfo = "console.infoicon.sml@2x";
+        
         public static readonly GUIStyle DefaultLabel = EditorStyles.label;
 
         public static readonly GUIStyle SuccessLabel = new GUIStyle(EditorStyles.label)

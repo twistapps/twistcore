@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using TwistCore;
+using TwistCore.Utils;
+using Debug = UnityEngine.Debug;
 
 namespace RequestForMirror.Editor
 {
     public static class EditorUtils
     {
         //cache results of GetDerivedFrom() because it's a pretty expensive method
-        private static readonly Dictionary<Type, Type[]> DerivativesDictionary = new Dictionary<Type, Type[]>();
+        private static readonly Dictionary<Type, Type[]> DerivativesCache = new Dictionary<Type, Type[]>();
+        private static TwistCoreSettings Settings => SettingsUtility.Load<TwistCoreSettings>();
 
         public static Type[] GetDerivedFrom<T>(params Type[] ignored)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             Type[] foundArr;
-            if (DerivativesDictionary.ContainsKey(typeof(T)))
+            if (DerivativesCache.ContainsKey(typeof(T)))
             {
                 // return cached result if GetDerivedFrom() has already been invoked before
-                foundArr = DerivativesDictionary[typeof(T)];
+                foundArr = DerivativesCache[typeof(T)];
             }
             else
             {
@@ -28,16 +32,16 @@ namespace RequestForMirror.Editor
                     select assemblyType;
 
                 foundArr = found as Type[] ?? found.ToArray();
-
-                DerivativesDictionary.Add(typeof(T), foundArr);
+                DerivativesCache.Add(typeof(T), foundArr);
             }
 
             if (ignored != null)
                 foundArr = foundArr.Where(t => !ignored.Contains(t)).ToArray();
 
             stopwatch.Stop();
-            // if (stopwatch.ElapsedMilliseconds > 0)
-            //     Debug.Log($"GetDerivedFrom<{typeof(T).Name}>() took {stopwatch.ElapsedMilliseconds}ms to execute");
+            if (stopwatch.ElapsedMilliseconds > 0 && Settings.debug)
+                Debug.Log($"GetDerivedFrom<{typeof(T).Name}>() took {stopwatch.ElapsedMilliseconds}ms to execute");
+            
             return foundArr;
         }
 

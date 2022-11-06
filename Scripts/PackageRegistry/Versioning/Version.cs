@@ -2,21 +2,21 @@
 
 public class Version
 {
-    private readonly uint[] versionRaw;
+    private readonly uint[] _parts;
+    private readonly string _raw;
 
     public Version(string version)
     {
-        versionRaw = version.Split('.').Select(uint.Parse).ToArray();
+        _raw = version;
+        _parts = version.Split('.').Select(uint.Parse).ToArray();
     }
 
-    public uint Major => versionRaw[0];
-    public uint Minor => versionRaw[1];
-    public uint Patch => versionRaw[2];
-
-    public string version => string.Join(".", versionRaw.Select(v => v.ToString()));
+    public uint Major => _parts[0];
+    public uint Minor => _parts[1];
+    public uint Patch => _parts[2];
 
     public override string ToString()
     {
-        return version;
+        return _raw;
     }
 }

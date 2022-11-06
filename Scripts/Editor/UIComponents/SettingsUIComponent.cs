@@ -13,7 +13,6 @@
 
         protected IPackageSettingsWindow<SettingsAsset> Window;
 
-        //protected T Settings => Window.GetSettings();
         protected string PackageName => Window.GetSettings().GetPackageName();
 
         public void BindWindow(IPackageSettingsWindow<SettingsAsset> window)
@@ -27,7 +26,5 @@
         {
             ComponentName = name;
         }
-
-        //public static SettingsUIComponent<T> CachedInstance => new CoreUnpackWidget<T>();
     }
 }

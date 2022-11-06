@@ -3,6 +3,7 @@ namespace TwistCore
     public class TwistCoreSettings : SettingsAsset
     {
         public bool packageDevelopment;
+        public bool debug;
 
         public bool enablePackageCreation;
         public string newPackageName;

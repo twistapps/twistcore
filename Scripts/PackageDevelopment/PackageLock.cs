@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TwistCore
 {
-    public static class PackagesLock
+    public static class PackageLock
     {
         public enum PackageSource
         {
@@ -18,11 +18,11 @@ namespace TwistCore
         private const string GIT = "git";
         private const string EMBEDDED = "embedded";
         private const string REGISTRY = "registry";
-        private static readonly string Lockfile = Path.Combine("Packages", "packages-lock.json");
+        private static readonly string LockfilePath = Path.Combine("Packages", "packages-lock.json");
 
         public static PackageSource GetSource(string packageName)
         {
-            var json = JObject.Parse(File.ReadAllText(Lockfile));
+            var json = JObject.Parse(File.ReadAllText(LockfilePath));
             var source = (string)json["dependencies"]?[packageName]?["source"];
 
             return source switch
@@ -34,15 +34,15 @@ namespace TwistCore
             };
         }
 
-        public static PackageData GetInfo(string name)
+        public static PackageData GetInfo(string packageName)
         {
-            var path = Path.Combine("Packages", name, "package.json");
+            var path = Path.Combine("Packages", packageName, "package.json");
             return !File.Exists(path) ? null : JsonUtility.FromJson<PackageData>(path);
         }
 
-        public static PackageData GetInfoByPath(string directory)
+        public static PackageData GetInfoByPath(string packageDirectory)
         {
-            var path = Path.Combine(directory, "package.json");
+            var path = Path.Combine(packageDirectory, "package.json");
             return !File.Exists(path) ? null : JsonUtility.FromJson<PackageData>(path);
         }
 

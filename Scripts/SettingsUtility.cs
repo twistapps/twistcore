@@ -25,9 +25,7 @@ namespace TwistCore.Utils
 
                 Settings.Remove(type);
             }
-
-            //var settingsPath = Path.Combine(TwistappsFolder, settingsType.Name) + ".asset";
-            //asset = (T)AssetDatabase.LoadAssetAtPath(settingsPath, settingsType);
+            
             asset = Resources.Load<T>(Path.Combine("Settings", type.Name));
             if (asset != null)
             {
