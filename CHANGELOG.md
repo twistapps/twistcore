@@ -1,3 +1,20 @@
+# [0.8.0](https://github.com/twistapps/twistcore/compare/0.7.1...0.8.0) (2022-11-06)
+
+
+### Bug Fixes
+
+* Better naming ([c376b1b](https://github.com/twistapps/twistcore/commit/c376b1be32c9d1212fdce8d12112a4579310dd2d))
+* Moved to PersistentEditorData ([f2eedd8](https://github.com/twistapps/twistcore/commit/f2eedd8b5acf7001684dff0b99a26e71cb088ac8))
+* TrimRoot() access level ([8fe01d8](https://github.com/twistapps/twistcore/commit/8fe01d813f13da13b511b33a5010088760b2eaba))
+
+
+### Features
+
+* Create GetPackageName() in SettingsAsset ([d2c20e6](https://github.com/twistapps/twistcore/commit/d2c20e64d7f5bf2f031c9f6fedd45e966104fe52))
+* Improve package unpacking, restore asmdef function ([c7f41a3](https://github.com/twistapps/twistcore/commit/c7f41a335ae003852530a231c03bac67b2b28624))
+* PersistentEditorData singleton ([5cb8bb0](https://github.com/twistapps/twistcore/commit/5cb8bb055ddaacb0f99cb71696e7f20d3770f413))
+* UI Components ([7940b9c](https://github.com/twistapps/twistcore/commit/7940b9cc6b974aae35a86c8c9a7020cc5dc24403))
+
 ## [0.7.1](https://github.com/twistapps/twistcore/compare/0.7.0...0.7.1) (2022-10-22)
 
 
