@@ -1,3 +1,12 @@
+## [0.10.2](https://github.com/twistapps/twistcore/compare/0.10.1...0.10.2) (2022-11-06)
+
+
+### Bug Fixes
+
+* Automated Cleanup ([36caf5f](https://github.com/twistapps/twistcore/commit/36caf5fd21c2148642aba058ed5c707900df10ae))
+* Comment excess logs ([b513b17](https://github.com/twistapps/twistcore/commit/b513b179628f6aba22a1fbf4f751f61fef7efeea))
+* Update .gitignore ([115efea](https://github.com/twistapps/twistcore/commit/115efeaf1ac8a4abc3689d5399ae6745faee9e2d))
+
 ## [0.10.1](https://github.com/twistapps/twistcore/compare/0.10.0...0.10.1) (2022-11-06)
 
 
