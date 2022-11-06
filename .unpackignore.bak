@@ -1,0 +1,10 @@
+*.meta
+*.dll
+*.asmdef
+*.asmdef.meta
+.git/*
+.github/*
+.NewPackageTemplate/*
+*SettingsWindow.cs !except *PackageSettingsWindow.cs
+Scripts/ProgressWindow/*
+Scripts/ProgressWindow.meta
