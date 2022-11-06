@@ -22,10 +22,8 @@ namespace TwistCore.ProgressWindow.Editor
                 now = EditorApplication.timeSinceStartup;
                 yield return progress;
             }
-
-            progress.CurrentStep = progress.TotalSteps;
-            TaskManager.AddLogs("Done!");
-            yield return progress;
+            
+            yield return progress.Complete("Done!");
         }
     }
 }
