@@ -1,6 +1,4 @@
-﻿using TwistCore.Editor.UIComponents;
-
-namespace TwistCore.Editor
+﻿namespace TwistCore.Editor
 {
     public interface ISettingsUIComponent<out T> where T : SettingsAsset
     {
@@ -11,9 +9,10 @@ namespace TwistCore.Editor
 
     public abstract class SettingsUIComponent<T> : ISettingsUIComponent<T> where T : SettingsAsset
     {
+        protected string ComponentName;
+
         protected IPackageSettingsWindow<SettingsAsset> Window;
 
-        protected string ComponentName;
         //protected T Settings => Window.GetSettings();
         protected string PackageName => Window.GetSettings().GetPackageName();
 
@@ -23,6 +22,7 @@ namespace TwistCore.Editor
         }
 
         public abstract void Draw();
+
         public void SetComponentName(string name)
         {
             ComponentName = name;

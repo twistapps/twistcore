@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace TwistCore
 {
     public class TwistCoreSettings : SettingsAsset
     {
         public bool packageDevelopment;
-        
+
         public bool enablePackageCreation;
         public string newPackageName;
         public string newPackageDisplayname;

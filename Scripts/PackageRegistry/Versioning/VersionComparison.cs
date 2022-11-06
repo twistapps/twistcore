@@ -3,6 +3,20 @@
     private const string ZERO = "0.0.0";
     private readonly Version _current, _next;
 
+    public VersionComparison(string currentVersion, string nextVersion)
+    {
+        _current = new Version(currentVersion);
+        _next = new Version(nextVersion);
+    }
+
+    public VersionComparison()
+    {
+        _current = new Version(ZERO);
+        _next = new Version(ZERO);
+    }
+
+    public bool hasUpdate => HasPatchUpdate();
+
     public bool HasMajorUpdate()
     {
         return _current.Major < _next.Major;
@@ -18,20 +32,6 @@
         return HasMajorUpdate() || HasMinorUpdate() || _current.Patch < _next.Patch;
     }
 
-    public bool hasUpdate => HasPatchUpdate();
-    
-    public VersionComparison(string currentVersion, string nextVersion)
-    {
-        _current = new Version(currentVersion);
-        _next = new Version(nextVersion);
-    }
-
-    public VersionComparison()
-    {
-        _current = new Version(ZERO);
-        _next = new Version(ZERO);
-    }
-    
     public override string ToString()
     {
         return _current.ToString();

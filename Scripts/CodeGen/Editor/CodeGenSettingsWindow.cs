@@ -23,8 +23,8 @@ namespace RequestForMirror.Editor
             InputField("SomeOtherField");
             HorizontalButtons(new Button("Create"));
             EndSection();
-            
-            
+
+
             WatchChangesAbove();
         }
 

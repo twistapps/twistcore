@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,10 +10,7 @@ namespace TwistCore
         {
             using var webRequest = UnityWebRequest.Get(url);
             var request = webRequest.SendWebRequest();
-            while (!request.isDone)
-            {
-                Thread.Sleep(300);
-            }
+            while (!request.isDone) Thread.Sleep(300);
 
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (webRequest.result)

@@ -1,7 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
-
-namespace TwistCore
+﻿namespace TwistCore
 {
     // [InitializeOnLoad]
     // public class Startup
@@ -23,5 +20,4 @@ namespace TwistCore
     //         //packageInfo = PackageFetch.Get()
     //     }
     // }
-
 }

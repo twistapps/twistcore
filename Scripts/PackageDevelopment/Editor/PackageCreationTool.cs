@@ -3,27 +3,25 @@ using System.IO;
 using System.Linq;
 using RequestForMirror.Editor;
 using TwistCore.Utils;
-using UnityEditor;
-using UnityEditor.Compilation;
 using UnityEditor.PackageManager;
-using UnityEngine;
 
 namespace TwistCore
 {
     public static class PackageCreationTool
     {
-        private static TwistCoreSettings Settings => SettingsUtility.Load<TwistCoreSettings>();
         private const char Separator = CodeGenBuilder.SeparatorSymbol;
 
-        private static readonly string[] CodeGenWhitelist = new[]
+        private static readonly string[] CodeGenWhitelist =
         {
             "LICENSE",
             $"{Separator}PACKAGE{Separator}.asmdef",
             "package.json",
-            
+
             $"{Separator}NAME{Separator}Settings.cs",
-            $"{Separator}NAME{Separator}SettingsWindow.cs",
+            $"{Separator}NAME{Separator}SettingsWindow.cs"
         };
+
+        private static TwistCoreSettings Settings => SettingsUtility.Load<TwistCoreSettings>();
 
         internal static void CreatePackage()
         {
@@ -35,7 +33,7 @@ namespace TwistCore
             var files = Directory
                 .EnumerateFiles(TwistCore.PackageTemplateFolder, "*.*", SearchOption.AllDirectories)
                 .ToArray();
-            
+
             var builder = CreateCodeGenBuilder();
             foreach (var path in files)
             {
@@ -64,7 +62,7 @@ namespace TwistCore
                     File.Copy(path, Path.Combine(dir, filename));
                 }
             }
-            
+
             //AssetDatabase.Refresh();
             // CompilationPipeline.RequestScriptCompilation();
             Client.Resolve();
@@ -72,13 +70,15 @@ namespace TwistCore
 
         private static string GetCurrentDirRelativeToPackageRoot(string path)
         {
-            var directory = path.Substring(0, path.Length-Path.GetFileName(path).Length-1); //Get current file's directory
-            directory = TrimRoot(directory, TwistCore.PackageTemplateFolder); //Trim file path relative to template folder as root dir
+            var directory =
+                path.Substring(0, path.Length - Path.GetFileName(path).Length - 1); //Get current file's directory
+            directory = TrimRoot(directory,
+                TwistCore.PackageTemplateFolder); //Trim file path relative to template folder as root dir
             return directory;
         }
-        
+
         /// <summary>
-        /// Trims path to be relative to specified rootDirectory.
+        ///     Trims path to be relative to specified rootDirectory.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="trimQuery">New root directory. Has to be a part of initial path.</param>

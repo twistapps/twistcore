@@ -5,8 +5,12 @@ namespace TwistCore.Editor
 {
     public static class GUIStyles
     {
+        public const string IconSuccess = "d_FilterSelectedOnly";
+        public const string IconError = "console.erroricon.sml@2x";
+        public const string IconWarning = "console.warnicon.sml@2x";
+        public const string IconInfo = "console.infoicon.sml@2x";
         public static readonly GUIStyle DefaultLabel = EditorStyles.label;
-        
+
         public static readonly GUIStyle SuccessLabel = new GUIStyle(EditorStyles.label)
         {
             normal =
@@ -22,7 +26,7 @@ namespace TwistCore.Editor
                 textColor = Color.red
             }
         };
-            
+
         public static readonly GUIStyle WarningLabel = new GUIStyle(EditorStyles.label)
         {
             normal =
@@ -30,10 +34,5 @@ namespace TwistCore.Editor
                 textColor = Color.yellow
             }
         };
-
-        public const string IconSuccess = "d_FilterSelectedOnly";
-        public const string IconError = "console.erroricon.sml@2x";
-        public const string IconWarning = "console.warnicon.sml@2x";
-        public const string IconInfo = "console.infoicon.sml@2x";
     }
 }

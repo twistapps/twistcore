@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using UnityEditor.PackageManager;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace TwistCore
@@ -11,17 +9,15 @@ namespace TwistCore
         public static PackageCollection List()
         {
             var listRequest = Client.List();
-            while (!listRequest.IsCompleted)
-            {
-                Thread.Sleep(100);
-            }
+            while (!listRequest.IsCompleted) Thread.Sleep(100);
 
             switch (listRequest.Status)
             {
                 case StatusCode.Success:
                     return listRequest.Result;
                 case StatusCode.Failure:
-                    Debug.LogError($"Unable to list UPM packages: (#{listRequest.Error.errorCode}) {listRequest.Error.message}");
+                    Debug.LogError(
+                        $"Unable to list UPM packages: (#{listRequest.Error.errorCode}) {listRequest.Error.message}");
                     break;
             }
 
@@ -32,19 +28,17 @@ namespace TwistCore
         {
             var version = GithubVersionControl.FetchUpdates(packageInfo);
             if (!version.hasUpdate) return packageInfo;
-            
+
             var addRequest = Client.Add(packageInfo.repository.url);
-            while (!addRequest.IsCompleted)
-            {
-                Thread.Sleep(100);
-            }
-            
+            while (!addRequest.IsCompleted) Thread.Sleep(100);
+
             switch (addRequest.Status)
             {
                 case StatusCode.Success:
                     return addRequest.Result;
                 case StatusCode.Failure:
-                    Debug.LogError($"Unable to list UPM packages: (#{addRequest.Error.errorCode}) {addRequest.Error.message}");
+                    Debug.LogError(
+                        $"Unable to list UPM packages: (#{addRequest.Error.errorCode}) {addRequest.Error.message}");
                     break;
             }
 
@@ -56,6 +50,5 @@ namespace TwistCore
             var packageInfo = PackageRegistry.Get(packageName);
             return Update(packageInfo);
         }
-        
     }
 }

@@ -10,13 +10,15 @@ namespace RequestForMirror.Editor
     public class CodeGenTemplateBuilder : CodeGenBuilder
     {
         public const string BaseSlug = "BASE";
-        public const string GenericArgumentSlug = "GENERIC_ARGUMENT";
-        public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
 
-        public string[] VariableNames => Variables.Keys.ToArray();
+        public const string GenericArgumentSlug = "GENERIC_ARGUMENT";
+
         //todo: move so called 'cursor' to position of a variable and ability to perform standard Builder's actions from that position,
         // then reset cursor
         private string _mem;
+        public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
+
+        public string[] VariableNames => Variables.Keys.ToArray();
 
         public void SetVariable(string key, string replacementValue)
         {
@@ -46,7 +48,7 @@ namespace RequestForMirror.Editor
             for (var i = 0; i < genericArguments.Length; i++)
             {
                 var genericArgument = genericArguments[i];
-                var variableName = $"{prefix}_{GenericArgumentSlug}_{i+1}".Replace("_1", "");
+                var variableName = $"{prefix}_{GenericArgumentSlug}_{i + 1}".Replace("_1", "");
                 if (SettingsUtility.Load<CodeGenSettings>().debugMode)
                     Debug.Log($"Setting builder variable: ${variableName}$ to {genericArgument.Name}");
                 SetVariable(variableName, genericArgument.Name);

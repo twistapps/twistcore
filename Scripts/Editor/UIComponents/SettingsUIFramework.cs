@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace TwistCore.Editor.UIComponents
@@ -19,7 +18,8 @@ namespace TwistCore.Editor.UIComponents
             //return Type.GetType($"TwistCore.Editor.UIComponents.{name}, TwistCore");
         }
 
-        private static void SetupCachedComponent<T>(IPackageSettingsWindow<T> boundWindow, ISettingsUIComponent<T> instance, string componentName)
+        private static void SetupCachedComponent<T>(IPackageSettingsWindow<T> boundWindow,
+            ISettingsUIComponent<T> instance, string componentName)
             where T : SettingsAsset
         {
             instance.BindWindow(boundWindow);
@@ -37,15 +37,15 @@ namespace TwistCore.Editor.UIComponents
             {
                 var type = GetTypeByName(component) ?? GetTypeByName(component + "`1");
                 var resultingType = type;
-                
-                if (type.IsGenericTypeDefinition) 
+
+                if (type.IsGenericTypeDefinition)
                     resultingType = type.MakeGenericType(typeof(T));
 
                 if (Activator.CreateInstance(resultingType) is ISettingsUIComponent<T> instance)
                     SetupCachedComponent(bind, instance, component);
                 else
                     SetupCachedComponent(bind, Activator.CreateInstance<UnsupportedNotification>(), component);
-                
+
                 return;
             }
 

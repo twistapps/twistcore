@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor.PackageManager;
-using UnityEngine;
 
 namespace TwistCore
 {
@@ -18,21 +16,19 @@ namespace TwistCore
             var collection = UPMInterface.List();
             var filteredPackages = new List<PackageInfo>();
             foreach (var package in collection)
+            foreach (var mask in namesMask)
             {
-                foreach (var mask in namesMask)
+                var parts = mask.Split('.');
+                if (parts.Length < 1) //empty line
+                    continue;
+                if (parts.Length < 3) //masked by organization name
                 {
-                    var parts = mask.Split('.');
-                    if (parts.Length < 1) //empty line
-                        continue;
-                    if (parts.Length < 3) //masked by organization name
-                    {
-                        if (package.name.Split('.')[1] == parts.Last())
-                            filteredPackages.Add(package);
-                    }
-                    else if (package.name == mask) //masked by exact name
-                    {
+                    if (package.name.Split('.')[1] == parts.Last())
                         filteredPackages.Add(package);
-                    }
+                }
+                else if (package.name == mask) //masked by exact name
+                {
+                    filteredPackages.Add(package);
                 }
             }
 

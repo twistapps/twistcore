@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using UnityEditor;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
@@ -12,7 +11,7 @@ namespace TwistCore
         {
             return package.name.Split('.').LastOrDefault();
         }
-        
+
         public static string Alias(this PackageData package)
         {
             return package.name.Split('.').LastOrDefault();
@@ -21,20 +20,22 @@ namespace TwistCore
         public static string Asmdef(this PackageInfo package)
         {
             var packageFolder = package.assetPath;
-            return Directory.GetFiles(packageFolder).FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
+            return Directory.GetFiles(packageFolder)
+                .FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
         }
-        
+
         public static string Asmdef(this PackageData package)
         {
             var packageFolder = package.assetPath;
-            return Directory.GetFiles(packageFolder).FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
+            return Directory.GetFiles(packageFolder)
+                .FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
         }
-        
+
         public static GUID AsmdefGuid(this PackageInfo package)
         {
             return AssetDatabase.GUIDFromAssetPath(Asmdef(package));
         }
-        
+
         public static GUID AsmdefGuid(this PackageData package)
         {
             return AssetDatabase.GUIDFromAssetPath(Asmdef(package));

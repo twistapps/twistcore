@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -8,13 +7,18 @@ namespace TwistCore
 {
     public static class PackagesLock
     {
-        private static readonly string Lockfile = Path.Combine("Packages", "packages-lock.json");
-        
+        public enum PackageSource
+        {
+            Git,
+            Embedded,
+            UnityRegistry,
+            Unknown
+        }
+
         private const string GIT = "git";
         private const string EMBEDDED = "embedded";
         private const string REGISTRY = "registry";
-        
-        public enum PackageSource {Git, Embedded, UnityRegistry, Unknown}
+        private static readonly string Lockfile = Path.Combine("Packages", "packages-lock.json");
 
         public static PackageSource GetSource(string packageName)
         {
