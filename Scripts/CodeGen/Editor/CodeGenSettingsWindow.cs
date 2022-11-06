@@ -5,10 +5,8 @@ namespace RequestForMirror.Editor
 {
     internal class CodeGenWindow : PackageSettingsWindow<CodeGenSettings>
     {
-        protected override void OnGUI()
+        protected override void Draw()
         {
-            base.OnGUI();
-
             BeginSection("CodeGen Settings");
             Checkbox("Auto Generate Scripts On Compile", ref Settings.autoGenerateOnCompile);
             Checkbox("Debug Mode", ref Settings.debugMode);
@@ -23,9 +21,6 @@ namespace RequestForMirror.Editor
             InputField("SomeOtherField");
             HorizontalButtons(new Button("Create"));
             EndSection();
-
-
-            WatchChangesAbove();
         }
 
         [MenuItem("Tools/Twist Apps/CodeGen Settings")]

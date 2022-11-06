@@ -1,4 +1,5 @@
 using TwistCore.Editor;
+using TwistCore.Editor.UIComponents;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,10 +7,8 @@ namespace TwistCore
 {
     public class TwistCoreSettingsWindow : PackageSettingsWindow<TwistCoreSettings>
     {
-        protected override void OnGUI()
+        protected override void Draw()
         {
-            base.OnGUI();
-
             BeginSection("Requirements");
 
             if (PersistentEditorData.instance.GitAvailable)
@@ -46,13 +45,15 @@ namespace TwistCore
 
             AddSection("Package Development", () =>
             {
-                if (!Settings.packageDevelopment)
-                    HorizontalButton(new Button("Enter Development Mode", () => { Settings.packageDevelopment = true; },
-                        150));
+                // if (!Settings.packageDevelopment)
+                //     HorizontalButton(new Button("Enter Development Mode", () => { Settings.packageDevelopment = true; },
+                //         150));
+                //
+                // if (Settings.packageDevelopment)
+                //     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
+                //         150));
                 
-                if (Settings.packageDevelopment)
-                    HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
-                        150));
+                this.DrawCachedComponent("DependencyManagerWidget");
             });
 
             BeginSection("Create Package", ref Settings.enablePackageCreation, true);
@@ -65,8 +66,6 @@ namespace TwistCore
 
             BeginSection("Packages in Project");
             EndSection();
-
-            WatchChangesAbove();
         }
 
         private void UpdatePackage()
