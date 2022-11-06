@@ -1,3 +1,22 @@
+# [0.11.0](https://github.com/twistapps/twistcore/compare/0.10.4...0.11.0) (2022-11-06)
+
+
+### Bug Fixes
+
+* Idling forever after completing a task ([3fbc80e](https://github.com/twistapps/twistcore/commit/3fbc80e740cbd8f71adb2843198bfca0f67077cf))
+* Matching [#2](https://github.com/twistapps/twistcore/issues/2) ([0f6c4cc](https://github.com/twistapps/twistcore/commit/0f6c4cc5b8c6331530bd6e652d45d2644b42360f))
+* Possibe skip of wait on tasks complete ([fabf494](https://github.com/twistapps/twistcore/commit/fabf4947a7394160fb2369329b1be1cfed0234b9))
+* Remove Duplicate const ([1c5dbf3](https://github.com/twistapps/twistcore/commit/1c5dbf30f076b0b8e09b71a93e73ac85176cd2e0))
+
+
+### Features
+
+* Create manifest ([d030921](https://github.com/twistapps/twistcore/commit/d0309217ae3d73a8b7d69376c744bfce607dfe91))
+* Dependency Manager ([345f67a](https://github.com/twistapps/twistcore/commit/345f67ac222e4ce9617e86a62f951d0bb139570f))
+* New Definitions ([48a781f](https://github.com/twistapps/twistcore/commit/48a781f6a9ab5afea643b95295194a4531f4405c))
+* UI Framework Overhaul (closes [#2](https://github.com/twistapps/twistcore/issues/2)) ([fbed659](https://github.com/twistapps/twistcore/commit/fbed659dd6d209449d9696c845b3f1a93bbc489d))
+* WebRequestUtility ([75b8632](https://github.com/twistapps/twistcore/commit/75b863242b4e5e1b43a5de83a3539c6419a5a306))
+
 ## [0.10.4](https://github.com/twistapps/twistcore/compare/0.10.3...0.10.4) (2022-11-06)
 
 
