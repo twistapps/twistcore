@@ -21,12 +21,12 @@ namespace TwistCore.Editor
         /// </summary>
         /// <param name="innerActions">Actions to execute inside the section.</param>
         void AddSection(string heading, Action innerActions, bool addDivider = false, bool forceDisabled = false,
-            int width = -1);
+            int width = -1, bool foldout=false);
 
         void AddSection(string heading, Action innerActions, ref bool enabled, bool addDivider = false,
             Action<bool> onEnabledChange = null, int width = -1);
 
-        void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1);
+        void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1, bool foldout=false);
 
         void BeginSection(string heading, ref bool enabled, bool addDivider = false,
             Action<bool> onEnabledChange = null, int width = -1);
@@ -44,8 +44,8 @@ namespace TwistCore.Editor
         void LabelSuccess(string text, string status, bool suppressColor = false, params Button[] buttons);
         void LabelFailure(string text, string status, bool suppressColor = false, params Button[] buttons);
         void LabelWarning(string text, string status, bool suppressColor = false, params Button[] buttons);
-        void InputField(string text, ref string value, bool forceEnabled = false);
-        void InputField(string text, bool disabled = false);
+        void InputField(string text, ref string value, bool forceEnabled = false, bool forceDisabled = false);
+        void InputField(string text);
         void HorizontalButtons(params Button[] buttons);
         void HorizontalButton(Button button);
         void CallToAction(string heading, params Button[] buttons);
