@@ -1,3 +1,13 @@
+## [0.10.1](https://github.com/twistapps/twistcore/compare/0.10.0...0.10.1) (2022-11-06)
+
+
+### Bug Fixes
+
+* add missing metafile ([06cef21](https://github.com/twistapps/twistcore/commit/06cef210ec0e77f7a406559eef148ae2ce1b582f))
+* asmdef references. Add Editor Coroutines ([0236167](https://github.com/twistapps/twistcore/commit/0236167d26afa01652e63c15bb0e5125d31e5c25))
+* EditorData ref and Dev mode ([e748948](https://github.com/twistapps/twistcore/commit/e7489482d8767858e133b9b31375544079327152))
+* Script reference ([fb35cc7](https://github.com/twistapps/twistcore/commit/fb35cc73ce2d8d7ff634560df13b865ed0d6e50c))
+
 # [0.10.0](https://github.com/twistapps/twistcore/compare/0.9.0...0.10.0) (2022-11-06)
 
 
