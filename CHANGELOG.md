@@ -1,3 +1,10 @@
+# [0.9.0](https://github.com/twistapps/twistcore/compare/0.8.0...0.9.0) (2022-11-06)
+
+
+### Features
+
+* TaskManager and ProgressWindow ([bbf8c73](https://github.com/twistapps/twistcore/commit/bbf8c732915119c4f4dca0eb72c81d9a0ad404a5))
+
 # [0.8.0](https://github.com/twistapps/twistcore/compare/0.7.1...0.8.0) (2022-11-06)
 
 
