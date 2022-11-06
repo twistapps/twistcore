@@ -2,7 +2,7 @@
   "name": "com.twistapps.twistcore",
   "displayName": "Twist Core",
   "description": "Core library for Twist! Apps assets.",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "unity": "2020.3",
   "repository": {
     "type": "git",
