@@ -81,12 +81,13 @@ namespace TwistCore
         /// Trims path to be relative to specified rootDirectory.
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="newRootPath">New root directory. Has to be a part of initial path.</param>
+        /// <param name="trimQuery">New root directory. Has to be a part of initial path.</param>
         /// <returns></returns>
-        public static string TrimRoot(string path, string newRootPath)
+        public static string TrimRoot(string path, string trimQuery)
         {
-            var index = path.IndexOf(newRootPath, StringComparison.Ordinal);
-            var newRoot = path.Substring(newRootPath.Length);
+            var index = path.IndexOf(trimQuery, StringComparison.Ordinal);
+            var newRoot = path.Substring(index + trimQuery.Length);
+            //return newRoot[0] == '\\' || newRoot[0] == '/' ? newRoot.Substring(1) : newRoot;
             return newRoot.StartsWith(Path.DirectorySeparatorChar.ToString()) ? newRoot.Substring(1) : newRoot;
         }
 
