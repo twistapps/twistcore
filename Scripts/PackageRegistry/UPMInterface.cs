@@ -30,7 +30,7 @@ namespace TwistCore
 
         public static PackageInfo Update(PackageInfo packageInfo)
         {
-            var version = GithubVersionControl.CompareVersion(packageInfo);
+            var version = GithubVersionControl.FetchUpdates(packageInfo);
             if (!version.hasUpdate) return packageInfo;
             
             var addRequest = Client.Add(packageInfo.repository.url);
