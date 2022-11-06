@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.EditorCoroutines.Editor;
+using UnityEngine;
 
 namespace TwistCore.ProgressWindow.Editor
 {
@@ -16,7 +17,7 @@ namespace TwistCore.ProgressWindow.Editor
         public static TwistTask CurrentTask;
         
         [UsedImplicitly]
-        private static EditorCoroutine _queueRunnerCoroutine;
+        public static EditorCoroutine QueueRunnerCoroutine;
         private static ProgressWindow _window;
         private static List<Action> _completionActions = new List<Action>();
 
@@ -48,7 +49,7 @@ namespace TwistCore.ProgressWindow.Editor
                 _window = ProgressWindow.ShowWindow();
             }
 
-            _queueRunnerCoroutine ??= EditorCoroutineUtility.StartCoroutineOwnerless(
+            QueueRunnerCoroutine ??= EditorCoroutineUtility.StartCoroutineOwnerless(
                 ExecuteTasks());
         }
 
@@ -64,9 +65,14 @@ namespace TwistCore.ProgressWindow.Editor
             yield return new EditorWaitForSeconds(WaitSecondsAfterAllTasksDone);
             _window.Close();
 
+            CurrentTask = null; 
+
             foreach (var action in _completionActions)
                 action?.Invoke();
             _completionActions = new List<Action>();
+
+            EditorCoroutineUtility.StopCoroutine(QueueRunnerCoroutine);
+            QueueRunnerCoroutine = null;
         }
     }
 }

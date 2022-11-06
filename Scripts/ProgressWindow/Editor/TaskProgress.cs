@@ -31,5 +31,13 @@
                 Log(logs);
             return this;
         }
+
+        public TaskProgress Complete(string logs = null)
+        {
+            CurrentStep = TotalSteps;
+            if (logs != null)
+                Log(logs);
+            return this;
+        }
     }
 }
