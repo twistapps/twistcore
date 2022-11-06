@@ -16,9 +16,9 @@ namespace TwistCore
             
             BeginSection("Requirements");
 
-            if (Startup.GitAvailable)
+            if (PersistentEditorData.instance.GitAvailable)
             {
-                LabelSuccess("Git", "Available", suppressColor:true, new Button(Startup.GitVersion));
+                LabelSuccess("Git", "Available", suppressColor:true, new Button(PersistentEditorData.instance.GitVersion));
             }
             else
             {
@@ -27,6 +27,8 @@ namespace TwistCore
                     Application.OpenURL("https://git-scm.com/");
                 }));
             }
+            
+            
 
             // var corePackageName = TwistCoreDefinitions.PackageName;
             // var corePackage = PackageRegistry.Get(corePackageName);
@@ -51,11 +53,24 @@ namespace TwistCore
             //         HorizontalButtons(new Button("Update Core", UpdatePackage));
             // }
             
-            HorizontalButton(new Button("Test Unpack", () => CoreUnpacker.UnpackIntoPackageFolder("com.twistapps.verytwist")));
-            
             EndSection();
             
-            BeginSection("Package Development", ref Settings.enablePackageCreation, addDivider:true);
+            AddSection("Package Development", () =>
+            {
+                if (!Settings.packageDevelopment)
+                {
+                    HorizontalButton(new Button("Enter Development Mode", () => { Settings.packageDevelopment = true;}, 150));
+                }
+                
+                
+                
+                if (Settings.packageDevelopment)
+                {
+                    HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false;}, 150));
+                }
+            });
+            
+            BeginSection("Create Package", ref Settings.enablePackageCreation, addDivider:true);
             InputField("Name", ref Settings.newPackageName);
             InputField("Displayname", ref Settings.newPackageDisplayname);
             InputField("Description", ref Settings.newPackageDescription);
