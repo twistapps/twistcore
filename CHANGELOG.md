@@ -1,3 +1,11 @@
+## [0.10.4](https://github.com/twistapps/twistcore/compare/0.10.3...0.10.4) (2022-11-06)
+
+
+### Bug Fixes
+
+* Add Scroll view for UI overflow ([5b79213](https://github.com/twistapps/twistcore/commit/5b79213a8405f83096a19709abd84fab86c2e829))
+* Refactor UI layout ([408f835](https://github.com/twistapps/twistcore/commit/408f83590ff6ffe59fc06bfd2daf721dc867b6ee))
+
 ## [0.10.3](https://github.com/twistapps/twistcore/compare/0.10.2...0.10.3) (2022-11-06)
 
 
