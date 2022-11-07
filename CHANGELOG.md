@@ -1,3 +1,12 @@
+# [0.12.0](https://github.com/twistapps/twistcore/compare/0.11.0...0.12.0) (2022-11-07)
+
+
+### Features
+
+* Add Modula to package-manifest ([6499408](https://github.com/twistapps/twistcore/commit/649940848757cb5b8de1fa19c985931854db9013))
+* PackageInfo to PackageData conversion ([535f603](https://github.com/twistapps/twistcore/commit/535f6032c590a0d23e1740ced639a7a64e04efbc))
+* PackagesInProject list widget ([5505d2e](https://github.com/twistapps/twistcore/commit/5505d2e152fec0570d37de5669aec1e8e108cbea))
+
 # [0.11.0](https://github.com/twistapps/twistcore/compare/0.10.4...0.11.0) (2022-11-06)
 
 
