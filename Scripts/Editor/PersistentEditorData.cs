@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace TwistCore
@@ -8,6 +10,11 @@ namespace TwistCore
         [SerializeField] private bool gitInitialized;
         [SerializeField] private bool gitAvailable;
         [SerializeField] private string gitVersion;
+
+        [SerializeField] private PackageData[] packagesInProject;
+
+        public static IEnumerable<PackageData> PackagesInProject => instance.packagesInProject ??=
+            DependencyManager.Manifest.packages.Select(package => (PackageData)PackageRegistry.Get(package.name)).ToArray();
 
         [SerializeField] private VersionComparison _coreUpdateInfo;
         public VersionComparison CoreUpdateInfo => _coreUpdateInfo ??= FetchCoreUpdates();

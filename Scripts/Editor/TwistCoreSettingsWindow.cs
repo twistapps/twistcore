@@ -64,8 +64,7 @@ namespace TwistCore
             HorizontalButton(new Button("Create Package", PackageCreationTool.CreatePackageBasedOnSettings));
             EndSection();
 
-            BeginSection("Packages in Project");
-            EndSection();
+            this.DrawCachedComponent("PackagesInProjectWidget");
         }
 
         private void UpdatePackage()
