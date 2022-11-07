@@ -1,3 +1,18 @@
+# [0.13.0](https://github.com/twistapps/twistcore/compare/0.12.0...0.13.0) (2022-11-07)
+
+
+### Bug Fixes
+
+* Match UI Framework interface to latest update ([130b3d5](https://github.com/twistapps/twistcore/commit/130b3d505733344c6cf3572e3db0766c7bca225d))
+* NullReferenceException probs when UPM auth is inactive ([01d382d](https://github.com/twistapps/twistcore/commit/01d382dc73364654cc9abc9adcbe58b40a996c6c))
+* Small UI Improvements ([2b309e0](https://github.com/twistapps/twistcore/commit/2b309e0c34da706d7638b2d1cfa94adc0f3893f8))
+
+
+### Features
+
+* Manifest editor improvements ([9cf2007](https://github.com/twistapps/twistcore/commit/9cf2007cc32de7d6acf505992297f50a45f99aba))
+* Support multiple !except entries, divided by & symbol ([a75af71](https://github.com/twistapps/twistcore/commit/a75af718c051ea6f502f01a2d6ced0883262f46d))
+
 # [0.12.0](https://github.com/twistapps/twistcore/compare/0.11.0...0.12.0) (2022-11-07)
 
 
