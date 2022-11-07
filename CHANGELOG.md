@@ -1,3 +1,12 @@
+## [0.13.1](https://github.com/twistapps/twistcore/compare/0.13.0...0.13.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* Add DependencyManager settings to unpackignore ([9e15014](https://github.com/twistapps/twistcore/commit/9e1501437fac93543fb83bcff61977d50901de28))
+* Convert PackageData to PackageInfo ([e32579a](https://github.com/twistapps/twistcore/commit/e32579aa378dd536f8f77c775e2f8f7a7bab37a8))
+* Сomprehensive cleanup ([a3b7162](https://github.com/twistapps/twistcore/commit/a3b71629c37741873c35f9f58cc2b883280020a2))
+
 # [0.13.0](https://github.com/twistapps/twistcore/compare/0.12.0...0.13.0) (2022-11-07)
 
 
