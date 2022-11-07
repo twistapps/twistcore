@@ -133,13 +133,16 @@ namespace TwistCore
                 var exceptKeywordIndex = searchPattern.LastIndexOf(exceptKeyword, StringComparison.Ordinal);
 
                 var pattern = searchPattern;
-                var excludeFromSearch = Array.Empty<string>();
+                var excludeFromSearch = new List<string>();
 
                 if (exceptKeywordIndex != -1)
                 {
                     pattern = searchPattern.Substring(0, exceptKeywordIndex);
-                    var keep = searchPattern.Substring(pattern.Length + exceptKeyword.Length);
-                    excludeFromSearch = Directory.GetFiles(corePath, Path.Combine(keep), SearchOption.AllDirectories);
+                    var keep = searchPattern.Substring(pattern.Length + exceptKeyword.Length).Split('&');
+                    foreach (var s in keep)
+                    {
+                        excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s), SearchOption.AllDirectories)); 
+                    }
                 }
 
                 var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
@@ -153,7 +156,7 @@ namespace TwistCore
 
             var files = Directory.EnumerateFiles(corePath, "*.*", SearchOption.AllDirectories);
             progress.CurrentStep = 0;
-            progress.TotalSteps = 50; //estimate file count
+            progress.TotalSteps = 60; //estimate file count
 
             foreach (var sourcePath in files)
             {
@@ -208,7 +211,7 @@ namespace TwistCore
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
             var files = Directory.EnumerateFiles(unpackedCorePath, "*", SearchOption.AllDirectories);
 
-            progress.TotalSteps = 100;
+            progress.TotalSteps = 150;
             foreach (var path in files)
             {
                 File.Delete(path);
