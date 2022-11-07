@@ -21,7 +21,7 @@ namespace TwistCore.Editor.UIComponents
                     {
                         Window.StatusLabel("Name", packageName, GUIStyles.DefaultLabel, null);
                         Window.StatusLabel("Organization", organization, GUIStyles.DefaultLabel);
-                        Window.StatusLabel("GIT URL", packageData.repository.url, EditorStyles.linkLabel);
+                        if (packageData?.repository?.url != null) Window.StatusLabel("GIT URL", packageData.repository.url, EditorStyles.linkLabel);
                     }, foldout: true);
                 }
             });
