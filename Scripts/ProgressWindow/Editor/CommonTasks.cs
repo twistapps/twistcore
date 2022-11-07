@@ -16,6 +16,7 @@ namespace TwistCore.ProgressWindow.Editor
             while (now <= endTime)
             {
                 var elapsed = (int)(now - startTime);
+                // ReSharper disable once RedundantCheckBeforeAssignment
                 if (progress.CurrentStep != elapsed)
                     progress.CurrentStep = elapsed;
                 //TaskManager.AddLogs(elapsed + " seconds elapsed.");

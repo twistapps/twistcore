@@ -2,7 +2,7 @@
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.PackageRegistry
 {
     public static class UPMInterface
     {
@@ -27,7 +27,7 @@ namespace TwistCore
         public static PackageInfo Update(PackageInfo packageInfo)
         {
             var version = GithubVersionControl.FetchUpdates(packageInfo);
-            if (!version.hasUpdate) return packageInfo;
+            if (!version.HasUpdate) return packageInfo;
 
             var addRequest = Client.Add(packageInfo.repository.url);
             while (!addRequest.IsCompleted) Thread.Sleep(100);
@@ -47,7 +47,7 @@ namespace TwistCore
 
         public static PackageInfo Update(string packageName)
         {
-            var packageInfo = PackageRegistry.Get(packageName);
+            var packageInfo = PackageRegistryUtils.Get(packageName);
             return Update(packageInfo);
         }
     }

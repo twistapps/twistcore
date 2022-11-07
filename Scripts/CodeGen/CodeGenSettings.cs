@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using TwistCore;
 
 //[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/SpawnManagerScriptableObject", order = 1)]
-namespace RequestForMirror
+namespace TwistCore.CodeGen
 {
     public class CodeGenSettings : SettingsAsset
     {

@@ -1,12 +1,11 @@
 ﻿using System.IO;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     public static class CodeGenDefinitions
     {
         private const string PackageName = "com.twistapps.request-for-mirror";
 
-        private const string SettingsFilename = "CodeGenSettings";
         internal const string DefaultTemplate = "CodeGenTemplate";
         private static string TwistappsFolder => Path.Combine("Assets", "TwistApps");
         private static string AssetFolder => Path.Combine(TwistappsFolder, "RequestForMirror");

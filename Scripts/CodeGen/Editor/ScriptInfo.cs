@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     public class ScriptInfo
     {

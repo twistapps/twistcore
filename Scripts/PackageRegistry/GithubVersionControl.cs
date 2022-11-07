@@ -1,7 +1,9 @@
-﻿using UnityEditor.PackageManager;
+﻿using TwistCore.PackageDevelopment;
+using TwistCore.PackageRegistry.Versioning;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.PackageRegistry
 {
     public static class GithubVersionControl
     {
@@ -20,7 +22,7 @@ namespace TwistCore
 
         public static VersionComparison FetchUpdates(string packageName)
         {
-            var localPackage = PackageRegistry.Get(packageName);
+            var localPackage = PackageRegistryUtils.Get(packageName);
             return FetchUpdates(localPackage);
         }
     }

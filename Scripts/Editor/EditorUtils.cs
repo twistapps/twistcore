@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using TwistCore;
-using TwistCore.Utils;
 using Debug = UnityEngine.Debug;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.Editor
 {
     public static class EditorUtils
     {

@@ -1,7 +1,7 @@
 ﻿using TwistCore.Editor;
 using UnityEditor;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     internal class CodeGenWindow : PackageSettingsWindow<CodeGenSettings>
     {

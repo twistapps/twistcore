@@ -3,21 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.EditorCoroutines.Editor;
-using UnityEngine;
 
 namespace TwistCore.ProgressWindow.Editor
 {
     public static class TaskManager
     {
         private const float WaitSecondsAfterAllTasksDone = 1;
-        
+
         public static readonly Queue<TwistTask> Queue = new Queue<TwistTask>();
         public static readonly List<string> Logs = new List<string>();
 
         public static TwistTask CurrentTask;
-        
-        [UsedImplicitly]
-        public static EditorCoroutine QueueRunnerCoroutine;
+
+        [UsedImplicitly] public static EditorCoroutine QueueRunnerCoroutine;
+
         private static ProgressWindow _window;
         private static List<Action> _completionActions = new List<Action>();
 
@@ -65,7 +64,7 @@ namespace TwistCore.ProgressWindow.Editor
             yield return new EditorWaitForSeconds(WaitSecondsAfterAllTasksDone);
             _window.Close();
 
-            CurrentTask = null; 
+            CurrentTask = null;
 
             foreach (var action in _completionActions)
                 action?.Invoke();

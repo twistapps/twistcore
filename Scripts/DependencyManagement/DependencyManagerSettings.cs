@@ -1,4 +1,4 @@
-namespace TwistCore
+namespace TwistCore.DependencyManagement
 {
     public class DependencyManagerSettings : SettingsAsset
     {

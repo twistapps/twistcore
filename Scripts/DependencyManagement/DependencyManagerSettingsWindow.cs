@@ -1,20 +1,12 @@
 ﻿using TwistCore.Editor;
 using UnityEditor;
-using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.DependencyManagement
 {
     public class DependencyManagerSettingsWindow : PackageSettingsWindow<DependencyManagerSettings>
     {
-        private string ManifestURL
-        {
-            get => Settings.useCustomManifestURL ? Settings.manifestURL : DependencyManager.DefaultManifestURL;
-            set
-            {
-                if (Settings.useCustomManifestURL)
-                    Settings.manifestURL = value;
-            }
-        }
+        private string ManifestURL =>
+            Settings.useCustomManifestURL ? Settings.manifestURL : DependencyManager.DefaultManifestURL;
 
         protected override void Draw()
         {
@@ -31,11 +23,12 @@ namespace TwistCore
                 }
                 else
                 {
-                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", !Settings.useCustomManifestURL, new Button("Switch", () =>
-                    {
-                        DependencyManager.LoadLocalManifest();
-                        ResetFoldouts();
-                    }));
+                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry",
+                        !Settings.useCustomManifestURL, new Button("Switch", () =>
+                        {
+                            DependencyManager.LoadLocalManifest();
+                            ResetFoldouts();
+                        }));
                     ButtonLabel("Fetch manifest", new Button("Update", () =>
                     {
                         DependencyManager.LoadManifest();
@@ -70,23 +63,22 @@ namespace TwistCore
                             InputField("Name", ref Settings.editingPackageName);
                             InputField("Organization", ref Settings.editingPackageOrganization);
                             InputField("GIT URL", ref Settings.editingPackageURL);
-                            ButtonLabel("", new Button("Cancel", () =>
-                            {
-                                Settings.editingPackage = -1;
-                            }), new Button("Save", () =>
-                            {
-                                var fullName =
-                                    $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
-                                DependencyManager.EditPackage(i, fullName, Settings.editingPackageURL);
-                                Settings.editingPackage = -1;
-                            }));
+                            ButtonLabel("", new Button("Cancel", () => { Settings.editingPackage = -1; }), new Button(
+                                "Save", () =>
+                                {
+                                    var fullName =
+                                        $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
+                                    // ReSharper disable once AccessToModifiedClosure
+                                    DependencyManager.EditPackage(i, fullName, Settings.editingPackageURL);
+                                    Settings.editingPackage = -1;
+                                }));
                         }, foldout: true);
                         continue;
                     }
 
                     AddSection(package.name, () =>
                     {
-                        StatusLabel("Name", packageName, GUIStyles.DefaultLabel, null);
+                        StatusLabel("Name", packageName, GUIStyles.DefaultLabel);
                         StatusLabel("Organization", organization, GUIStyles.DefaultLabel);
                         StatusLabel("GIT URL", package.url, EditorStyles.linkLabel);
                         ButtonLabel("", new Button("Edit", () =>
@@ -94,6 +86,7 @@ namespace TwistCore
                             Settings.editingPackageName = packageName;
                             Settings.editingPackageOrganization = organization;
                             Settings.editingPackageURL = package.url;
+                            // ReSharper disable once AccessToModifiedClosure
                             Settings.editingPackage = i;
                         }));
                     }, foldout: true);
@@ -106,7 +99,7 @@ namespace TwistCore
                 InputField("Git URL", ref Settings.newPackageGitURL);
                 HorizontalButton(new Button("Add to Manifest",
                     () => { DependencyManager.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL); }));
-            }, false);
+            });
         }
 
         public static void ShowSettings()

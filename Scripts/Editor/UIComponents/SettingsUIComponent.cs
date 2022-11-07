@@ -1,4 +1,4 @@
-﻿namespace TwistCore.Editor
+﻿namespace TwistCore.Editor.UIComponents
 {
     public interface ISettingsUIComponent<out T> where T : SettingsAsset
     {

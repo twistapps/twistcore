@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using UnityEditor.PackageManager;
 
-namespace TwistCore
+namespace TwistCore.PackageRegistry
 {
-    public static class PackageRegistry
+    public static class PackageRegistryUtils
     {
         private static List<PackageInfo> _collection;
         public static List<PackageInfo> Collection => _collection ?? LoadCoreDependentPackages();

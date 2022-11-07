@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using RequestForMirror.Editor;
-using TwistCore.Utils;
+using TwistCore.CodeGen.Editor;
 using UnityEditor.PackageManager;
 
-namespace TwistCore
+namespace TwistCore.PackageDevelopment.Editor
 {
     public static class PackageCreationTool
     {

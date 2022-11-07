@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace TwistCore
+namespace TwistCore.PackageDevelopment
 {
     public static class PackageDataExtensions
     {

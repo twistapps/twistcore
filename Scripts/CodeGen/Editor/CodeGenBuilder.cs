@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using TwistCore.Utils;
 using UnityEditor;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     public enum Scope
     {
@@ -18,12 +17,12 @@ namespace RequestForMirror.Editor
         public const char SeparatorSymbol = '$';
         private const char Indent = ' ';
         private const int IndentAmountPerStep = 4;
-        protected readonly StringBuilder stringBuilder;
+        protected readonly StringBuilder StringBuilder;
         private int _indent;
 
         public CodeGenBuilder()
         {
-            stringBuilder = new StringBuilder();
+            StringBuilder = new StringBuilder();
         }
 
         public void Using(string name)
@@ -31,8 +30,8 @@ namespace RequestForMirror.Editor
             AppendLine("using $;", name);
         }
 
-        public void Class(Scope scope, string name, Type parentClass = null, bool _abstract = false,
-            bool partial = false, bool _static = false)
+        public void Class(Scope scope, string name, Type parentClass = null, bool @abstract = false,
+            bool partial = false, bool @static = false)
         {
             switch (scope)
             {
@@ -50,8 +49,8 @@ namespace RequestForMirror.Editor
             }
 
             Space();
-            if (_static) Append("static ");
-            if (_abstract) Append("abstract ");
+            if (@static) Append("static ");
+            if (@abstract) Append("abstract ");
             if (partial) Append("partial ");
             Append("class $", name);
             if (parentClass != null) Append(" : $", parentClass.Name);
@@ -65,11 +64,11 @@ namespace RequestForMirror.Editor
             var counter = 0;
             foreach (var (text, insertion) in parts.ToTuplesWith(lineInsertions, true))
             {
-                stringBuilder.Append(text + insertion);
+                StringBuilder.Append(text + insertion);
                 counter++;
             }
 
-            for (var i = counter; i < parts.Length; i++) stringBuilder.Append(parts[i]);
+            for (var i = counter; i < parts.Length; i++) StringBuilder.Append(parts[i]);
 
             return this;
         }
@@ -81,16 +80,16 @@ namespace RequestForMirror.Editor
 
         public CodeGenBuilder AppendLine(string line, params string[] lineInsertions)
         {
-            stringBuilder.AppendLine();
-            stringBuilder.Append(GetIndent());
+            StringBuilder.AppendLine();
+            StringBuilder.Append(GetIndent());
             Append(line, lineInsertions);
             return this;
         }
 
         public CodeGenBuilder AppendLine(bool ignoreIndent = false)
         {
-            stringBuilder.AppendLine();
-            if (!ignoreIndent) stringBuilder.Append(GetIndent());
+            StringBuilder.AppendLine();
+            if (!ignoreIndent) StringBuilder.Append(GetIndent());
             return this;
         }
 
@@ -131,13 +130,13 @@ namespace RequestForMirror.Editor
         public void SaveToFile(string path, bool keepBuilderDirty = false)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            File.WriteAllText(path, stringBuilder.ToString());
+            File.WriteAllText(path, StringBuilder.ToString());
             if (!keepBuilderDirty) Clear();
         }
 
         public void Clear()
         {
-            stringBuilder.Clear();
+            StringBuilder.Clear();
             _indent = 0;
         }
     }

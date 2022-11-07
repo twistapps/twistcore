@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
+using TwistCore.PackageRegistry;
 using TwistCore.ProgressWindow.Editor;
-using TwistCore.Utils;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.DependencyManagement
 {
     public class DependencyManager : ScriptableSingleton<DependencyManager>
     {
@@ -83,10 +83,6 @@ namespace TwistCore
         public static void RemovePackageFromManifest(string fullName)
         {
             Manifest.RemovePackage(fullName);
-        }
-
-        private void Warmup()
-        {
         }
     }
 }

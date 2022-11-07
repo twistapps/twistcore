@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
-using TwistCore.Utils;
 using UnityEditor;
 using UnityEngine;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     public class CodeGenCsFileProcessor : AssetPostprocessor
     {

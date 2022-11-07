@@ -26,8 +26,6 @@ namespace TwistCore
 
         public static string ExecuteCommand(string workingDirectory, string command)
         {
-            var output = "no-git";
-            var errorOutput = "no-git";
             var processInfo = new ProcessStartInfo("git", command)
             {
                 CreateNoWindow = false,
@@ -51,12 +49,12 @@ namespace TwistCore
             {
                 Debug.LogError("Git is not set-up correctly, required to be on PATH, and to be a git project.");
                 Debug.Log(e.Message);
-                throw e;
+                throw;
             }
 
 
-            output = process.StandardOutput.ReadToEnd();
-            errorOutput = process.StandardError.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
+            var errorOutput = process.StandardError.ReadToEnd();
 
             process.WaitForExit();
             process.Close();

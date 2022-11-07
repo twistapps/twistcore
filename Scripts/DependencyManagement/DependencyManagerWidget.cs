@@ -1,5 +1,7 @@
+using TwistCore.DependencyManagement;
 using TwistCore.ProgressWindow.Editor;
 
+// ReSharper disable once CheckNamespace
 namespace TwistCore.Editor.UIComponents
 {
     public class DependencyManagerWidget : SettingsUIComponent<TwistCoreSettings>

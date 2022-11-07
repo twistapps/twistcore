@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TwistCore.Utils;
+using TwistCore.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     public static class CodeGen
     {
         public delegate void BeforeCsFileGeneration(CodeGenTemplateBuilder builder, Type type);
 
-        public delegate bool ShouldGenerateCSCheck(Type type);
+        public delegate bool ShouldGenerateCsCheck(Type type);
 
         private static CodeGenSettings _settings;
         public static BeforeCsFileGeneration OnBeforeCsFileGeneration;
-        public static ShouldGenerateCSCheck shouldGenerateCs;
+        public static ShouldGenerateCsCheck ShouldGenerateCs;
 
         private static string GetTxtPath(params string[] pathParts)
         {
@@ -101,7 +101,7 @@ namespace RequestForMirror.Editor
 
         private static bool ShouldGenerateCsForType(Type type)
         {
-            var invocationList = shouldGenerateCs?.GetInvocationList().Cast<ShouldGenerateCSCheck>();
+            var invocationList = ShouldGenerateCs?.GetInvocationList().Cast<ShouldGenerateCsCheck>();
             return invocationList?.All(shouldGenerateCheck => shouldGenerateCheck(type)) ?? true;
         }
 

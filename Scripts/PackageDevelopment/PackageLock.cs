@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.PackageDevelopment
 {
     public static class PackageLock
     {

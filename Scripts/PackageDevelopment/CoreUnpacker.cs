@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TwistCore.PackageDevelopment.Editor;
+using TwistCore.PackageRegistry;
 using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.PackageDevelopment
 {
     public static class CoreUnpacker
     {
@@ -41,10 +43,10 @@ namespace TwistCore
                 return;
             }
 
-            var core = PackageRegistry.Get(packageToUnpack);
+            var core = PackageRegistryUtils.Get(packageToUnpack);
             var corePath = core.assetPath;
 
-            var package = PackageRegistry.Get(packageName);
+            var package = PackageRegistryUtils.Get(packageName);
             var packagePath = package.assetPath;
 
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
@@ -114,10 +116,10 @@ namespace TwistCore
                 yield break;
             }
 
-            var core = PackageRegistry.Get(packageToUnpack);
+            var core = PackageRegistryUtils.Get(packageToUnpack);
             var corePath = core.assetPath;
 
-            var package = PackageRegistry.Get(packageName);
+            var package = PackageRegistryUtils.Get(packageName);
             var packagePath = package.assetPath;
 
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
@@ -140,9 +142,8 @@ namespace TwistCore
                     pattern = searchPattern.Substring(0, exceptKeywordIndex);
                     var keep = searchPattern.Substring(pattern.Length + exceptKeyword.Length).Split('&');
                     foreach (var s in keep)
-                    {
-                        excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s), SearchOption.AllDirectories)); 
-                    }
+                        excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s),
+                            SearchOption.AllDirectories));
                 }
 
                 var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
@@ -205,7 +206,7 @@ namespace TwistCore
             yield return progress.Next();
 
             progress.Log("Removing dir " + outputDirectoryName);
-            var package = PackageRegistry.Get(packageName);
+            var package = PackageRegistryUtils.Get(packageName);
             var packagePath = package.assetPath;
 
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
@@ -235,13 +236,13 @@ namespace TwistCore
 
         public static void RemoveAsmdefDependency(string packageName, string dependencyName)
         {
-            var package = PackageRegistry.Get(packageName);
+            var package = PackageRegistryUtils.Get(packageName);
             var asmdef = package.Asmdef();
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
-            var dependencyGuid = "GUID:" + PackageRegistry.Get(dependencyName).AsmdefGuid();
+            var dependencyGuid = "GUID:" + PackageRegistryUtils.Get(dependencyName).AsmdefGuid();
 
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
@@ -257,7 +258,7 @@ namespace TwistCore
 
         public static void AddAsmdefDependency(string packageName, string dependencyName)
         {
-            var package = PackageRegistry.Get(packageName);
+            var package = PackageRegistryUtils.Get(packageName);
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
@@ -266,7 +267,7 @@ namespace TwistCore
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
 
-            var dependencyGuid = "GUID:" + PackageRegistry.Get(dependencyName).AsmdefGuid();
+            var dependencyGuid = "GUID:" + PackageRegistryUtils.Get(dependencyName).AsmdefGuid();
             if (references.IndexOf(dependencyGuid) != -1) return;
             references.Add(dependencyGuid);
 

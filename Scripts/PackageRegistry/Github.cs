@@ -1,4 +1,4 @@
-﻿namespace TwistCore
+﻿namespace TwistCore.PackageRegistry
 {
     public static class Github
     {

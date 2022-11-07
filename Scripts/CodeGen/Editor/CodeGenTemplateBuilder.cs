@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TwistCore.Utils;
 using UnityEngine;
 
-namespace RequestForMirror.Editor
+namespace TwistCore.CodeGen.Editor
 {
     public class CodeGenTemplateBuilder : CodeGenBuilder
     {
@@ -82,7 +81,7 @@ namespace RequestForMirror.Editor
 
         public void MoveCursorToVariable(string variableName)
         {
-            var generated = stringBuilder.ToString();
+            var generated = StringBuilder.ToString();
         }
     }
 }

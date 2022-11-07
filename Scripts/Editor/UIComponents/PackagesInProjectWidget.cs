@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using RequestForMirror;
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace TwistCore.Editor.UIComponents
 {
@@ -19,9 +17,10 @@ namespace TwistCore.Editor.UIComponents
 
                     Window.AddSection(packageData.name, () =>
                     {
-                        Window.StatusLabel("Name", packageName, GUIStyles.DefaultLabel, null);
+                        Window.StatusLabel("Name", packageName, GUIStyles.DefaultLabel);
                         Window.StatusLabel("Organization", organization, GUIStyles.DefaultLabel);
-                        if (packageData?.repository?.url != null) Window.StatusLabel("GIT URL", packageData.repository.url, EditorStyles.linkLabel);
+                        if (packageData.repository?.url != null)
+                            Window.StatusLabel("GIT URL", packageData.repository.url, EditorStyles.linkLabel);
                     }, foldout: true);
                 }
             });

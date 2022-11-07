@@ -1,9 +1,10 @@
-using TwistCore.Editor;
 using TwistCore.Editor.UIComponents;
+using TwistCore.PackageDevelopment.Editor;
+using TwistCore.PackageRegistry;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.Editor
 {
     public class TwistCoreSettingsWindow : PackageSettingsWindow<TwistCoreSettings>
     {
@@ -67,6 +68,7 @@ namespace TwistCore
             this.DrawCachedComponent("PackagesInProjectWidget");
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void UpdatePackage()
         {
             var package = TwistCore.PackageName;

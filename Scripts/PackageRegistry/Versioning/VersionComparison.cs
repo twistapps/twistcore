@@ -1,39 +1,45 @@
-﻿public class VersionComparison
+﻿using System;
+
+namespace TwistCore.PackageRegistry.Versioning
 {
-    private const string ZERO = "0.0.0";
-    private readonly Version _current, _next;
-
-    public VersionComparison(string currentVersion, string nextVersion)
+    [Serializable]
+    public class VersionComparison
     {
-        _current = new Version(currentVersion);
-        _next = new Version(nextVersion);
-    }
+        private const string Zero = "0.0.0";
+        private readonly VersionInfo _current, _next;
 
-    public VersionComparison()
-    {
-        _current = new Version(ZERO);
-        _next = new Version(ZERO);
-    }
+        public VersionComparison(string currentVersion, string nextVersion)
+        {
+            _current = new VersionInfo(currentVersion);
+            _next = new VersionInfo(nextVersion);
+        }
 
-    public bool hasUpdate => HasPatchUpdate();
+        public VersionComparison()
+        {
+            _current = new VersionInfo(Zero);
+            _next = new VersionInfo(Zero);
+        }
 
-    public bool HasMajorUpdate()
-    {
-        return _current.Major < _next.Major;
-    }
+        public bool HasUpdate => HasPatchUpdate();
 
-    public bool HasMinorUpdate()
-    {
-        return HasMajorUpdate() || _current.Minor < _next.Minor;
-    }
+        public bool HasMajorUpdate()
+        {
+            return _current.Major < _next.Major;
+        }
 
-    public bool HasPatchUpdate()
-    {
-        return HasMajorUpdate() || HasMinorUpdate() || _current.Patch < _next.Patch;
-    }
+        public bool HasMinorUpdate()
+        {
+            return HasMajorUpdate() || _current.Minor < _next.Minor;
+        }
 
-    public override string ToString()
-    {
-        return _current.ToString();
+        public bool HasPatchUpdate()
+        {
+            return HasMajorUpdate() || HasMinorUpdate() || _current.Patch < _next.Patch;
+        }
+
+        public override string ToString()
+        {
+            return _current.ToString();
+        }
     }
 }

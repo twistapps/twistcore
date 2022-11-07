@@ -6,7 +6,7 @@ using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 
-namespace TwistCore
+namespace TwistCore.DependencyManagement
 {
     [Serializable]
     public class DependencyManifest

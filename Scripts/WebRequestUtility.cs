@@ -10,7 +10,7 @@ namespace TwistCore
     public class WebRequestUtility
     {
         /// <summary>
-        /// Synchronously load json data from URL. Main thread freezes while waiting for the result.
+        ///     Synchronously load json data from URL. Main thread freezes while waiting for the result.
         /// </summary>
         /// <param name="url">URI to fetch.</param>
         /// <typeparam name="T"></typeparam>
@@ -32,7 +32,7 @@ namespace TwistCore
                     Debug.LogError(url + ": HTTP Error: " + webRequest.error);
                     return new T();
                 case UnityWebRequest.Result.Success:
-                    Debug.Log(url + ":\nReceived: " + webRequest.downloadHandler.text);
+                    //Debug.Log(url + ":\nReceived: " + webRequest.downloadHandler.text);
                     break;
             }
 
@@ -44,7 +44,7 @@ namespace TwistCore
         {
             var progress = new TaskProgress(2);
             yield return progress.Next(url);
-            
+
             using var webRequest = UnityWebRequest.Get(url);
             var request = webRequest.SendWebRequest();
             while (!request.isDone) yield return progress;
@@ -62,7 +62,7 @@ namespace TwistCore
                     onResult(new T());
                     yield break;
                 case UnityWebRequest.Result.Success:
-                    Debug.Log(url + ":\nReceived: " + webRequest.downloadHandler.text);
+                    //Debug.Log(url + ":\nReceived: " + webRequest.downloadHandler.text);
                     break;
             }
 

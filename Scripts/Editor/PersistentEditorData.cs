@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TwistCore.DependencyManagement;
+using TwistCore.PackageDevelopment;
+using TwistCore.PackageRegistry;
+using TwistCore.PackageRegistry.Versioning;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.Editor
 {
     public class PersistentEditorData : ScriptableSingleton<PersistentEditorData>
     {
@@ -13,18 +17,20 @@ namespace TwistCore
 
         [SerializeField] private PackageData[] packagesInProject;
 
-        public static IEnumerable<PackageData> PackagesInProject => instance.packagesInProject ??=
-            DependencyManager.Manifest.packages.Select(package => (PackageData)PackageRegistry.Get(package.name)).ToArray();
+        [SerializeField] private VersionComparison coreUpdateInfo;
 
-        [SerializeField] private VersionComparison _coreUpdateInfo;
-        public VersionComparison CoreUpdateInfo => _coreUpdateInfo ??= FetchCoreUpdates();
+        public static IEnumerable<PackageData> PackagesInProject => instance.packagesInProject ??=
+            DependencyManager.Manifest.packages
+                .Select(package => (PackageData)PackageRegistryUtils.Get(package.name)).Where(p => p != null).ToArray();
+
+        public VersionComparison CoreUpdateInfo => coreUpdateInfo ??= FetchCoreUpdates();
 
         public bool GitAvailable => gitInitialized ? gitAvailable : InitializeGit() != null;
         public string GitVersion => gitInitialized ? gitVersion : InitializeGit();
 
         private static VersionComparison FetchCoreUpdates()
         {
-            var package = PackageRegistry.Get(TwistCore.PackageName);
+            var package = PackageRegistryUtils.Get(TwistCore.PackageName);
             return GithubVersionControl.FetchUpdates(package);
         }
 
