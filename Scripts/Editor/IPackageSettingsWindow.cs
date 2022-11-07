@@ -14,6 +14,10 @@ namespace TwistCore.Editor
         Vector2 maxSize { get; set; }
         string title { get; set; }
         Rect position { get; set; }
+
+        void Focus();
+        void ShowPopup();
+        void Close();
         TSettings GetSettings();
 
         /// <summary>
@@ -41,17 +45,33 @@ namespace TwistCore.Editor
             where T : Enum;
 
         void ButtonLabel(string labelText, params Button[] buttons);
-        void StatusLabel(string text, string status, GUIStyle statusStyle, string iconId, params Button[] buttons);
+
+        void StatusLabel(string text, string status, GUIStyle statusStyle, string iconId = null,
+            params Button[] buttons);
+
         void LabelSuccess(string text, string status, bool suppressColor = false, params Button[] buttons);
         void LabelFailure(string text, string status, bool suppressColor = false, params Button[] buttons);
         void LabelWarning(string text, string status, bool suppressColor = false, params Button[] buttons);
         void InputField(string text, ref string value, bool forceEnabled = false, bool forceDisabled = false);
         void InputField(string text);
+
+        void InputField(string text, string value, ref string outValue, bool forceEnabled = false,
+            bool forceDisabled = false);
+
+        void InputFieldWide(string text, ref string value, bool forceEnabled = false,
+            bool forceDisabled = false);
+
+        void InputFieldWide(string text, string value, ref string outValue, bool forceEnabled = false,
+            bool forceDisabled = false);
+
         void HorizontalButtons(params Button[] buttons);
         void HorizontalButton(Button button);
         void CallToAction(string heading, params Button[] buttons);
-        void Focus();
-        void ShowPopup();
-        void Close();
+        void ResetFoldouts();
+        void Divider();
+
+        void CheckboxSmall(string text, ref bool value, Action<bool> onValueChanged = null,
+            bool forceEnabled = false,
+            GUIStyle style = null);
     }
 }
