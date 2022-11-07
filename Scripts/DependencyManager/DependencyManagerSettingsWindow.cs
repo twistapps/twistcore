@@ -1,4 +1,6 @@
 ﻿using TwistCore.Editor;
+using UnityEditor;
+using UnityEngine;
 
 namespace TwistCore
 {
@@ -29,16 +31,16 @@ namespace TwistCore
                 }
                 else
                 {
-                    LabelSuccess(manifestSource, "Network", false, new Button("Switch", () =>
+                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", !Settings.useCustomManifestURL, new Button("Switch", () =>
                     {
                         DependencyManager.LoadLocalManifest();
                         ResetFoldouts();
                     }));
-                    ButtonLabel("Fetch manifest", new Button("Update", DependencyManager.LoadManifest));
-                    // GUILayout.Space(15);
-                    //
-                    // InputFieldWide("Manifest URL", ManifestURL, ref Settings.manifestURL, forceDisabled:!Settings.useCustomManifestURL);
-                    // Checkbox("Use Custom URL", ref Settings.useCustomManifestURL);
+                    ButtonLabel("Fetch manifest", new Button("Update", () =>
+                    {
+                        DependencyManager.LoadManifest();
+                        DependencyManager.Manifest.Save();
+                    }));
                 }
             });
 
@@ -68,7 +70,10 @@ namespace TwistCore
                             InputField("Name", ref Settings.editingPackageName);
                             InputField("Organization", ref Settings.editingPackageOrganization);
                             InputField("GIT URL", ref Settings.editingPackageURL);
-                            ButtonLabel("", new Button("Save", () =>
+                            ButtonLabel("", new Button("Cancel", () =>
+                            {
+                                Settings.editingPackage = -1;
+                            }), new Button("Save", () =>
                             {
                                 var fullName =
                                     $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
@@ -79,12 +84,11 @@ namespace TwistCore
                         continue;
                     }
 
-
                     AddSection(package.name, () =>
                     {
-                        StatusLabel("Name", packageName, GUIStyles.DefaultLabel, GUIStyles.IconInfo);
+                        StatusLabel("Name", packageName, GUIStyles.DefaultLabel, null);
                         StatusLabel("Organization", organization, GUIStyles.DefaultLabel);
-                        StatusLabel("GIT URL", package.url, GUIStyles.DefaultLabel);
+                        StatusLabel("GIT URL", package.url, EditorStyles.linkLabel);
                         ButtonLabel("", new Button("Edit", () =>
                         {
                             Settings.editingPackageName = packageName;
@@ -102,7 +106,7 @@ namespace TwistCore
                 InputField("Git URL", ref Settings.newPackageGitURL);
                 HorizontalButton(new Button("Add to Manifest",
                     () => { DependencyManager.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL); }));
-            }, true);
+            }, false);
         }
 
         public static void ShowSettings()
