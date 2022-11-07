@@ -22,7 +22,7 @@ namespace TwistCore.ProgressWindow.Editor
                 now = EditorApplication.timeSinceStartup;
                 yield return progress;
             }
-            
+
             yield return progress.Complete("Done!");
         }
     }

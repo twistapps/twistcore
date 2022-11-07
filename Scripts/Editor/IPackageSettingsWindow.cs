@@ -21,12 +21,13 @@ namespace TwistCore.Editor
         /// </summary>
         /// <param name="innerActions">Actions to execute inside the section.</param>
         void AddSection(string heading, Action innerActions, bool addDivider = false, bool forceDisabled = false,
-            int width = -1, bool foldout=false);
+            int width = -1, bool foldout = false);
 
         void AddSection(string heading, Action innerActions, ref bool enabled, bool addDivider = false,
             Action<bool> onEnabledChange = null, int width = -1);
 
-        void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1, bool foldout=false);
+        void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1,
+            bool foldout = false);
 
         void BeginSection(string heading, ref bool enabled, bool addDivider = false,
             Action<bool> onEnabledChange = null, int width = -1);

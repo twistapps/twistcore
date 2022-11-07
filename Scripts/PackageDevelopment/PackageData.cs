@@ -1,5 +1,3 @@
-
-
 // ReSharper disable InconsistentNaming
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable MemberCanBePrivate.Global

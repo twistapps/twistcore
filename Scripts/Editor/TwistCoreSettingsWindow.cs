@@ -52,7 +52,7 @@ namespace TwistCore
                 // if (Settings.packageDevelopment)
                 //     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
                 //         150));
-                
+
                 this.DrawCachedComponent("DependencyManagerWidget");
             });
 

@@ -10,8 +10,6 @@ namespace TwistCore.ProgressWindow.Editor
         public readonly string Description;
         public bool Completed;
         public float ProgressAmount;
-        
-        public TaskProgress Progress => _coroutine.Current ?? new TaskProgress();
 
         public TwistTask(IEnumerator<TaskProgress> coroutine, string description)
         {
@@ -19,13 +17,15 @@ namespace TwistCore.ProgressWindow.Editor
             Description = description;
         }
 
+        public TaskProgress Progress => _coroutine.Current ?? new TaskProgress();
+
         public IEnumerator Execute(ProgressWindow window)
         {
             while (_coroutine.MoveNext())
             {
                 ProgressAmount = (float)Progress.CurrentStep / Progress.TotalSteps;
                 window.Repaint();
-                
+
                 yield return Progress.ShouldSleepForSeconds > 0
                     ? new EditorWaitForSeconds(Progress.ShouldSleepForSeconds)
                     : null;

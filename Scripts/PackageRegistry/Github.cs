@@ -17,7 +17,7 @@
             var url = $"https://raw.githubusercontent.com/{author}/{name}/main/";
             return url;
         }
-        
+
         public static string GetPackageRootURL(string packageFullName)
         {
             var parts = packageFullName.Split('.');

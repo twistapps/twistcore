@@ -41,7 +41,7 @@ namespace RequestForMirror.Editor
             stopwatch.Stop();
             if (stopwatch.ElapsedMilliseconds > 0 && Settings.debug)
                 Debug.Log($"GetDerivedFrom<{typeof(T).Name}>() took {stopwatch.ElapsedMilliseconds}ms to execute");
-            
+
             return foundArr;
         }
 

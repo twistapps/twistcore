@@ -24,7 +24,7 @@ namespace TwistCore.Utils
 
                 Settings.Remove(type);
             }
-            
+
             asset = Resources.Load<T>(Path.Combine("Settings", type.Name));
             if (asset != null)
             {

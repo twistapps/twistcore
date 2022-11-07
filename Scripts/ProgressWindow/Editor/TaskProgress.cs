@@ -3,9 +3,9 @@
     public class TaskProgress
     {
         public int CurrentStep;
-        public int TotalSteps;
 
         public float ShouldSleepForSeconds;
+        public int TotalSteps;
 
         public TaskProgress(int totalSteps = 0)
         {
