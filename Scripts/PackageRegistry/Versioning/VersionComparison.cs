@@ -8,6 +8,8 @@ namespace TwistCore.PackageRegistry.Versioning
         private const string Zero = "0.0.0";
         private readonly VersionInfo _current, _next;
 
+        public string NewVersion => _next.ToString();
+
         public VersionComparison(string currentVersion, string nextVersion)
         {
             _current = new VersionInfo(currentVersion);

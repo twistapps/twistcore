@@ -12,7 +12,7 @@ namespace TwistCore.Editor.UIComponents
                 new Button("Open",
                     () =>
                     {
-                        TaskManager.Enqueue(DependencyManager.FetchManifestAsync(), "Fetching manifest",
+                        TaskManager.Enqueue(DependencyManager.LoadManifestAsync(), "Fetching manifest",
                             DependencyManagerSettingsWindow.ShowSettings);
                     }));
         }

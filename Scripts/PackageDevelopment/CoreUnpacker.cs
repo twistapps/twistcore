@@ -157,6 +157,7 @@ namespace TwistCore.PackageDevelopment
 
             var files = Directory.EnumerateFiles(corePath, "*.*", SearchOption.AllDirectories);
             progress.CurrentStep = 0;
+            //todo: count files
             progress.TotalSteps = 60; //estimate file count
 
             foreach (var sourcePath in files)
