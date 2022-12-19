@@ -33,9 +33,14 @@ namespace TwistCore.DependencyManagement
             Save();
         }
 
+        public bool PackageExists(string name)
+        {
+            return packages.FirstOrDefault(p => p.name == name) != null;
+        }
+
         public void Save()
         {
-            File.WriteAllText(TwistCore.ManifestPath, JsonUtility.ToJson(this));
+            File.WriteAllText(TwistCore.ManifestPath, JsonUtility.ToJson(this, true));
         }
 
         [Serializable]
@@ -44,6 +49,7 @@ namespace TwistCore.DependencyManagement
             public string name;
             public string url;
             public string source; //github || other
+            [SerializeField] public List<string> dependencies = new List<string>();
         }
     }
 }
