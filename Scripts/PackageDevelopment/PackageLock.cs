@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json.Linq;
+using TwistCore.PackageRegistry;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -32,6 +33,13 @@ namespace TwistCore.PackageDevelopment
                 REGISTRY => PackageSource.UnityRegistry,
                 _ => PackageSource.Unknown
             };
+        }
+
+        public static bool IsGithubPackage(string packageName)
+        {
+            if (GetSource(packageName) != PackageSource.Git) return false;
+            var packageInfo = PackageRegistryUtils.Get(packageName);
+            return packageInfo.repository.url.Contains("https://github.com/");
         }
 
         public static PackageData GetInfo(string packageName)
