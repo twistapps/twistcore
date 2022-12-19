@@ -382,12 +382,6 @@ namespace TwistCore.Editor
             GUILayout.Space(ElementMarginBottom);
         }
 
-        public void Space(int pixels)
-        {
-            if (!FoldoutManager.CurrentElementIsOpen) return;
-            GUILayout.Space(pixels);
-        }
-
         public void Heading(string text, params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
@@ -405,6 +399,12 @@ namespace TwistCore.Editor
             }
 
             GUILayout.Space(ElementMarginBottom);
+        }
+
+        public void Space(int pixels)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            GUILayout.Space(pixels);
         }
 
         private void ButtonLabel(string labelText, bool shrinkWidth, int marginLeft = 30, params Button[] buttons)

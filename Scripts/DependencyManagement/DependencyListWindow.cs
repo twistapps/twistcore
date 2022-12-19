@@ -54,10 +54,8 @@ namespace TwistCore.DependencyManagement
                 {
                     var dependency = _package.dependencies[i];
                     if (DependencyManager.Manifest.PackageExists(dependency)) continue;
-                    StatusLabel($"[{i}]", 35, dependency, GUIStyles.DefaultLabel, null, new Button("-", () =>
-                    {
-                        _package.dependencies.Remove(dependency);
-                    }, 24));
+                    StatusLabel($"[{i}]", 35, dependency, GUIStyles.DefaultLabel, null,
+                        new Button("-", () => { _package.dependencies.Remove(dependency); }, 24));
                 }
 
                 var addButton = new Button("+",
@@ -66,10 +64,10 @@ namespace TwistCore.DependencyManagement
                         _package.dependencies.Add(_newDependencyName);
                         _newDependencyName = "";
                     }, 24);
-                
+
                 InputField($"[{_package.dependencies.Count}]", 35, ref _newDependencyName, buttons: addButton);
-                
-                
+
+
                 GUILayout.FlexibleSpace();
                 HorizontalButton(new Button("Done", Close));
             });
