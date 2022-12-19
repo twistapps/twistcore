@@ -1,12 +1,50 @@
-﻿using TwistCore.Editor;
+﻿using System;
+using System.Collections.Generic;
+using TwistCore.Editor;
 using UnityEditor;
+using UnityEngine;
 
 namespace TwistCore.DependencyManagement
 {
     public class DependencyManagerSettingsWindow : PackageSettingsWindow<DependencyManagerSettings>
     {
-        private string ManifestURL =>
+        private bool _justEnteredManifestEditMode;
+
+        private static string ManifestURL =>
             Settings.useCustomManifestURL ? Settings.manifestURL : DependencyManager.DefaultManifestURL;
+
+        private void SetEditingPackage(DependencyManifest.Package package)
+        {
+            var nameParts = package.name.Split('.');
+            var organization = nameParts[1];
+            var packageName = nameParts[2];
+
+            Settings.editingPackageName = packageName;
+            Settings.editingPackageOrganization = organization;
+            Settings.editingPackageURL = package.url;
+            // ReSharper disable once AccessToModifiedClosure
+            Settings.editingPackage = Array.FindIndex(DependencyManager.Manifest.packages, p => p.name == package.name);
+            DependencyManager.instance.usingLocalManifest = true;
+            _justEnteredManifestEditMode = true;
+        }
+
+        private static void RemovePackage(DependencyManifest.Package package)
+        {
+            if (EditorUtility.DisplayDialog(
+                    "Package Removal Confirmation",
+                    $"Are you sure you want to remove {package.name} from manifest?",
+                    "Remove",
+                    "Cancel"))
+                DependencyManager.RemovePackageFromManifest(package);
+        }
+
+        private void ListDependencies(DependencyManifest.Package package)
+        {
+            var dependenciesAmount = package.dependencies?.Count ?? 0;
+            var dependenciesStatus = $"Dependencies[{dependenciesAmount}]";
+            ButtonLabelShrinkWidth(dependenciesStatus,
+                new Button("Change", () => { DependencyListWindow.ShowSettings(package); }, 60));
+        }
 
         protected override void Draw()
         {
@@ -15,32 +53,34 @@ namespace TwistCore.DependencyManagement
             {
                 if (DependencyManager.instance.usingLocalManifest)
                 {
-                    LabelWarning(manifestSource, "Local (edit mode)", true, new Button("Switch", () =>
-                    {
-                        DependencyManager.LoadManifest();
-                        ResetFoldouts();
-                    }));
+                    LabelWarning(manifestSource, "Local (edit mode)", true,
+                        new Button("Switch", () =>
+                        {
+                            DependencyManager.LoadManifestFromURL();
+                            ResetFoldouts();
+                            Settings.editingPackage = -1;
+                        }));
                 }
                 else
                 {
-                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry",
-                        !Settings.useCustomManifestURL, new Button("Switch", () =>
+                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", 
+                        !Settings.useCustomManifestURL,
+                        new Button("Switch", () =>
                         {
-                            DependencyManager.LoadLocalManifest();
+                            DependencyManager.LoadManifestFromFile();
                             ResetFoldouts();
                         }));
-                    ButtonLabel("Fetch manifest", new Button("Update", () =>
+                    ButtonLabel("Download Manifest from web", new Button("Update", () =>
                     {
-                        DependencyManager.LoadManifest();
+                        DependencyManager.LoadManifestFromURL();
                         DependencyManager.Manifest.Save();
                     }));
                 }
             });
 
-            if (!DependencyManager.instance.usingLocalManifest)
-                AddSection("Manifest URL",
-                    () => { InputFieldWide("Custom Manifest Link", ManifestURL, ref Settings.manifestURL); },
-                    ref Settings.useCustomManifestURL);
+            AddSection("Manifest URL",
+                () => { InputFieldWide("Custom Manifest Link", ManifestURL, ref Settings.manifestURL); },
+                ref Settings.useCustomManifestURL);
 
             AddSection("Edit Manifest", () =>
             {
@@ -55,57 +95,80 @@ namespace TwistCore.DependencyManagement
                     var organization = nameParts[1];
                     var packageName = nameParts[2];
 
-
                     if (Settings.editingPackage == i)
                     {
                         AddSection(package.name, () =>
                         {
+                            // if (_justEnteredManifestEditMode && !FoldoutManager.CurrentElementIsOpen)
+                            // {
+                            //     FoldoutManager.SetCurrentElement(true);
+                            //     _justEnteredManifestEditMode = false;
+                            // }
+
+                            ListDependencies(package);
+
                             InputField("Name", ref Settings.editingPackageName);
                             InputField("Organization", ref Settings.editingPackageOrganization);
                             InputField("GIT URL", ref Settings.editingPackageURL);
-                            ButtonLabel("", new Button("Cancel", () => { Settings.editingPackage = -1; }), new Button(
-                                "Save", () =>
-                                {
-                                    var fullName =
-                                        $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
-                                    // ReSharper disable once AccessToModifiedClosure
-                                    DependencyManager.EditPackage(i, fullName, Settings.editingPackageURL);
-                                    Settings.editingPackage = -1;
-                                }));
+
+                            ButtonLabel("",
+                                //new Button("Cancel", () => { Settings.editingPackage = -1; }), 
+                                new Button(
+                                    "Save", () =>
+                                    {
+                                        var fullName =
+                                            $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
+                                        // ReSharper disable once AccessToModifiedClosure
+                                        DependencyManager.EditPackage(i, fullName, Settings.editingPackageURL);
+                                        Settings.editingPackage = -1;
+                                    }));
                         }, foldout: true);
                         continue;
                     }
 
                     AddSection(package.name, () =>
                     {
+                        var editButton = new Button("Edit",
+                            () => { SetEditingPackage(package); });
+                        var removeButton = new Button("Remove",
+                            () => { RemovePackage(package); });
+
+                        ListDependencies(package);
+
                         StatusLabel("Name", packageName, GUIStyles.DefaultLabel);
                         StatusLabel("Organization", organization, GUIStyles.DefaultLabel);
                         StatusLabel("GIT URL", package.url, EditorStyles.linkLabel);
-                        ButtonLabel("", new Button("Edit", () =>
-                        {
-                            Settings.editingPackageName = packageName;
-                            Settings.editingPackageOrganization = organization;
-                            Settings.editingPackageURL = package.url;
-                            // ReSharper disable once AccessToModifiedClosure
-                            Settings.editingPackage = i;
-                        }));
+
+
+                        ButtonLabel("", removeButton, editButton);
                     }, foldout: true);
                 }
             });
-
-            AddSection("Register Package", () =>
+            
+            AddSection("Add Package to Manifest", () =>
             {
                 InputField("Full Name", ref Settings.newPackageName);
                 InputField("Git URL", ref Settings.newPackageGitURL);
-                HorizontalButton(new Button("Add to Manifest",
-                    () => { DependencyManager.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL); }));
-            });
+                
+                var dependenciesStatus = $"Dependencies[{Settings.newPackageDependencies?.Count ?? 0}]";
+                ButtonLabelShrinkWidth(dependenciesStatus, 16,
+                    new Button("Change", () => { DependencyListWindow.ShowSettings(null); }, 60));
+
+                ButtonLabel("", new Button("Add Package",
+                    () =>
+                    {
+                        DependencyManager.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL,
+                            Settings.newPackageDependencies);
+                    }, 110));
+            }, ref Settings.addPackageEnabled);
         }
 
         public static void ShowSettings()
         {
             ShowWindow(out var window, true);
+            Settings.newPackageDependencies = new List<string>();
             window.ResetFoldouts();
+            window.minSize = new Vector2(370, 500);
         }
     }
 }
