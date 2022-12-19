@@ -4,6 +4,7 @@
 // ReSharper disable UnassignedField.Global
 
 using System;
+using TwistCore.PackageRegistry;
 using TwistCore.PackageRegistry.Versioning;
 using UnityEditor.PackageManager;
 
@@ -22,12 +23,15 @@ namespace TwistCore.PackageDevelopment
 
         //public string unity;
         public string version;
-        private VersionInfo _versionInfoInfo;
+        private VersionInfo _versionInfo;
 
         public Author author;
 
         public Repository repository;
-        public VersionInfo VersionInfoInfo => _versionInfoInfo ??= new VersionInfo(version);
+        public VersionInfo VersionInfoInfo => _versionInfo ??= new VersionInfo(version);
+
+        private VersionComparison updateInfo;
+        public VersionComparison UpdateInfo => updateInfo ??= GithubVersionControl.FetchUpdates(name);
 
         public static explicit operator PackageData(PackageInfo info)
         {
