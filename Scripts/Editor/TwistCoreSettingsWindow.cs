@@ -56,7 +56,9 @@ namespace TwistCore.Editor
 
                 this.DrawCachedComponent("DependencyManagerWidget");
             });
-
+            
+            this.DrawCachedComponent("PackagesInProjectWidget");
+            
             BeginSection("Create Package", ref Settings.enablePackageCreation, true);
             InputField("Name", ref Settings.newPackageName);
             InputField("Displayname", ref Settings.newPackageDisplayname);
@@ -64,8 +66,6 @@ namespace TwistCore.Editor
 
             HorizontalButton(new Button("Create Package", PackageCreationTool.CreatePackageBasedOnSettings));
             EndSection();
-
-            this.DrawCachedComponent("PackagesInProjectWidget");
         }
 
         // ReSharper disable once UnusedMember.Local

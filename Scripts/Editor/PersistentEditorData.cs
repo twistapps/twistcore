@@ -15,13 +15,7 @@ namespace TwistCore.Editor
         [SerializeField] private bool gitAvailable;
         [SerializeField] private string gitVersion;
 
-        [SerializeField] private PackageData[] packagesInProject;
-
         [SerializeField] private VersionComparison coreUpdateInfo;
-
-        public static IEnumerable<PackageData> PackagesInProject => instance.packagesInProject ??=
-            DependencyManager.Manifest.packages
-                .Select(package => (PackageData)PackageRegistryUtils.Get(package.name)).Where(p => p != null).ToArray();
 
         public VersionComparison CoreUpdateInfo => coreUpdateInfo ??= FetchCoreUpdates();
 
@@ -50,5 +44,30 @@ namespace TwistCore.Editor
             gitInitialized = true;
             return gitVersion;
         }
+
+        #region Dependency Management
+
+        [SerializeField] private PackageData[] packagesInProject;
+
+        public static IEnumerable<PackageData> PackagesInProjectCached =>
+            instance.packagesInProject ??= ListPackagesInProject().ToArray();
+
+        public static IEnumerable<PackageData> ListPackagesInProject()
+        {
+            instance.packagesInProject = DependencyManager.Manifest.packages
+                .Select(package => (PackageData)PackageRegistryUtils.Get(package.name))
+                .Where(p => p != null)
+                .ToArray();
+
+            return instance.packagesInProject;
+        }
+
+        public static void PurgePackagesInProjectCache()
+        {
+            instance.packagesInProject = null;
+            PackageRegistryUtils.LoadCoreDependentPackages();
+        }
+
+        #endregion
     }
 }
