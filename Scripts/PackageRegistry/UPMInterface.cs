@@ -50,5 +50,23 @@ namespace TwistCore.PackageRegistry
             var packageInfo = PackageRegistryUtils.Get(packageName);
             return Update(packageInfo);
         }
+
+        public static PackageInfo Install(string packageGitUrl)
+        {
+            var addRequest = Client.Add(packageGitUrl);
+            while (!addRequest.IsCompleted) Thread.Sleep(100);
+
+            switch (addRequest.Status)
+            {
+                case StatusCode.Success:
+                    return addRequest.Result;
+                case StatusCode.Failure:
+                    Debug.LogError(
+                        $"Unable to install UPM packages: (#{addRequest.Error.errorCode}) {addRequest.Error.message}");
+                    break;
+            }
+
+            return null;
+        }
     }
 }
