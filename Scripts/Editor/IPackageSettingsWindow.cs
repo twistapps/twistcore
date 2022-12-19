@@ -39,6 +39,7 @@ namespace TwistCore.Editor
         void EndSection();
 
         void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null, bool forceEnabled = false,
+            bool expandWidth = false,
             GUIStyle style = null);
 
         void EnumPopup<T>(string text, ref T value, Action<T> onValueChanged = null, bool forceEnabled = false)
@@ -52,23 +53,28 @@ namespace TwistCore.Editor
         void LabelSuccess(string text, string status, bool suppressColor = false, params Button[] buttons);
         void LabelFailure(string text, string status, bool suppressColor = false, params Button[] buttons);
         void LabelWarning(string text, string status, bool suppressColor = false, params Button[] buttons);
-        void InputField(string text, ref string value, bool forceEnabled = false, bool forceDisabled = false);
+
+        void InputField(string text, ref string value, bool forceEnabled = false, bool forceDisabled = false,
+            params Button[] buttons);
+
         void InputField(string text);
 
         void InputField(string text, string value, ref string outValue, bool forceEnabled = false,
-            bool forceDisabled = false);
+            bool forceDisabled = false, params Button[] buttons);
 
         void InputFieldWide(string text, ref string value, bool forceEnabled = false,
-            bool forceDisabled = false);
+            bool forceDisabled = false, params Button[] buttons);
 
         void InputFieldWide(string text, string value, ref string outValue, bool forceEnabled = false,
-            bool forceDisabled = false);
+            bool forceDisabled = false, params Button[] buttons);
 
         void HorizontalButtons(params Button[] buttons);
         void HorizontalButton(Button button);
         void CallToAction(string heading, params Button[] buttons);
         void ResetFoldouts();
         void Divider();
+
+        void Heading(string text, params Button[] buttons);
 
         void CheckboxSmall(string text, ref bool value, Action<bool> onValueChanged = null,
             bool forceEnabled = false,

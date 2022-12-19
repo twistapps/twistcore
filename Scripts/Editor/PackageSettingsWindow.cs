@@ -6,6 +6,66 @@ using UnityEngine;
 
 namespace TwistCore.Editor
 {
+    public class FoldoutManager
+    {
+        private readonly Dictionary<int, bool> _state = new Dictionary<int, bool>();
+        //private readonly Dictionary<string, bool> _stateByName = new Dictionary<string, bool>();
+
+        private int _foldoutCounter;
+        private int _prevFoldoutCount;
+
+        public bool CurrentElementIsFoldout => _state.ContainsKey(_foldoutCounter);
+        public bool CurrentElementIsOpen => !CurrentElementIsFoldout || _state[_foldoutCounter];
+
+        public bool Current
+        {
+            get => CurrentElementIsFoldout && _state[_foldoutCounter];
+            set => SetCurrentElement(value);
+        }
+
+        public void SetCurrentElement(bool isOpen)
+        {
+            _state[_foldoutCounter] = isOpen;
+        }
+
+        // public void SetStateByName(string sectionName, bool isOpen)
+        // {
+        //     _stateByName[sectionName] = isOpen;
+        // }
+
+        // public void SetOpenByName(string sectionName)
+        // {
+        //     _stateByName[sectionName] = true;
+        // }
+
+        public void Reset()
+        {
+            _state.Clear();
+            _prevFoldoutCount = 0;
+        }
+
+        public void GUICycle()
+        {
+            if (_foldoutCounter != _prevFoldoutCount && _prevFoldoutCount != 0)
+                Reset();
+            _prevFoldoutCount = _foldoutCounter;
+            _foldoutCounter = 0;
+        }
+
+        //private string currentElementName;
+
+        public void NextSectionStart(string sectionName = null)
+        {
+            _foldoutCounter++;
+
+            //currentElementName = sectionName;
+            //if (sectionName == null || !_stateByName.ContainsKey(sectionName)) return;
+            //Debug.Log("Yes");
+            //_state[_foldoutCounter] = _stateByName[sectionName];
+            //_stateByName.Remove(sectionName);
+        }
+    }
+
     public abstract class PackageSettingsWindow<TSettings> : EditorWindow, IPackageSettingsWindow<TSettings>
         where TSettings : SettingsAsset
     {
@@ -13,23 +73,21 @@ namespace TwistCore.Editor
         private const int ElementMarginBottom = 3;
 
         protected static TSettings Settings;
-
-        private readonly Dictionary<int, bool> _foldouts = new Dictionary<int, bool>();
+        protected readonly FoldoutManager FoldoutManager = new FoldoutManager();
 
         private Section _currentSection;
-        private int _foldoutCounter;
-
         private Vector2 _scrollPosition;
-        private bool CurrentFoldoutIsOpen => !_foldouts.ContainsKey(_foldoutCounter) || _foldouts[_foldoutCounter];
+        private int _sectionDepth;
 
         private static GUILayoutOption[] DefaultLabelLayoutOptions =>
-            new[] { GUILayout.ExpandWidth(false), GUILayout.MinWidth(120) };
+            new[] { GUILayout.ExpandWidth(false), GUILayout.MinWidth(38) };
 
         private void OnGUI()
         {
             if (Settings == null) Settings = SettingsUtility.Load<TSettings>();
+            FoldoutManager.GUICycle();
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-            _foldoutCounter = 0;
+            GUILayout.Space(5);
             Draw();
             EditorGUILayout.EndScrollView();
             WatchChangesAbove();
@@ -39,6 +97,11 @@ namespace TwistCore.Editor
         {
             return Settings;
         }
+
+        // public void SetFoldoutSectionOpenByName(string name)
+        // {
+        //     FoldoutManager.SetOpenByName(name);
+        // }
 
         /// <summary>
         ///     Create section using one method only. Put UI elements code into insides parameter to draw them inside this section.
@@ -63,26 +126,30 @@ namespace TwistCore.Editor
         public void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1,
             bool foldout = false)
         {
+            FoldoutManager.NextSectionStart(foldout ? heading : null);
             EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
             if (addDivider) EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
             var style = new GUIStyle("BoldLabel");
 
             if (foldout)
-                _foldouts[_foldoutCounter] =
-                    EditorGUILayout.Foldout(_foldouts.ContainsKey(_foldoutCounter) && _foldouts[_foldoutCounter],
-                        heading);
+                FoldoutManager.Current = EditorGUILayout.Foldout(FoldoutManager.Current, heading);
             else
                 EditorGUILayout.LabelField(heading, style);
 
             EditorGUI.indentLevel++;
-            _currentSection = new Section { Disabled = forceDisabled };
             EditorGUIUtility.labelWidth = 80;
+
+            if (foldout && FoldoutManager.CurrentElementIsOpen) Space(5);
+
+            _currentSection = new Section { Disabled = forceDisabled };
+            _sectionDepth++;
         }
 
         public void BeginSection(string heading, ref bool enabled, bool addDivider = false,
             Action<bool> onEnabledChange = null, int width = -1)
         {
+            FoldoutManager.NextSectionStart();
             EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
             if (addDivider) EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             using (var l = new EditorGUILayout.HorizontalScope())
@@ -97,36 +164,44 @@ namespace TwistCore.Editor
             }
 
             EditorGUI.indentLevel++;
-            _currentSection = new Section { Disabled = !enabled };
             EditorGUIUtility.labelWidth = 80;
+
+            _currentSection = new Section { Disabled = !enabled };
+            _sectionDepth++;
         }
 
         public void EndSection()
         {
             EditorGUI.indentLevel--;
-            if (_foldouts.ContainsKey(_foldoutCounter) && CurrentFoldoutIsOpen)
+            if (FoldoutManager.CurrentElementIsFoldout && FoldoutManager.CurrentElementIsOpen)
+            {
+                GUILayout.Space(-7);
                 EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+                GUILayout.Space(5);
+            }
+
             GUILayout.Space(20);
             EditorGUILayout.EndVertical();
             _currentSection = null;
             EditorGUIUtility.labelWidth = 0;
 
-
-            if (_foldouts.ContainsKey(_foldoutCounter))
+            if (FoldoutManager.CurrentElementIsFoldout && _sectionDepth > 1)
                 GUILayout.Space(-20);
-            _foldoutCounter++;
+            _sectionDepth--;
         }
 
         public void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null, bool forceEnabled = false,
+            bool expandWidth = false,
             GUIStyle style = null)
         {
-            if (!CurrentFoldoutIsOpen) return;
+            if (!FoldoutManager.CurrentElementIsOpen) return;
             using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
             {
                 using (var l = new EditorGUILayout.HorizontalScope())
                 {
                     var oldValue = value;
-                    EditorGUILayout.LabelField(text, DefaultLabelLayoutOptions);
+                    var layoutOptions = expandWidth ? new[] { GUILayout.ExpandWidth(true) } : DefaultLabelLayoutOptions;
+                    EditorGUILayout.LabelField(text, layoutOptions);
                     value = EditorGUILayout.Toggle(value, GUILayout.Width(25));
                     GUILayout.Space(10);
                     if (oldValue != value) onValueChanged?.Invoke(value);
@@ -139,7 +214,7 @@ namespace TwistCore.Editor
         public void EnumPopup<T>(string text, ref T value, Action<T> onValueChanged = null, bool forceEnabled = false)
             where T : Enum
         {
-            if (!CurrentFoldoutIsOpen) return;
+            if (!FoldoutManager.CurrentElementIsOpen) return;
             using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
             {
                 var oldValue = value;
@@ -150,44 +225,13 @@ namespace TwistCore.Editor
 
         public void ButtonLabel(string labelText, params Button[] buttons)
         {
-            if (!CurrentFoldoutIsOpen) return;
-            using (var l = new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField(labelText);
-                if (buttons.Length > 0)
-                    foreach (var button in buttons)
-                    {
-                        button.Construct(70);
-                        GUILayout.Space(9);
-                    }
-            }
-
-            GUILayout.Space(ElementMarginBottom);
+            ButtonLabel(labelText, false, 30, buttons);
         }
 
-        public void StatusLabel(string text, string status, GUIStyle statusStyle, string iconId = null,
+        public void StatusLabel(string text, string status, GUIStyle statusStyle = null, string iconId = null,
             params Button[] buttons)
         {
-            if (!CurrentFoldoutIsOpen) return;
-            using (var l = new EditorGUILayout.HorizontalScope())
-            {
-                var lw = EditorGUIUtility.labelWidth;
-                //EditorGUIUtility.labelWidth = 40;
-                if (text != null) EditorGUILayout.LabelField(text, DefaultLabelLayoutOptions);
-
-                var content = iconId != null ? EditorGUIUtility.IconContent(iconId) : new GUIContent();
-                content.text = status;
-                EditorGUILayout.LabelField(content, statusStyle);
-                EditorGUIUtility.labelWidth = lw;
-                if (buttons.Length > 0)
-                    foreach (var button in buttons)
-                    {
-                        button.Construct(70);
-                        GUILayout.Space(9);
-                    }
-            }
-
-            GUILayout.Space(ElementMarginBottom);
+            StatusLabel(text, -1, status, statusStyle, iconId, buttons);
         }
 
         public void LabelSuccess(string text, string status, bool suppressColor = false, params Button[] buttons)
@@ -208,20 +252,10 @@ namespace TwistCore.Editor
             StatusLabel(text, status, statusStyle, GUIStyles.IconWarning, buttons);
         }
 
-        public void InputField(string text, ref string value, bool forceEnabled = false, bool forceDisabled = false)
+        public void InputField(string text, ref string value, bool forceEnabled = false, bool forceDisabled = false,
+            params Button[] buttons)
         {
-            if (!CurrentFoldoutIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled || forceDisabled))
-            {
-                using (var l = new EditorGUILayout.HorizontalScope())
-                {
-                    EditorGUILayout.LabelField(text, DefaultLabelLayoutOptions);
-                    value = EditorGUILayout.TextField(value);
-                    GUILayout.Space(5);
-                }
-            }
-
-            GUILayout.Space(ElementMarginBottom);
+            InputField(text, -1, ref value, forceEnabled, forceDisabled, buttons);
         }
 
         public void InputField(string text)
@@ -231,43 +265,35 @@ namespace TwistCore.Editor
         }
 
         public void InputField(string text, string value, ref string outValue, bool forceEnabled = false,
-            bool forceDisabled = false)
+            bool forceDisabled = false,
+            params Button[] buttons)
         {
-            if (!CurrentFoldoutIsOpen) return;
+            InputField(text, -1, value, ref outValue, forceEnabled, forceDisabled, buttons);
+        }
+
+        public void InputFieldWide(string text, ref string value, bool forceEnabled = false,
+            bool forceDisabled = false, params Button[] buttons)
+        {
+            InputFieldWide(text, value, ref value, forceEnabled, forceDisabled, buttons);
+        }
+
+        public void InputFieldWide(string text, string value, ref string outValue, bool forceEnabled = false,
+            bool forceDisabled = false, params Button[] buttons)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
             using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled || forceDisabled))
             {
+                if (text != null)
+                    EditorGUILayout.LabelField(text + ":", EditorStyles.boldLabel);
+
                 using (var l = new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField(text, DefaultLabelLayoutOptions);
                     if (outValue != null)
                         outValue = EditorGUILayout.TextField(value);
                     else
                         EditorGUILayout.TextField(value);
-                    GUILayout.Space(5);
+                    InputFieldButtons(buttons);
                 }
-            }
-
-            GUILayout.Space(ElementMarginBottom);
-        }
-
-        public void InputFieldWide(string text, ref string value, bool forceEnabled = false,
-            bool forceDisabled = false)
-        {
-            InputFieldWide(text, value, ref value, forceEnabled, forceDisabled);
-        }
-
-        public void InputFieldWide(string text, string value, ref string outValue, bool forceEnabled = false,
-            bool forceDisabled = false)
-        {
-            if (!CurrentFoldoutIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled || forceDisabled))
-            {
-                EditorGUILayout.LabelField(text + ":", EditorStyles.boldLabel);
-
-                if (outValue != null)
-                    outValue = EditorGUILayout.TextField(value);
-                else
-                    EditorGUILayout.TextField(value);
             }
 
             GUILayout.Space(ElementMarginBottom);
@@ -275,7 +301,7 @@ namespace TwistCore.Editor
 
         public void HorizontalButtons(params Button[] buttons)
         {
-            if (!CurrentFoldoutIsOpen) return;
+            if (!FoldoutManager.CurrentElementIsOpen) return;
             using (new EditorGUI.DisabledScope(_currentSection?.Disabled ?? false))
             {
                 GUILayout.Space(HorizontalButtonsMargin);
@@ -301,7 +327,6 @@ namespace TwistCore.Editor
 
         public void CallToAction(string heading, params Button[] buttons)
         {
-            //if (!CurrentFoldoutIsOpen) return;
             GUILayout.Space(-25);
             EditorGUILayout.BeginVertical(new GUIStyle("NotificationBackground"));
             GUILayout.Space(-25);
@@ -331,11 +356,12 @@ namespace TwistCore.Editor
 
         public void ResetFoldouts()
         {
-            _foldouts.Clear();
+            FoldoutManager.Reset();
         }
 
         public void Divider()
         {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         }
 
@@ -343,7 +369,7 @@ namespace TwistCore.Editor
             bool forceEnabled = false,
             GUIStyle style = null)
         {
-            if (!CurrentFoldoutIsOpen) return;
+            if (!FoldoutManager.CurrentElementIsOpen) return;
             using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
             {
                 var oldValue = value;
@@ -354,6 +380,161 @@ namespace TwistCore.Editor
             }
 
             GUILayout.Space(ElementMarginBottom);
+        }
+
+        public void Space(int pixels)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            GUILayout.Space(pixels);
+        }
+
+        public void Heading(string text, params Button[] buttons)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            using (var l = new EditorGUILayout.HorizontalScope())
+            {
+                var layoutOptions =
+                    buttons.Length > 0 ? new[] { GUILayout.ExpandWidth(true) } : DefaultLabelLayoutOptions;
+                EditorGUILayout.LabelField(text, EditorStyles.boldLabel, layoutOptions);
+                if (buttons.Length > 0)
+                    foreach (var button in buttons)
+                    {
+                        button.Construct(70);
+                        GUILayout.Space(9);
+                    }
+            }
+
+            GUILayout.Space(ElementMarginBottom);
+        }
+
+        private void ButtonLabel(string labelText, bool shrinkWidth, int marginLeft = 30, params Button[] buttons)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            using (new EditorGUI.DisabledScope(_currentSection.Disabled))
+            {
+                using (var l = new EditorGUILayout.HorizontalScope())
+                {
+                    var layoutOptions = shrinkWidth ? DefaultLabelLayoutOptions : null;
+                    EditorGUILayout.LabelField(labelText, layoutOptions);
+                    if (buttons.Length > 0)
+                    {
+                        if (shrinkWidth) GUILayout.Space(marginLeft);
+                        foreach (var button in buttons)
+                        {
+                            button.Construct(70);
+                            GUILayout.Space(9);
+                        }
+                    }
+                }
+            }
+
+            GUILayout.Space(ElementMarginBottom);
+        }
+
+        public void ButtonLabelShrinkWidth(string labelText, params Button[] buttons)
+        {
+            ButtonLabel(labelText, true, 30, buttons);
+        }
+
+        public void ButtonLabelShrinkWidth(string labelText, int marginLeft, params Button[] buttons)
+        {
+            ButtonLabel(labelText, true, marginLeft, buttons);
+        }
+
+        public void StatusLabel(string text, int textWidthOverride, string status, GUIStyle statusStyle = null,
+            string iconId = null,
+            params Button[] buttons)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            using (var l = new EditorGUILayout.HorizontalScope())
+            {
+                var lw = EditorGUIUtility.labelWidth;
+                //EditorGUIUtility.labelWidth = 40;
+                var layoutOptions = textWidthOverride != -1
+                    ? new[] { GUILayout.Width(textWidthOverride) }
+                    : DefaultLabelLayoutOptions;
+
+                if (text != null) EditorGUILayout.LabelField(text, layoutOptions);
+
+                var content = iconId != null ? EditorGUIUtility.IconContent(iconId) : new GUIContent();
+                content.text = status;
+                EditorGUILayout.LabelField(content, statusStyle ?? EditorStyles.label);
+                EditorGUIUtility.labelWidth = lw;
+                if (buttons.Length > 0)
+                    foreach (var button in buttons)
+                    {
+                        button.Construct(70);
+                        GUILayout.Space(9);
+                    }
+            }
+
+            GUILayout.Space(ElementMarginBottom);
+        }
+
+        public void InputField(string text, int textWidthOverride, ref string value, bool forceEnabled = false,
+            bool forceDisabled = false, params Button[] buttons)
+        {
+            InputField(text, textWidthOverride, value, ref value, forceEnabled, forceDisabled, buttons);
+        }
+
+        public void InputField(string text, int textWidthOverride, string value, ref string outValue,
+            bool forceEnabled = false,
+            bool forceDisabled = false, params Button[] buttons)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled || forceDisabled))
+            {
+                using (var l = new EditorGUILayout.HorizontalScope())
+                {
+                    var layoutOptions = textWidthOverride != -1
+                        ? new[] { GUILayout.Width(textWidthOverride) }
+                        : DefaultLabelLayoutOptions;
+
+                    EditorGUILayout.LabelField(text, layoutOptions);
+                    if (outValue != null)
+                        outValue = EditorGUILayout.TextField(value);
+                    else
+                        EditorGUILayout.TextField(value);
+                    GUILayout.Space(5);
+                    InputFieldButtons(buttons);
+                }
+            }
+
+            GUILayout.Space(ElementMarginBottom);
+        }
+
+        public void ButtonsLeft(params Button[] buttons)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            using (new EditorGUI.DisabledScope(_currentSection?.Disabled ?? false))
+            {
+                GUILayout.Space(HorizontalButtonsMargin);
+                // Horizontally centered
+                using (var l = new EditorGUILayout.HorizontalScope())
+                {
+                    foreach (var button in buttons)
+                    {
+                        button.Construct(DefaultLabelLayoutOptions);
+                        GUILayout.Space(5);
+                    }
+                }
+            }
+        }
+
+        private void InputFieldButtons(Button[] buttons)
+        {
+            if (buttons.Length > 0)
+            {
+                var spaceBetweenButtons = 4;
+                var marginRight = 9;
+                foreach (var button in buttons)
+                {
+                    button.Construct();
+                    GUILayout.Space(spaceBetweenButtons);
+                }
+
+                GUILayout.Space(marginRight - spaceBetweenButtons);
+            }
         }
 
         protected abstract void Draw();
@@ -389,6 +570,7 @@ namespace TwistCore.Editor
                 GetWindow(TraceCallingType(), utility, Settings.GetEditorWindowTitle()) as
                     PackageSettingsWindow<TSettings>;
             if (minSize != default) window.minSize = minSize;
+            else window.minSize = new Vector2(275, 55);
         }
 
         protected static void ShowWindow(bool utility = false, Vector2 minSize = default)
@@ -423,6 +605,15 @@ namespace TwistCore.Editor
             {
                 if (_widthOverride != 0) width = _widthOverride;
                 if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton"), GUILayout.Width(width)))
+                    _onClick?.Invoke();
+            }
+        }
+
+        public void Construct(params GUILayoutOption[] options)
+        {
+            using (new EditorGUI.DisabledScope(_onClick == null))
+            {
+                if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton"), options))
                     _onClick?.Invoke();
             }
         }
