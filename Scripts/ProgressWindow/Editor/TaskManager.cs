@@ -18,7 +18,7 @@ namespace TwistCore.ProgressWindow.Editor
         [UsedImplicitly] public static EditorCoroutine QueueRunnerCoroutine;
 
         private static ProgressWindow _window;
-        private static List<Action> _completionActions = new List<Action>();
+        private static List<Action> _onComplete = new List<Action>();
 
 
         public static void AddLogs(string text)
@@ -33,14 +33,14 @@ namespace TwistCore.ProgressWindow.Editor
         /// <param name="action"></param>
         public static void ExecuteOnCompletion(Action action)
         {
-            _completionActions.Add(action);
+            _onComplete.Add(action);
         }
 
         public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
-            Action completionAction = null)
+            Action onComplete = null)
         {
             Queue.Enqueue(new TwistTask(coroutine, description));
-            if (completionAction != null) _completionActions.Add(completionAction);
+            if (onComplete != null) _onComplete.Add(onComplete);
 
             if (_window == null)
             {
@@ -66,9 +66,9 @@ namespace TwistCore.ProgressWindow.Editor
 
             CurrentTask = null;
 
-            foreach (var action in _completionActions)
+            foreach (var action in _onComplete)
                 action?.Invoke();
-            _completionActions = new List<Action>();
+            _onComplete = new List<Action>();
 
             EditorCoroutineUtility.StopCoroutine(QueueRunnerCoroutine);
             QueueRunnerCoroutine = null;
