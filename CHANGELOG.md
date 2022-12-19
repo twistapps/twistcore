@@ -1,3 +1,25 @@
+# [0.14.0](https://github.com/twistapps/twistcore/compare/0.13.1...0.14.0) (2022-12-19)
+
+
+### Bug Fixes
+
+* DependencyManager window overhaul ([a251a79](https://github.com/twistapps/twistcore/commit/a251a791fcd89552a8079e128ea2accc7d24c59d))
+* Load packages by manifest instead of name mask ([358f298](https://github.com/twistapps/twistcore/commit/358f2985cfe3c338e80cae40014312d6787d604e))
+* Refactor ([47d65d6](https://github.com/twistapps/twistcore/commit/47d65d611c0e9ea771219ed5f282586257a64516))
+* Update package-manifest.json ([b7840b2](https://github.com/twistapps/twistcore/commit/b7840b26449a5dbbc0ed483e91fcb0f3d0c3f3d8))
+
+
+### Features
+
+* Check if requested package is installed ([5d225bb](https://github.com/twistapps/twistcore/commit/5d225bb083ed28f235d0388f1920d65d3a03e499))
+* DependencyList window ([a7db30a](https://github.com/twistapps/twistcore/commit/a7db30a4a7836966a243508c3302a84944c3f6ff))
+* Fetch update info in PackageData ([8cc5271](https://github.com/twistapps/twistcore/commit/8cc5271cfed2e0830e88724f92d6be26ae22f7ec))
+* Install Package ([4d0c13c](https://github.com/twistapps/twistcore/commit/4d0c13c29fe2d70a715a2864b6489ab10f3a0924))
+* IsGithubPackage ([3fdd366](https://github.com/twistapps/twistcore/commit/3fdd366ef141f4dc934575760b94255f0dfac731))
+* List packages in project ([3a06210](https://github.com/twistapps/twistcore/commit/3a062107724db5022cbe3c35e4e7c3caa4c99a3c))
+* Manifest: UpdateDeps. RemovePkg, Save ([6ddf7bf](https://github.com/twistapps/twistcore/commit/6ddf7bf744fab64f5364e3f9df2a27126e164dfa))
+* resolve [#4](https://github.com/twistapps/twistcore/issues/4) ([975d4bc](https://github.com/twistapps/twistcore/commit/975d4bc7ff435950594a1a842ed414ceedf1c2d0))
+
 ## [0.13.1](https://github.com/twistapps/twistcore/compare/0.13.0...0.13.1) (2022-11-07)
 
 
