@@ -56,9 +56,9 @@ namespace TwistCore.Editor
 
                 this.DrawCachedComponent("DependencyManagerWidget");
             });
-            
+
             this.DrawCachedComponent("PackagesInProjectWidget");
-            
+
             BeginSection("Create Package", ref Settings.enablePackageCreation, true);
             InputField("Name", ref Settings.newPackageName);
             InputField("Displayname", ref Settings.newPackageDisplayname);

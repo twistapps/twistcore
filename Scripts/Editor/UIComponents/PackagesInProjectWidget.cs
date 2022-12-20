@@ -8,7 +8,6 @@ namespace TwistCore.Editor.UIComponents
 {
     public class PackagesInProjectWidget : SettingsUIComponent<TwistCoreSettings>
     {
-
         private void DrawUpToDatePackages(List<PackageData> packages)
         {
             if (packages.Count < 1) return;
@@ -22,7 +21,7 @@ namespace TwistCore.Editor.UIComponents
                 //Window.Divider();
             }
         }
-        
+
         private void DrawOutdatedPackages(List<PackageData> packages)
         {
             if (packages.Count < 1) return;
@@ -33,12 +32,12 @@ namespace TwistCore.Editor.UIComponents
                 Window.StatusLabel("Full Name", package.name, GUIStyles.DefaultLabel);
                 Window.LabelWarning("Version", package.version, true);
                 Window.StatusLabel("New Version", package.UpdateInfo.NewVersion, EditorStyles.linkLabel);
-                Window.ButtonLabel("",  new Button("Download Update",
+                Window.ButtonLabel("", new Button("Download Update",
                     () =>
                     {
                         UPMInterface.Update(package.name);
                         PersistentEditorData.PurgePackagesInProjectCache();
-                    }, widthOverride:120));
+                    }, 120));
                 EditorGUI.indentLevel--;
                 //Window.Divider();
             }
@@ -48,7 +47,7 @@ namespace TwistCore.Editor.UIComponents
         {
             if (packages.Count < 1) return;
             Window.Heading("Other Packages");
-            
+
             foreach (var packageData in packages)
             {
                 var nameParts = packageData.name.Split('.');
@@ -76,7 +75,6 @@ namespace TwistCore.Editor.UIComponents
                 var otherPackages = new List<PackageData>();
 
                 foreach (var packageData in packages)
-                {
                     if (PackageLock.IsGithubPackage(packageData.name))
                     {
                         if (packageData.UpdateInfo.HasUpdate)
@@ -88,12 +86,11 @@ namespace TwistCore.Editor.UIComponents
                     {
                         otherPackages.Add(packageData);
                     }
-                }
-                
+
                 DrawOutdatedPackages(outdatedPackages);
                 DrawUpToDatePackages(upToDatePackages);
                 DrawOtherPackages(otherPackages);
-                
+
                 //Window.HorizontalButton("Update");
             });
         }

@@ -63,7 +63,7 @@ namespace TwistCore.DependencyManagement
                 }
                 else
                 {
-                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", 
+                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry",
                         !Settings.useCustomManifestURL,
                         new Button("Switch", () =>
                         {
@@ -144,12 +144,12 @@ namespace TwistCore.DependencyManagement
                     }, foldout: true);
                 }
             });
-            
+
             AddSection("Add Package to Manifest", () =>
             {
                 InputField("Full Name", ref Settings.newPackageName);
                 InputField("Git URL", ref Settings.newPackageGitURL);
-                
+
                 var dependenciesStatus = $"Dependencies[{Settings.newPackageDependencies?.Count ?? 0}]";
                 ButtonLabelShrinkWidth(dependenciesStatus, 16,
                     new Button("Change", () => { DependencyListWindow.ShowSettings(null); }, 60));
