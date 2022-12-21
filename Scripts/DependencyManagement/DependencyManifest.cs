@@ -43,6 +43,11 @@ namespace TwistCore.DependencyManagement
             File.WriteAllText(TwistCore.ManifestPath, JsonUtility.ToJson(this, true));
         }
 
+        public Package Get(string packageName)
+        {
+            return packages.FirstOrDefault(pkg => pkg.name == packageName);
+        }
+
         [Serializable]
         public class Package
         {
