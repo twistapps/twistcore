@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TwistCore.DependencyManagement;
 using TwistCore.PackageDevelopment.Editor;
 using TwistCore.PackageRegistry;
 using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace TwistCore.PackageDevelopment
@@ -45,6 +47,9 @@ namespace TwistCore.PackageDevelopment
 
             var core = PackageRegistryUtils.Get(packageToUnpack);
             var corePath = core.assetPath;
+
+            if (!PackageRegistryUtils.IsEmbedded(core.name))
+                UPMInterface.Embed(core.name);
 
             var package = PackageRegistryUtils.Get(packageName);
             var packagePath = package.assetPath;
@@ -119,13 +124,23 @@ namespace TwistCore.PackageDevelopment
             var core = PackageRegistryUtils.Get(packageToUnpack);
             var corePath = core.assetPath;
 
+            Debug.Log(packageName);
             var package = PackageRegistryUtils.Get(packageName);
             var packagePath = package.assetPath;
 
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
+            Debug.Log($"Unpacked core path: {unpackedCorePath}");
 
             var ignore = File.ReadAllLines(Path.Combine(corePath, UnpackIgnore));
             var ignoredFiles = new List<string>();
+
+            if (!PackageRegistryUtils.IsEmbedded(core.name))
+            {
+                progress.TotalSteps++;
+                yield return progress.Log("Embedding source pkg...");
+                UPMInterface.Embed(core.name);
+                yield return progress.Next("Done embedding").Sleep(1);
+            }
 
             yield return progress.Log("Filtering ignored files...");
 
@@ -145,7 +160,7 @@ namespace TwistCore.PackageDevelopment
                         excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s),
                             SearchOption.AllDirectories));
                 }
-
+                
                 var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
                 found = found.Except(excludeFromSearch).ToArray();
 
@@ -156,9 +171,8 @@ namespace TwistCore.PackageDevelopment
             yield return progress.Next("Copying files...");
 
             var files = Directory.EnumerateFiles(corePath, "*.*", SearchOption.AllDirectories);
-            progress.CurrentStep = 0;
-            //todo: count files
-            progress.TotalSteps = 60; //estimate file count
+            var filecount = 60; //todo: count files;
+            var secondaryProgress = new TaskProgress(filecount);
 
             foreach (var sourcePath in files)
             {
@@ -171,12 +185,11 @@ namespace TwistCore.PackageDevelopment
                     Directory.CreateDirectory(outputDirectory);
                 File.Copy(sourcePath, outputPath, true);
 
-                yield return progress.Next();
+                yield return secondaryProgress.Next();
             }
 
-            yield return progress.Log("Source files copied.").Sleep(.5f);
-            progress.CurrentStep = 2;
-            progress.TotalSteps = 5;
+            yield return progress.Next("Source files copied.").Sleep(.5f);
+            progress.TotalSteps++;
             yield return progress.Log("Removing excess files");
 
             var outputFiles = Directory.GetFiles(unpackedCorePath, "*.*", SearchOption.AllDirectories);
@@ -189,7 +202,14 @@ namespace TwistCore.PackageDevelopment
 
             yield return progress.Next("Redirecting dependencies...");
             RemoveAsmdefDependency(packageName, packageToUnpack);
-
+            
+            //add dependencies of embedded package
+            foreach (var dependency in DependencyManager.Manifest.Get(packageToUnpack).dependencies)
+            {
+                AddExternalAsmdefDependency(packageName, dependency);
+                //AddAsmdefDependency(packageName, dependency);
+            }
+ 
             yield return progress.Next().Sleep(1);
 
             yield return progress.Next("Requesting asset db refresh...").Sleep(.5f);
@@ -230,6 +250,13 @@ namespace TwistCore.PackageDevelopment
             yield return progress;
 
             AddAsmdefDependency(packageName, unpackedPackage);
+            
+            //remove dependencies of embedded package
+            foreach (var dependency in DependencyManager.Manifest.Get(unpackedPackage).dependencies)
+            {
+                RemoveExternalAsmdefDependency(packageName, dependency);
+            }
+            
             progress.Log("Requesting asset db refresh...");
             TaskManager.ExecuteOnCompletion(AssetDatabase.Refresh);
             yield return progress.Next().Sleep(.5f);
@@ -243,7 +270,7 @@ namespace TwistCore.PackageDevelopment
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
-            var dependencyGuid = "GUID:" + PackageRegistryUtils.Get(dependencyName).AsmdefGuid();
+            var dependencyGuid = "GUID:" + PackageRegistryUtils.GetFromFullCollection(dependencyName).AsmdefGuid();
 
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
@@ -257,6 +284,59 @@ namespace TwistCore.PackageDevelopment
             File.WriteAllText(asmdef, json);
         }
 
+        private static string GetExternalPackageGuid(string packageName)
+        {
+            var alias = PackageRegistryUtils.GetFromFullCollection(packageName).Alias();
+
+            var files = Directory.GetFiles(Path.Combine("Packages", packageName), "*.asmdef",
+                SearchOption.AllDirectories);
+            if (files.Length < 1) return null;
+            var guid = AssetDatabase.GUIDFromAssetPath(files[0]);
+            return "GUID:" + guid;
+        }
+
+        public static void AddExternalAsmdefDependency(string packageName, string dependencyName)
+        {
+            var package = PackageRegistryUtils.Get(packageName);
+
+            if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
+                return;
+
+            var dependencyGuid = GetExternalPackageGuid(dependencyName);
+            
+            var asmdef = package.Asmdef();
+            var o = JObject.Parse(File.ReadAllText(asmdef));
+            var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
+            
+            if (references.IndexOf(dependencyGuid) != -1) return;
+            references.Add(dependencyGuid);
+
+            o["references"] = new JArray(references);
+            File.WriteAllText(asmdef, o.ToString());
+        }
+        
+        public static void RemoveExternalAsmdefDependency(string packageName, string dependencyName)
+        {
+            var package = PackageRegistryUtils.Get(packageName);
+            var asmdef = package.Asmdef();
+
+            if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
+                return;
+
+            var dependencyGuid = GetExternalPackageGuid(dependencyName);
+
+            var o = JObject.Parse(File.ReadAllText(asmdef));
+            var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
+
+            var index = references.IndexOf(dependencyGuid);
+            if (index != -1) references.RemoveAt(index);
+
+            o["references"] = new JArray(references);
+            var json = o.ToString();
+
+            File.WriteAllText(asmdef, json);
+        }
+        
         public static void AddAsmdefDependency(string packageName, string dependencyName)
         {
             var package = PackageRegistryUtils.Get(packageName);
@@ -268,7 +348,10 @@ namespace TwistCore.PackageDevelopment
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
 
-            var dependencyGuid = "GUID:" + PackageRegistryUtils.Get(dependencyName).AsmdefGuid();
+            var dependencyGuid = "GUID:" + PackageRegistryUtils.GetFromFullCollection(dependencyName).AsmdefGuid();
+
+            //CompilationPipeline.GUIDToAssemblyDefinitionReferenceGUID()
+            
             if (references.IndexOf(dependencyGuid) != -1) return;
             references.Add(dependencyGuid);
 
