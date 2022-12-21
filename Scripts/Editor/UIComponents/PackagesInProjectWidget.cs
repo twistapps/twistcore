@@ -54,7 +54,7 @@ namespace TwistCore.Editor.UIComponents
                 var nameParts = packageData.name.Split('.');
                 var organization = nameParts[1];
                 var packageName = nameParts[2];
-
+                
                 Window.AddSection(packageData.name, () =>
                 {
                     Window.StatusLabel("Name", packageName, GUIStyles.DefaultLabel);
@@ -67,8 +67,10 @@ namespace TwistCore.Editor.UIComponents
 
         public override void Draw()
         {
-            Window.AddSection("Packages In Project", () =>
+            Window.AddSection("Packages In Project:", () =>
             {
+                Window.ButtonLabel("Reload Packages", new Button("Refresh", () => PersistentEditorData.PurgePackagesInProjectCache()));
+                Window.Space(10);
                 var packages = PersistentEditorData.PackagesInProjectCached.ToArray();
 
                 var upToDatePackages = new List<PackageData>();
@@ -93,8 +95,6 @@ namespace TwistCore.Editor.UIComponents
                 DrawOutdatedPackages(outdatedPackages);
                 DrawUpToDatePackages(upToDatePackages);
                 DrawOtherPackages(otherPackages);
-                
-                //Window.HorizontalButton("Update");
             });
         }
     }
