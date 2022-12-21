@@ -2,7 +2,7 @@
 *.dll
 *.asmdef
 *.asmdef.meta
-.git/*
+*.git
 .github/*
 .NewPackageTemplate/*
 *SettingsWindow.cs !except *PackageSettingsWindow.cs&*DependencyManagerSettingsWindow.cs
