@@ -35,11 +35,11 @@ namespace TwistCore.ProgressWindow.Editor
             return window;
         }
 
-        [MenuItem("Tools/Twist Apps/Progress Window")]
-        public static void OnMenuItemClick()
-        {
-            const int seconds = 3;
-            TaskManager.Enqueue(CommonTasks.Sleep(seconds), $"Sleeping for {seconds}s");
-        }
+        // [MenuItem("Tools/Twist Apps/Progress Window")]
+        // public static void OnMenuItemClick()
+        // {
+        //     const int seconds = 3;
+        //     TaskManager.Enqueue(CommonTasks.Sleep(seconds), $"Sleeping for {seconds}s");
+        // }
     }
 }
