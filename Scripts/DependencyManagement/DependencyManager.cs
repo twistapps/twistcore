@@ -58,7 +58,7 @@ namespace TwistCore.DependencyManagement
             while (coroutine.MoveNext()) yield return coroutine.Current;
             yield return new TaskProgress(2).Complete();
         }
-
+        
         public static void RegisterPackage(string fullName, string url, IEnumerable<string> dependencies)
         {
             var source = url.StartsWith("https://github.com/") ? "github" : "other";
@@ -123,6 +123,7 @@ namespace TwistCore.DependencyManagement
         {
             instance.usingLocalManifest = true;
             Manifest.Save();
+            PackageRegistryUtils.PurgeCollection();
         }
     }
 }

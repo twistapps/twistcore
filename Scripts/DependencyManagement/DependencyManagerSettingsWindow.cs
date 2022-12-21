@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TwistCore.Editor;
+using TwistCore.PackageRegistry;
 using UnityEditor;
 using UnityEngine;
 
@@ -59,16 +60,18 @@ namespace TwistCore.DependencyManagement
                             DependencyManager.LoadManifestFromURL();
                             ResetFoldouts();
                             Settings.editingPackage = -1;
+                            PackageRegistryUtils.PurgeCollection();
                         }));
                 }
                 else
                 {
-                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry",
+                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", 
                         !Settings.useCustomManifestURL,
                         new Button("Switch", () =>
                         {
                             DependencyManager.LoadManifestFromFile();
                             ResetFoldouts();
+                            PackageRegistryUtils.PurgeCollection();
                         }));
                     ButtonLabel("Download Manifest from web", new Button("Update", () =>
                     {
@@ -144,12 +147,12 @@ namespace TwistCore.DependencyManagement
                     }, foldout: true);
                 }
             });
-
+            
             AddSection("Add Package to Manifest", () =>
             {
                 InputField("Full Name", ref Settings.newPackageName);
                 InputField("Git URL", ref Settings.newPackageGitURL);
-
+                
                 var dependenciesStatus = $"Dependencies[{Settings.newPackageDependencies?.Count ?? 0}]";
                 ButtonLabelShrinkWidth(dependenciesStatus, 16,
                     new Button("Change", () => { DependencyListWindow.ShowSettings(null); }, 60));
