@@ -48,8 +48,8 @@ namespace TwistCore.PackageDevelopment
             var core = PackageRegistryUtils.Get(packageToUnpack);
             var corePath = core.assetPath;
 
-            if (!PackageRegistryUtils.IsEmbedded(core.name))
-                UPMInterface.Embed(core.name);
+            // if (!PackageRegistryUtils.IsEmbedded(core.name))
+            //     UPMInterface.Embed(core.name);
 
             var package = PackageRegistryUtils.Get(packageName);
             var packagePath = package.assetPath;
@@ -134,13 +134,13 @@ namespace TwistCore.PackageDevelopment
             var ignore = File.ReadAllLines(Path.Combine(corePath, UnpackIgnore));
             var ignoredFiles = new List<string>();
 
-            if (!PackageRegistryUtils.IsEmbedded(core.name))
-            {
-                progress.TotalSteps++;
-                yield return progress.Log("Embedding source pkg...");
-                UPMInterface.Embed(core.name);
-                yield return progress.Next("Done embedding").Sleep(1);
-            }
+            // if (!PackageRegistryUtils.IsEmbedded(core.name))
+            // {
+            //     progress.TotalSteps++;
+            //     yield return progress.Log("Embedding source pkg...");
+            //     UPMInterface.Embed(core.name);
+            //     yield return progress.Next("Done embedding").Sleep(1);
+            // }
 
             yield return progress.Log("Filtering ignored files...");
 
