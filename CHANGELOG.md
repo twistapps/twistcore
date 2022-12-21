@@ -1,3 +1,14 @@
+## [0.15.1](https://github.com/twistapps/twistcore/compare/0.15.0...0.15.1) (2022-12-21)
+
+
+### Bug Fixes
+
+* 2-Level nested sections support ([9fe127a](https://github.com/twistapps/twistcore/commit/9fe127af4828c2db7343861cdc0d5d603e7b9059))
+* Add Space() to interface ([50b52f1](https://github.com/twistapps/twistcore/commit/50b52f174ea27d85c315f9a1e73974c97b425861))
+* Embedding core lib is unnecessary ([e94ae4c](https://github.com/twistapps/twistcore/commit/e94ae4cdb74bfeb2fe3240a3144e744a6cc76960))
+* Reload packages if stuck ([d55ce46](https://github.com/twistapps/twistcore/commit/d55ce469e95cf1e77efe068d61102f5289502e05))
+* Remove debug "show ProgressWindow" menu item ([07d079c](https://github.com/twistapps/twistcore/commit/07d079c689af1e5239a3ecc74a5a6a7831250593))
+
 # [0.15.0](https://github.com/twistapps/twistcore/compare/0.14.0...0.15.0) (2022-12-21)
 
 
