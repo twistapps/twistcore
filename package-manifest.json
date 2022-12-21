@@ -4,11 +4,19 @@
             "name": "com.twistapps.twistcore",
             "url": "https://github.com/twistapps/twistcore.git",
             "source": "github",
-            "dependencies": []
+            "dependencies": [
+                "com.unity.editorcoroutines"
+            ]
         },
         {
             "name": "com.twistapps.modula",
             "url": "https://github.com/twistapps/modula.git",
+            "source": "github",
+            "dependencies": []
+        },
+        {
+            "name": "com.twistapps.request-for-mirror",
+            "url": "https://github.com/twistapps/request-for-mirror.git",
             "source": "github",
             "dependencies": []
         }
