@@ -74,6 +74,8 @@ namespace TwistCore.Editor
         void ResetFoldouts();
         void Divider();
 
+        void Space(int pixels);
+
         void Heading(string text, params Button[] buttons);
 
         void CheckboxSmall(string text, ref bool value, Action<bool> onValueChanged = null,
