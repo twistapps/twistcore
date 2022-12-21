@@ -68,5 +68,23 @@ namespace TwistCore.PackageRegistry
 
             return null;
         }
+
+        public static PackageInfo Embed(string packageName)
+        {
+            var embedRequest = Client.Embed(packageName);
+            while (!embedRequest.IsCompleted) Thread.Sleep(100);
+
+            switch (embedRequest.Status)
+            {
+                case StatusCode.Success:
+                    return embedRequest.Result;
+                case StatusCode.Failure:
+                    Debug.LogError(
+                        $"Unable to install UPM packages: (#{embedRequest.Error.errorCode}) {embedRequest.Error.message}");
+                    break;
+            }
+
+            return null;
+        }
     }
 }
