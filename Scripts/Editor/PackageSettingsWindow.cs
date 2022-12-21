@@ -15,7 +15,8 @@ namespace TwistCore.Editor
         private int _foldoutCounter;
         private int _prevFoldoutCount;
 
-        public bool CurrentElementIsFoldout => _state.ContainsKey(_foldoutCounter);
+        private bool _currentElementIsActive = false;
+        public bool CurrentElementIsFoldout => _currentElementIsActive && _state.ContainsKey(_foldoutCounter);
         public bool CurrentElementIsOpen => !CurrentElementIsFoldout || _state[_foldoutCounter];
 
         public bool Current
@@ -58,12 +59,18 @@ namespace TwistCore.Editor
         public void NextSectionStart(string sectionName = null)
         {
             _foldoutCounter++;
+            _currentElementIsActive = true;
 
             //currentElementName = sectionName;
             //if (sectionName == null || !_stateByName.ContainsKey(sectionName)) return;
             //Debug.Log("Yes");
             //_state[_foldoutCounter] = _stateByName[sectionName];
             //_stateByName.Remove(sectionName);
+        }
+
+        public void SectionEnd()
+        {
+            _currentElementIsActive = false;
         }
     }
 
@@ -78,13 +85,14 @@ namespace TwistCore.Editor
 
         private Section _currentSection;
         private Vector2 _scrollPosition;
-        private int _sectionDepth;
+        private int _sectionDepth = 0;
 
         private static GUILayoutOption[] DefaultLabelLayoutOptions =>
             new[] { GUILayout.ExpandWidth(false), GUILayout.MinWidth(38) };
 
         private void OnGUI()
         {
+            _sectionDepth = 0;
             if (Settings == null) Settings = SettingsUtility.Load<TSettings>();
             FoldoutManager.GUICycle();
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
@@ -124,6 +132,8 @@ namespace TwistCore.Editor
             EndSection();
         }
 
+        private Section _topSection;
+
         public void BeginSection(string heading, bool addDivider = false, bool forceDisabled = false, int width = -1,
             bool foldout = false)
         {
@@ -145,6 +155,7 @@ namespace TwistCore.Editor
 
             _currentSection = new Section { Disabled = forceDisabled };
             _sectionDepth++;
+            if (_sectionDepth == 1) _topSection = _currentSection;
         }
 
         public void BeginSection(string heading, ref bool enabled, bool addDivider = false,
@@ -169,6 +180,7 @@ namespace TwistCore.Editor
 
             _currentSection = new Section { Disabled = !enabled };
             _sectionDepth++;
+            if (_sectionDepth == 1) _topSection = _currentSection;
         }
 
         public void EndSection()
@@ -183,12 +195,15 @@ namespace TwistCore.Editor
 
             GUILayout.Space(20);
             EditorGUILayout.EndVertical();
-            _currentSection = null;
             EditorGUIUtility.labelWidth = 0;
 
             if (FoldoutManager.CurrentElementIsFoldout && _sectionDepth > 1)
                 GUILayout.Space(-20);
+            
+            FoldoutManager.SectionEnd();
             _sectionDepth--;
+            _currentSection = _sectionDepth == 1 ? _topSection : null;
+            if (_sectionDepth == 0) _topSection = null;
         }
 
         public void Checkbox(string text, ref bool value, Action<bool> onValueChanged = null, bool forceEnabled = false,
