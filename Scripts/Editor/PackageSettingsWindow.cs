@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace TwistCore.Editor
 {
@@ -215,6 +216,7 @@ namespace TwistCore.Editor
             where T : Enum
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
+            EditorGUIUtility.labelWidth = 0;
             using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
             {
                 var oldValue = value;
@@ -382,6 +384,12 @@ namespace TwistCore.Editor
             GUILayout.Space(ElementMarginBottom);
         }
 
+        public void Space(int pixels)
+        {
+            if (!FoldoutManager.CurrentElementIsOpen) return;
+            GUILayout.Space(pixels);
+        }
+
         public void Heading(string text, params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
@@ -399,12 +407,6 @@ namespace TwistCore.Editor
             }
 
             GUILayout.Space(ElementMarginBottom);
-        }
-
-        public void Space(int pixels)
-        {
-            if (!FoldoutManager.CurrentElementIsOpen) return;
-            GUILayout.Space(pixels);
         }
 
         private void ButtonLabel(string labelText, bool shrinkWidth, int marginLeft = 30, params Button[] buttons)
@@ -566,6 +568,7 @@ namespace TwistCore.Editor
             Vector2 minSize = default)
         {
             Settings = SettingsUtility.Load<TSettings>();
+            Debug.Log($"Displaying {TraceCallingType().Name}");
             window =
                 GetWindow(TraceCallingType(), utility, Settings.GetEditorWindowTitle()) as
                     PackageSettingsWindow<TSettings>;

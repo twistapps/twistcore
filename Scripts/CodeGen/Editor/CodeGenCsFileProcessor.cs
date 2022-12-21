@@ -32,7 +32,7 @@ namespace TwistCore.CodeGen.Editor
 
 #if REQUEST_FOR_MIRROR //regenerate RequestManager in case it's a module that has been deleted.
                 //todo: optimize to run only if a module was deleted
-                RequestManagerGenerator.GenerateScripts(generatedAsset.Classname);
+                //RequestManagerGenerator.GenerateScripts(generatedAsset.Classname);
 #endif
             }
         }
