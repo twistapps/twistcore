@@ -1,3 +1,18 @@
+# [0.18.0](https://github.com/twistapps/twistcore/compare/0.17.0...0.18.0) (2022-12-22)
+
+
+### Bug Fixes
+
+* Refactor ([7207dec](https://github.com/twistapps/twistcore/commit/7207decaaba492c8cafe01d7bf269e5b4f0df2ad))
+* Refactor: prettify ([7d2c888](https://github.com/twistapps/twistcore/commit/7d2c88838ccef21e4067fc6587bf64b83e0acbf1))
+
+
+### Features
+
+* Core update info in requirements list ([1e46d4b](https://github.com/twistapps/twistcore/commit/1e46d4b4676bc87f3f0d5eeb064029944e6f036b))
+* Scripting define symbols setter ([3d06ec6](https://github.com/twistapps/twistcore/commit/3d06ec6817fe657284162924d32f7582143e992d))
+* Set define symbols in manifest editor ([167b114](https://github.com/twistapps/twistcore/commit/167b114e3f22d62dc6f161fb47573acd4a9921bb))
+
 # [0.17.0](https://github.com/twistapps/twistcore/compare/0.16.2...0.17.0) (2022-12-22)
 
 
