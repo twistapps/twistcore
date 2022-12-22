@@ -68,23 +68,9 @@ namespace TwistCore.PackageDevelopment.Editor
         {
             var directory =
                 path.Substring(0, path.Length - Path.GetFileName(path).Length - 1); //Get current file's directory
-            directory = TrimRoot(directory,
+            directory = FolderSync.MakeRelativePath(directory,
                 TwistCore.NewPackageTemplateFolder); //Trim file path relative to template folder as root dir
             return directory;
-        }
-
-        /// <summary>
-        ///     Trims path to be relative to specified rootDirectory.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="trimQuery">New root directory. Has to be a part of initial path.</param>
-        /// <returns></returns>
-        public static string TrimRoot(string path, string trimQuery)
-        {
-            var index = path.IndexOf(trimQuery, StringComparison.Ordinal);
-            var newRoot = path.Substring(index + trimQuery.Length);
-            //return newRoot[0] == '\\' || newRoot[0] == '/' ? newRoot.Substring(1) : newRoot;
-            return newRoot.StartsWith(Path.DirectorySeparatorChar.ToString()) ? newRoot.Substring(1) : newRoot;
         }
 
         private static CodeGenTemplateBuilder CreateCodeGenBuilder()
