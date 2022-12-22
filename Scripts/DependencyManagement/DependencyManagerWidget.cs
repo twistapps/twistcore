@@ -6,15 +6,16 @@ namespace TwistCore.Editor.UIComponents
 {
     public class DependencyManagerWidget : SettingsUIComponent<TwistCoreSettings>
     {
+        private static void Open()
+        {
+            TaskManager.Enqueue(DependencyManager.LoadManifestAsync(), "Fetching manifest",
+                DependencyManagerSettingsWindow.ShowSettings);
+        }
+        
         public override void Draw()
         {
             Window.ButtonLabel("Dependency Manager Settings",
-                new Button("Open",
-                    () =>
-                    {
-                        TaskManager.Enqueue(DependencyManager.LoadManifestAsync(), "Fetching manifest",
-                            DependencyManagerSettingsWindow.ShowSettings);
-                    }));
+                new Button("Open", Open));
         }
     }
 }
