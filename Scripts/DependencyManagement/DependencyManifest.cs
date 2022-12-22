@@ -54,6 +54,7 @@ namespace TwistCore.DependencyManagement
             public string name;
             public string url;
             public string source; //github || other
+            public string scriptingDefineSymbols;
             [SerializeField] public List<string> dependencies = new List<string>();
         }
     }
