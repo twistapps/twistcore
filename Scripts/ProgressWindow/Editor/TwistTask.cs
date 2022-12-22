@@ -29,6 +29,8 @@ namespace TwistCore.ProgressWindow.Editor
                 yield return Progress.ShouldSleepForSeconds > 0
                     ? new EditorWaitForSeconds(Progress.ShouldSleepForSeconds)
                     : null;
+                
+                Progress.ShouldSleepForSeconds = 0;
             }
 
             Completed = true;
