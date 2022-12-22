@@ -22,7 +22,7 @@ namespace TwistCore.CodeGen
                 .ToArray();
             
             TaskManager.Enqueue(
-                FolderSync.SyncFoldersTask(CodeGenDefinitions.TemplatesFolder, sourceFolders), 
+                FolderSync.SyncFoldersTask(CodeGenDefinitions.TemplatesFolder, true, sourceFolders), 
                 "Gathering templates");
         }
     }
