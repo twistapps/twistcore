@@ -38,70 +38,8 @@ namespace TwistCore.PackageDevelopment
         public static void UnpackIntoPackageFolder(string packageName, string packageToUnpack,
             string outputDirectoryName)
         {
-            if (!PackageLock.IsInDevelopmentMode(packageName)) //requested package is not in development mode 
-            {
-                Debug.LogError(
-                    $"The requested package '{packageName}' is not in development mode so it won't be modified.");
-                return;
-            }
-
-            var core = PackageRegistryUtils.Get(packageToUnpack);
-            var corePath = core.assetPath;
-
-            // if (!PackageRegistryUtils.IsEmbedded(core.name))
-            //     UPMInterface.Embed(core.name);
-
-            var package = PackageRegistryUtils.Get(packageName);
-            var packagePath = package.assetPath;
-
-            var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
-
-            var ignore = File.ReadAllLines(Path.Combine(corePath, UnpackIgnore));
-            var ignoredFiles = new List<string>();
-            foreach (var searchPattern in ignore)
-            {
-                const string exceptKeyword = " !except ";
-                var exceptKeywordIndex = searchPattern.LastIndexOf(exceptKeyword, StringComparison.Ordinal);
-
-                var pattern = searchPattern;
-                var excludeFromSearch = Array.Empty<string>();
-
-                if (exceptKeywordIndex != -1)
-                {
-                    pattern = searchPattern.Substring(0, exceptKeywordIndex);
-                    var keep = searchPattern.Substring(pattern.Length + exceptKeyword.Length);
-                    excludeFromSearch = Directory.GetFiles(corePath, Path.Combine(keep), SearchOption.AllDirectories);
-                }
-
-                var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
-                found = found.Except(excludeFromSearch).ToArray();
-
-                ignoredFiles.AddRange(found);
-            }
-
-            var files = Directory.EnumerateFiles(corePath, "*.*", SearchOption.AllDirectories);
-            foreach (var sourcePath in files)
-            {
-                if (ignoredFiles.Contains(sourcePath)) continue;
-
-                var relativePath = PackageCreationTool.TrimRoot(sourcePath, corePath);
-                var outputPath = Path.Combine(unpackedCorePath, relativePath);
-                var outputDirectory = Path.GetDirectoryName(outputPath);
-                if (outputDirectory != null && !Directory.Exists(outputDirectory))
-                    Directory.CreateDirectory(outputDirectory);
-                File.Copy(sourcePath, outputPath, true);
-            }
-
-            var outputFiles = Directory.GetFiles(unpackedCorePath, "*.*", SearchOption.AllDirectories);
-            foreach (var unpackedFile in outputFiles)
-            {
-                var relativePath = PackageCreationTool.TrimRoot(unpackedFile, unpackedCorePath);
-                var sourcePath = Path.Combine(corePath, relativePath);
-                if (!File.Exists(sourcePath)) File.Delete(unpackedFile);
-            }
-
-            RemoveAsmdefDependency(packageName, packageToUnpack);
-            AssetDatabase.Refresh();
+            UnpackIntoPackageFolderCoroutine(packageName, packageToUnpack, outputDirectoryName)
+                .FinishSynchronously();
         }
 
         public static IEnumerator<TaskProgress> UnpackIntoPackageFolderCoroutine(string packageName,
@@ -178,7 +116,7 @@ namespace TwistCore.PackageDevelopment
             {
                 if (ignoredFiles.Contains(sourcePath)) continue;
 
-                var relativePath = PackageCreationTool.TrimRoot(sourcePath, corePath);
+                var relativePath = FolderSync.MakeRelativePath(sourcePath, corePath);
                 var outputPath = Path.Combine(unpackedCorePath, relativePath);
                 var outputDirectory = Path.GetDirectoryName(outputPath);
                 if (outputDirectory != null && !Directory.Exists(outputDirectory))
@@ -195,7 +133,7 @@ namespace TwistCore.PackageDevelopment
             var outputFiles = Directory.GetFiles(unpackedCorePath, "*.*", SearchOption.AllDirectories);
             foreach (var unpackedFile in outputFiles)
             {
-                var relativePath = PackageCreationTool.TrimRoot(unpackedFile, unpackedCorePath);
+                var relativePath = FolderSync.MakeRelativePath(unpackedFile, unpackedCorePath);
                 var sourcePath = Path.Combine(corePath, relativePath);
                 if (!File.Exists(sourcePath)) File.Delete(unpackedFile);
             }
