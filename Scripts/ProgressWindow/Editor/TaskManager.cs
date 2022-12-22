@@ -34,6 +34,9 @@ namespace TwistCore.ProgressWindow.Editor
         public static void ExecuteOnCompletion(Action action)
         {
             _onComplete.Add(action);
+            
+            if (CurrentTask == null && Queue.Count == 0)
+                InvokeAllOnCompleteActions();
         }
 
         public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
@@ -52,6 +55,13 @@ namespace TwistCore.ProgressWindow.Editor
                 ExecuteTasks());
         }
 
+        private static void InvokeAllOnCompleteActions()
+        {
+            foreach (var action in _onComplete)
+                action?.Invoke();
+            _onComplete = new List<Action>();
+        }
+
         private static IEnumerator ExecuteTasks()
         {
             while (CurrentTask is { Completed: false }) yield return null;
@@ -66,9 +76,7 @@ namespace TwistCore.ProgressWindow.Editor
 
             CurrentTask = null;
 
-            foreach (var action in _onComplete)
-                action?.Invoke();
-            _onComplete = new List<Action>();
+            InvokeAllOnCompleteActions();
 
             EditorCoroutineUtility.StopCoroutine(QueueRunnerCoroutine);
             QueueRunnerCoroutine = null;
