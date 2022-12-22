@@ -1,3 +1,22 @@
+# [0.16.0](https://github.com/twistapps/twistcore/compare/0.15.1...0.16.0) (2022-12-22)
+
+
+### Bug Fixes
+
+* Avoid code dupl. by synchronous task exec ([39cda8e](https://github.com/twistapps/twistcore/commit/39cda8e30b354e449a8b879725085cff5060d99a))
+* Invoke OnComplete actions if window is inactive ([54d6ea1](https://github.com/twistapps/twistcore/commit/54d6ea1915289cb5901c1827d46f7dcdc5add7a0))
+* Package name, Folder paths ([f61d9f7](https://github.com/twistapps/twistcore/commit/f61d9f786a4ec34b2bd21fa30565737e858dc58a))
+* Remove redundant code, fix typo ([419d149](https://github.com/twistapps/twistcore/commit/419d149140335704edf12a158f2f3251c912a0af))
+* Reset task sleeping time after sleep ([d3bbfab](https://github.com/twistapps/twistcore/commit/d3bbfab3c4c36cb39370539a8e34ad856ad7cda4))
+
+
+### Features
+
+* Collect ScriptTemplates from supported pkgs ([971bf7c](https://github.com/twistapps/twistcore/commit/971bf7c3345d545a3f2cb4b90430a0e76c8e2496))
+* Finish task synchronously ([5b19715](https://github.com/twistapps/twistcore/commit/5b19715f82c734fb9652cd4fa22a333f6d211fe8))
+* FolderSync class ([01487c7](https://github.com/twistapps/twistcore/commit/01487c757e315dd65fbb7ab31ff9f493315284e8))
+* Record latest log pushed by current task ([3eb57f8](https://github.com/twistapps/twistcore/commit/3eb57f8a6e37f6bcfba7830e53ef6b6630a7780e))
+
 ## [0.15.1](https://github.com/twistapps/twistcore/compare/0.15.0...0.15.1) (2022-12-21)
 
 
