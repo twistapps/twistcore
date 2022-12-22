@@ -47,12 +47,13 @@ namespace TwistCore
         /// <param name="pathToFile">File to clone</param>
         /// <param name="oldRootFolder"></param>
         /// <param name="newRootFolder"></param>
-        public static void CloneFile(string pathToFile, string oldRootFolder, string newRootFolder)
+        /// <param name="overwrite">should force overwrite file</param>
+        public static void CloneFile(string pathToFile, string oldRootFolder, string newRootFolder, bool overwrite=true)
         {
             var filename = Path.GetFileName(pathToFile);
             var outputFolderPath = ChangeRootAndGetDirectory(pathToFile, oldRootFolder, newRootFolder);
             Directory.CreateDirectory(outputFolderPath);
-            File.Copy(pathToFile, Path.Combine(outputFolderPath, filename));
+            File.Copy(pathToFile, Path.Combine(outputFolderPath, filename), overwrite);
         }
 
         public static void Clone(string path, string oldRoot, string newRoot)

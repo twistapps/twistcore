@@ -3,6 +3,7 @@ using System.Linq;
 using TwistCore.PackageDevelopment;
 using TwistCore.PackageRegistry;
 using UnityEditor;
+using UnityEngine;
 
 namespace TwistCore.Editor.UIComponents
 {
@@ -81,6 +82,8 @@ namespace TwistCore.Editor.UIComponents
                 {
                     if (PackageLock.IsGithubPackage(packageData.name))
                     {
+                        //Debug.Log($"[{packageData.name}] - {packageData.UpdateInfo.NewVersion}");
+                        
                         if (packageData.UpdateInfo.HasUpdate)
                             outdatedPackages.Add(packageData);
                         else
