@@ -31,7 +31,7 @@ namespace TwistCore.CodeGen.Editor
         }
 
         public void Class(Scope scope, string name, Type parentClass = null, bool @abstract = false,
-            bool partial = false, bool @static = false)
+            bool @partial = false, bool @static = false)
         {
             switch (scope)
             {
@@ -51,7 +51,7 @@ namespace TwistCore.CodeGen.Editor
             Space();
             if (@static) Append("static ");
             if (@abstract) Append("abstract ");
-            if (partial) Append("partial ");
+            if (@partial) Append("partial ");
             Append("class $", name);
             if (parentClass != null) Append(" : $", parentClass.Name);
             OpenCurly();
