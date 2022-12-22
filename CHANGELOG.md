@@ -1,3 +1,10 @@
+## [0.16.2](https://github.com/twistapps/twistcore/compare/0.16.1...0.16.2) (2022-12-22)
+
+
+### Bug Fixes
+
+* Overwrite errors ([190e9c4](https://github.com/twistapps/twistcore/commit/190e9c47fc512ae94b8aa7fcf0d9b3b0d01483e0))
+
 ## [0.16.1](https://github.com/twistapps/twistcore/compare/0.16.0...0.16.1) (2022-12-22)
 
 
