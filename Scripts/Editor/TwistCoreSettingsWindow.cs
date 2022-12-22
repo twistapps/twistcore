@@ -1,4 +1,7 @@
+using System.Linq;
+using TwistCore.DependencyManagement;
 using TwistCore.Editor.UIComponents;
+using TwistCore.PackageDevelopment;
 using TwistCore.PackageDevelopment.Editor;
 using TwistCore.PackageRegistry;
 using UnityEditor;
@@ -20,27 +23,35 @@ namespace TwistCore.Editor
 
 
             // var corePackageName = TwistCoreDefinitions.PackageName;
-            // var corePackage = PackageRegistry.Get(corePackageName);
-            //
-            // if (!PackagesLock.IsInDevelopmentMode(corePackageName))
-            // {
-            //     LabelWarning(corePackage.displayName, "Development Mode", true, new Button(corePackage.version));
-            // }
-            // else
-            // {
-            //     var status = "Up To Date";
-            //     var version = GithubVersionControl.CompareVersion(corePackage);
-            //     if (version.HasMajorUpdate()) status = "Major Update!";
-            //     else if (version.HasMinorUpdate()) status = "Has Updates";
-            //     else if (version.HasPatchUpdate()) status = "New Patch";
-            //     
-            //     var style = version.HasMinorUpdate() ? GUIStyles.WarningLabel : GUIStyles.DefaultLabel;
-            //     var icon = version.hasUpdate ? GUIStyles.IconWarning : GUIStyles.IconSuccess;
-            //     StatusLabel(corePackage.displayName, status, style, icon, new Button(corePackage.version));
-            //     
-            //     if (!version.hasUpdate)
-            //         HorizontalButtons(new Button("Update Core", UpdatePackage));
-            // }
+            var corePackage = PackageRegistryUtils.Get(TwistCore.PackageName);
+            
+            if (PackageLock.IsInDevelopmentMode(TwistCore.PackageName))
+            {
+                LabelWarning(corePackage.displayName, "Development Mode", true, new Button(corePackage.version));
+            }
+            else
+            {
+                var status = "Up to date";
+                var version = PersistentEditorData.PackagesInProjectCached
+                    .FirstOrDefault(p => p.name == TwistCore.PackageName)
+                    ?.UpdateInfo;
+                if (version != null)
+                {
+                    if (version.HasMajorUpdate()) status = "Major Update!";
+                    else if (version.HasMinorUpdate()) status = "Has Updates";
+                    else if (version.HasPatchUpdate()) status = "New Patch";
+            
+                    var style = version.HasMinorUpdate() ? GUIStyles.WarningLabel : GUIStyles.DefaultLabel;
+                    var icon = version.HasUpdate ? GUIStyles.IconWarning : GUIStyles.IconSuccess;
+                    StatusLabel(corePackage.displayName, status, style, icon, new Button(corePackage.version));
+            
+                    if (version.HasUpdate)
+                        HorizontalButtons(new Button("Changelog", () =>
+                        {
+                            Application.OpenURL(corePackage.changelogUrl);
+                        }), new Button("Update", UpdatePackage));
+                }
+            }
 
             EndSection();
 
@@ -73,6 +84,7 @@ namespace TwistCore.Editor
         {
             var package = TwistCore.PackageName;
             UPMInterface.Update(package);
+            PersistentEditorData.PurgePackagesInProjectCache();
         }
 
         [MenuItem("Tools/Twist Apps/Twist Core Settings")]
