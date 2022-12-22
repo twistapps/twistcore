@@ -21,6 +21,12 @@
             return this;
         }
 
+        public TaskProgress ClearLatestLogField()
+        {
+            LatestLog = string.Empty;
+            return this;
+        }
+
         public TaskProgress Sleep(float seconds)
         {
             ShouldSleepForSeconds = seconds;

@@ -9,7 +9,10 @@ namespace TwistCore
     public static class FolderSync
     {
         private const string CopyingFilesSlug = "Copying files...";
-        
+        private const string DoneCountingFiles = "(done counting files)";
+
+        private const float SleepTimeBetweenFileCopyActions = .05f;
+
         /// <summary>
         ///     Trims path to be relative to specified folder.
         /// </summary>
@@ -24,7 +27,7 @@ namespace TwistCore
         }
 
         /// <summary>
-        /// Given a path to a file, move its root location to newRootFolder, keeping relative path.
+        ///     Given a path to a file, move its root location to newRootFolder, keeping relative path.
         /// </summary>
         /// <param name="pathToFile">Path to modify</param>
         /// <param name="oldRootFolder">Directory after which relative part of the path begins which shouldn't be changed.</param>
@@ -42,13 +45,14 @@ namespace TwistCore
         }
 
         /// <summary>
-        /// Move the specified file, keeping the original and relative path
+        ///     Move the specified file, keeping the original and relative path
         /// </summary>
         /// <param name="pathToFile">File to clone</param>
         /// <param name="oldRootFolder"></param>
         /// <param name="newRootFolder"></param>
         /// <param name="overwrite">should force overwrite file</param>
-        public static void CloneFile(string pathToFile, string oldRootFolder, string newRootFolder, bool overwrite=true)
+        public static void CloneFile(string pathToFile, string oldRootFolder, string newRootFolder,
+            bool overwrite = true)
         {
             var filename = Path.GetFileName(pathToFile);
             var outputFolderPath = ChangeRootAndGetDirectory(pathToFile, oldRootFolder, newRootFolder);
@@ -63,14 +67,16 @@ namespace TwistCore
 
         public static IEnumerator<TaskProgress> CloneTask(string path, string oldRoot, string newRoot)
         {
-            var progress = new TaskProgress(2);
+            var progress = new TaskProgress(3);
             yield return progress.Log("Counting files...");
-            var fileCount = Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
-            yield return progress.Next($"Found {fileCount} to be cloned").Sleep(1);
 
+            // var fileCount = (from file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+            //     select file).Count();
+            var fileCount = Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
             progress = new TaskProgress(fileCount);
+            yield return progress.Log($"Found {fileCount} to be cloned").Log(DoneCountingFiles).Sleep(1);
             yield return progress.Log(CopyingFilesSlug);
-            
+
             var files = Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories);
             foreach (var file in files)
             {
@@ -85,13 +91,15 @@ namespace TwistCore
         {
             SyncFoldersTask(outputFolder, inputFolders).FinishSynchronously();
         }
-        
+
         public static IEnumerator<TaskProgress> SyncFoldersTask(string outputFolder, params string[] inputFolders)
         {
-            var overallProgress = new TaskProgress(inputFolders.Length);
-            var progress = new TaskProgress(0);
-            yield return overallProgress.Log($"Syncing {inputFolders.Length} folders...").Sleep(1.3f);
-            
+            // overallProgress = new TaskProgress(inputFolders.Length);
+            var progress = new TaskProgress(inputFolders.Length);
+            yield return progress.Log($"Syncing {inputFolders.Length} folders...").Sleep(1.3f);
+
+            var previousStepsSummary = 0;
+
             foreach (var inputFolder in inputFolders)
             {
                 var cloneTask = CloneTask(inputFolder, inputFolder, outputFolder);
@@ -100,14 +108,21 @@ namespace TwistCore
                     var current = cloneTask.Current;
                     if (current == null) continue;
 
-                    if (current.LatestLog == CopyingFilesSlug)
-                        progress.TotalSteps += current.TotalSteps;
+                    if (current.LatestLog == DoneCountingFiles)
+                        current.ClearLatestLogField();
+                    else
+                    {
+                        progress.TotalSteps = current.TotalSteps + previousStepsSummary;
+                    }
+                    progress.CurrentStep = current.CurrentStep + previousStepsSummary;
 
-                    yield return progress.Next().Sleep(current.ShouldSleepForSeconds);
+                    yield return progress.Sleep(current.ShouldSleepForSeconds + SleepTimeBetweenFileCopyActions);
                     current.ShouldSleepForSeconds = 0;
                 }
-                
-                yield return overallProgress.Next($"[{progress.CurrentStep}/{progress.TotalSteps}] Cloned").Sleep(.8f);
+
+                previousStepsSummary += cloneTask.Current.TotalSteps;
+
+                yield return progress.Log($"[{progress.CurrentStep}/{progress.TotalSteps}] Cloned").Sleep(.8f);
             }
         }
     }
