@@ -21,10 +21,7 @@ namespace TwistCore.CodeGen.Editor
 
         public void SetVariable(string key, string replacementValue)
         {
-            if (Variables.ContainsKey(key))
-                Variables[key] = replacementValue;
-            else
-                Variables.Add(key, replacementValue);
+            Variables[key] = replacementValue;
         }
 
         public string GetVariable(string key)
@@ -67,7 +64,7 @@ namespace TwistCore.CodeGen.Editor
                     {
                         Debug.LogWarning(
                             $"CodeGen: variable ${parts[i]}$ is not set for template {Path.GetFileName(templatePath)}. " +
-                            "It will be replaced with empty string");
+                            "It is replaced with empty string");
                         parts[i] = string.Empty;
                         continue;
                     }
