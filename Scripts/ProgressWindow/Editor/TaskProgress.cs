@@ -6,6 +6,8 @@
 
         public float ShouldSleepForSeconds;
         public int TotalSteps;
+        
+        public string LatestLog { get; private set; }
 
         public TaskProgress(int totalSteps = 0)
         {
@@ -14,6 +16,7 @@
 
         public TaskProgress Log(string text)
         {
+            LatestLog = text;
             TaskManager.AddLogs(text);
             return this;
         }
