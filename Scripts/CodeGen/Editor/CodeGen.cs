@@ -12,17 +12,13 @@ namespace TwistCore.CodeGen.Editor
     public static class CodeGen
     {
         public delegate void BeforeCsFileGeneration(CodeGenTemplateBuilder builder, Type type);
-
         public delegate bool ShouldGenerateCsCheck(Type type);
 
         private static CodeGenSettings _settings;
+        private static CodeGenSettings Settings => _settings ??= SettingsUtility.Load<CodeGenSettings>();
+        
         public static BeforeCsFileGeneration OnBeforeCsFileGeneration;
         public static ShouldGenerateCsCheck ShouldGenerateCs;
-
-        private static string GetTxtPath(params string[] pathParts)
-        {
-            return Path.ChangeExtension(Path.Combine(pathParts), ".txt");
-        }
 
         public static string FindTxtTemplate(Type type)
         {
@@ -45,17 +41,16 @@ namespace TwistCore.CodeGen.Editor
         {
             return Path.ChangeExtension(Path.Combine(CodeGenDefinitions.GeneratedFolder, type.Name), ".cs");
         }
-
-        private static CodeGenSettings LoadSettingsAsset()
+        
+        private static string GetTxtPath(params string[] pathParts)
         {
-            _settings = SettingsUtility.Load<CodeGenSettings>();
-            return _settings;
+            return Path.ChangeExtension(Path.Combine(pathParts), ".txt");
         }
 
         [DidReloadScripts(1)]
         private static void OnScriptsReloaded()
         {
-            if (LoadSettingsAsset().autoGenerateOnCompile)
+            if (Settings.autoGenerateOnCompile)
                 GenerateScripts();
         }
 
@@ -95,14 +90,14 @@ namespace TwistCore.CodeGen.Editor
                 if (!modified) continue;
 
                 File.WriteAllLines(path, lines);
-                if (_settings.debugMode) Debug.Log($"Adding 'partial' modifier to {path}");
+                if (Settings.debugMode) Debug.Log($"Adding 'partial' modifier to {path}");
             }
         }
 
         private static bool ShouldGenerateCsForType(Type type)
         {
-            var invocationList = ShouldGenerateCs?.GetInvocationList().Cast<ShouldGenerateCsCheck>();
-            return invocationList?.All(shouldGenerateCheck => shouldGenerateCheck(type)) ?? true;
+            var shouldGenerateChecks = ShouldGenerateCs?.GetInvocationList().Cast<ShouldGenerateCsCheck>();
+            return shouldGenerateChecks?.All(shouldGenerateCheck => shouldGenerateCheck(type)) ?? true;
         }
 
         private static bool ShouldGenerateCsForType(string className)
@@ -120,12 +115,12 @@ namespace TwistCore.CodeGen.Editor
             {
                 if (!ShouldGenerateCsForType(type)) continue;
                 var outputPath = GetOutputCsPath(type);
-                var generatedFileIsRegistered = _settings.generatedFiles?.Contains(outputPath) ?? false;
+                var generatedFileIsRegistered = Settings.generatedFiles?.Contains(outputPath) ?? false;
                 if (!forceRegenerateExisting
                     && generatedFileIsRegistered
                     && File.Exists(outputPath))
                 {
-                    if (_settings.debugMode)
+                    if (Settings.debugMode)
                         Debug.Log($"Skipping {outputPath} because it has already been generated previously.");
                     continue;
                 }
@@ -143,7 +138,7 @@ namespace TwistCore.CodeGen.Editor
                 EditorPrefs.SetInt(autoRefresh, autoRefreshState);
 
                 if (!generatedFileIsRegistered)
-                    _settings.generatedFiles!.Add(outputPath);
+                    Settings.generatedFiles!.Add(outputPath);
             }
 
             CleanupFolder();
@@ -158,7 +153,6 @@ namespace TwistCore.CodeGen.Editor
         {
             if (!Directory.Exists(CodeGenDefinitions.GeneratedFolder)) return;
             var files = Directory.GetFiles(CodeGenDefinitions.GeneratedFolder, "*.cs");
-            var types = GetTypes();
             foreach (var file in files)
             {
                 var className = Path.GetFileNameWithoutExtension(file);
@@ -169,8 +163,8 @@ namespace TwistCore.CodeGen.Editor
                     continue;
 
                 File.Delete(file);
-                if (_settings.generatedFiles.Contains(file))
-                    _settings.generatedFiles.RemoveAll(entry => entry == file);
+                if (Settings.generatedFiles.Contains(file))
+                    Settings.generatedFiles.RemoveAll(entry => entry == file);
             }
         }
     }
