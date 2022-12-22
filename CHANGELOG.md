@@ -1,3 +1,15 @@
+# [0.17.0](https://github.com/twistapps/twistcore/compare/0.16.2...0.17.0) (2022-12-22)
+
+
+### Bug Fixes
+
+* Prettier progress display ([58e7055](https://github.com/twistapps/twistcore/commit/58e70554e2a6305f2980e22609a9828b6835db1e))
+
+
+### Features
+
+* SyncFolder ignore mask ([7761a71](https://github.com/twistapps/twistcore/commit/7761a71912961bab4fe86ffc0f1223b37912b4f0))
+
 ## [0.16.2](https://github.com/twistapps/twistcore/compare/0.16.1...0.16.2) (2022-12-22)
 
 
