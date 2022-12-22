@@ -4,6 +4,7 @@
             "name": "com.twistapps.twistcore",
             "url": "https://github.com/twistapps/twistcore.git",
             "source": "github",
+            "scriptingDefineSymbols": "TWIST_CORE",
             "dependencies": [
                 "com.unity.editorcoroutines"
             ]
@@ -12,12 +13,14 @@
             "name": "com.twistapps.modula",
             "url": "https://github.com/twistapps/modula.git",
             "source": "github",
+            "scriptingDefineSymbols": "TWIST_MODULA",
             "dependencies": []
         },
         {
             "name": "com.twistapps.request-for-mirror",
             "url": "https://github.com/twistapps/request-for-mirror.git",
             "source": "github",
+            "scriptingDefineSymbols": "REQUEST_FOR_MIRROR",
             "dependencies": []
         }
     ]

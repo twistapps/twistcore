@@ -13,9 +13,11 @@ namespace TwistCore.DependencyManagement
         public string editingPackageName;
         public string editingPackageOrganization;
         public string editingPackageURL;
+        public string editingPackageDefineSymbols;
 
         public string newPackageName;
         public string newPackageGitURL;
+        public string newPackageDefineSymbols;
         [SerializeField] public List<string> newPackageDependencies = new List<string>();
 
         public override string GetEditorWindowTitle()

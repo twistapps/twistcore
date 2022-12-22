@@ -23,6 +23,7 @@ namespace TwistCore.DependencyManagement
             Settings.editingPackageName = packageName;
             Settings.editingPackageOrganization = organization;
             Settings.editingPackageURL = package.url;
+            Settings.editingPackageDefineSymbols = package.scriptingDefineSymbols;
             // ReSharper disable once AccessToModifiedClosure
             Settings.editingPackage = Array.FindIndex(DependencyManager.Manifest.packages, p => p.name == package.name);
             DependencyManager.instance.usingLocalManifest = true;
@@ -113,9 +114,10 @@ namespace TwistCore.DependencyManagement
                             InputField("Name", ref Settings.editingPackageName);
                             InputField("Organization", ref Settings.editingPackageOrganization);
                             InputField("GIT URL", ref Settings.editingPackageURL);
+                            InputField("Scripting Defines", ref Settings.editingPackageDefineSymbols);
 
                             ButtonLabel("",
-                                //new Button("Cancel", () => { Settings.editingPackage = -1; }), 
+                                new Button("Cancel", () => { Settings.editingPackage = -1; }), 
                                 new Button(
                                     "Save", () =>
                                     {
@@ -123,6 +125,7 @@ namespace TwistCore.DependencyManagement
                                             $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
                                         // ReSharper disable once AccessToModifiedClosure
                                         DependencyManager.EditPackage(i, fullName, Settings.editingPackageURL);
+                                        DependencyManager.SetDefineSymbols(i, Settings.editingPackageDefineSymbols);
                                         Settings.editingPackage = -1;
                                     }));
                         }, foldout: true);
@@ -141,6 +144,7 @@ namespace TwistCore.DependencyManagement
                         StatusLabel("Name", packageName, GUIStyles.DefaultLabel);
                         StatusLabel("Organization", organization, GUIStyles.DefaultLabel);
                         StatusLabel("GIT URL", package.url, EditorStyles.linkLabel);
+                        StatusLabel("Scripting Defines", package.scriptingDefineSymbols, GUIStyles.DefaultLabel);
 
 
                         ButtonLabel("", removeButton, editButton);
@@ -152,6 +156,7 @@ namespace TwistCore.DependencyManagement
             {
                 InputField("Full Name", ref Settings.newPackageName);
                 InputField("Git URL", ref Settings.newPackageGitURL);
+                InputField("Scripting Defines", ref Settings.newPackageDefineSymbols);
                 
                 var dependenciesStatus = $"Dependencies[{Settings.newPackageDependencies?.Count ?? 0}]";
                 ButtonLabelShrinkWidth(dependenciesStatus, 16,
@@ -161,7 +166,7 @@ namespace TwistCore.DependencyManagement
                     () =>
                     {
                         DependencyManager.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL,
-                            Settings.newPackageDependencies);
+                            Settings.newPackageDependencies, Settings.newPackageDefineSymbols);
                     }, 110));
             }, ref Settings.addPackageEnabled);
         }

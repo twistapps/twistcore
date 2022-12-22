@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TwistCore.Editor;
 using TwistCore.PackageRegistry;
 using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
@@ -9,6 +10,7 @@ using UnityEngine;
 
 namespace TwistCore.DependencyManagement
 {
+    //todo:consider renaming to ManifestEditor
     public class DependencyManager : ScriptableSingleton<DependencyManager>
     {
         [SerializeField] private DependencyManifest manifest;
@@ -59,19 +61,20 @@ namespace TwistCore.DependencyManagement
             yield return new TaskProgress(2).Complete();
         }
         
-        public static void RegisterPackage(string fullName, string url, IEnumerable<string> dependencies)
+        public static void RegisterPackage(string fullName, string url, IEnumerable<string> dependencies, string scriptingDefines)
         {
             var source = url.StartsWith("https://github.com/") ? "github" : "other";
-            RegisterPackage(fullName, url, source, dependencies);
+            RegisterPackage(fullName, url, source, dependencies, scriptingDefines);
             SaveManifest();
         }
 
-        public static void RegisterPackage(string fullName, string url, string source, IEnumerable<string> dependencies)
+        public static void RegisterPackage(string fullName, string url, string source, IEnumerable<string> dependencies, string scriptingDefines)
         {
             var package = new DependencyManifest.Package
             {
                 name = fullName, url = url, source = source,
-                dependencies = dependencies.ToList()
+                dependencies = dependencies.ToList(),
+                scriptingDefineSymbols = scriptingDefines
             };
             Manifest.AddPackage(package);
             SaveManifest();
@@ -88,6 +91,18 @@ namespace TwistCore.DependencyManagement
             Manifest.packages[index] = pkg;
 
             SaveManifest();
+        }
+
+        public static void SetDefineSymbols(int index, string newSymbols)
+        {
+            var pkg = Manifest.packages[index];
+            var oldSymbols = pkg.scriptingDefineSymbols;
+            pkg.scriptingDefineSymbols = newSymbols;
+            Manifest.packages[index] = pkg;
+            
+            SaveManifest();
+            ScriptingDefinesSetter.RemoveSymbols(oldSymbols);
+            ScriptingDefinesSetter.RefreshAllSymbols();
         }
 
         public static void UpdateDependencies(DependencyManifest.Package package, IEnumerable<string> dependencies)

@@ -20,15 +20,8 @@ namespace TwistCore.Editor
             RefreshAllSymbols();
             instance.startupInitializationComplete = true;
         }
-        
-        [InitializeOnLoadMethod]
-        private static void SubscribeToEvent()
-        {
-            // This causes the method to be invoked after the Editor registers the new list of packages.
-            Events.registeredPackages += RegisteredPackagesEventHandler;
-        }
 
-        private static void RegisteredPackagesEventHandler(PackageRegistrationEventArgs packageRegistrationEventArgs)
+        public static void RegisteredPackagesEventHandler(PackageRegistrationEventArgs packageRegistrationEventArgs)
         {
             foreach (var packageInfo in packageRegistrationEventArgs.added)
             {
@@ -45,7 +38,7 @@ namespace TwistCore.Editor
             }
         }
         
-        private static void RefreshAllSymbols()
+        public static void RefreshAllSymbols()
         {
             var packagesInProject = PackageRegistryUtils.Collection;
             foreach (var manifestPackage in DependencyManager.Manifest.packages)
@@ -66,6 +59,7 @@ namespace TwistCore.Editor
         
         public static void AddSymbols(string entry)
         {
+            if (string.IsNullOrEmpty(entry)) return;
             var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
 
             var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
@@ -82,6 +76,7 @@ namespace TwistCore.Editor
 
         public static void RemoveSymbols(string entry)
         {
+            if (string.IsNullOrEmpty(entry)) return;
             var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
 
             var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
@@ -96,10 +91,10 @@ namespace TwistCore.Editor
             Debug.Log($"Removed '{entry}' from scripting defines...");
         }
 
-        public static void ReplaceSymbols(string oldSymbols, string newSymbols)
-        {
-            RemoveSymbols(oldSymbols);
-            AddSymbols(newSymbols);
-        }
+        // public static void ReplaceSymbols(string oldSymbols, string newSymbols)
+        // {
+        //     RemoveSymbols(oldSymbols);
+        //     AddSymbols(newSymbols);
+        // }
     }
 }

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using TwistCore.DependencyManagement;
+using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore.PackageRegistry
 {
@@ -19,6 +21,11 @@ namespace TwistCore.PackageRegistry
                     LoadCoreDependentPackages();
                 return _fullCollection;
             }
+        }
+
+        public static void RegisteredPackagesEventHandler(PackageRegistrationEventArgs packageRegistrationEventArgs)
+        {
+            PurgeCollection();
         }
 
         public static List<PackageInfo> LoadCoreDependentPackages()
