@@ -7,68 +7,84 @@ namespace TwistCore.DependencyManagement
 {
     public class DependencyListWindow : PackageSettingsWindow<DependencyManagerSettings>
     {
+        private int _currentPackageIndex;
+        private DependencyManifest.Package _editingPackage;
+        private string _editingPackageShortname;
+        private string _heading = "Select Dependencies";
         private string _newDependencyName = "";
-        private DependencyManifest.Package _package;
-        private bool[] _selections;
-        private string _shortname;
+
+        private bool[] _selectedPackagesMask;
 
         private void OnDestroy()
         {
-            if (_package.name == null) Settings.newPackageDependencies = _package.dependencies;
-            DependencyManager.UpdateDependencies(_package, _package.dependencies);
+            if (_editingPackage.name == null) Settings.newPackageDependencies = _editingPackage.dependencies;
+            DependencyManager.UpdateDependencies(_editingPackage, _editingPackage.dependencies);
+        }
+
+        private void OnPackageSelectionChange(int packageIndex, bool selected)
+        {
+            var manifestPackageName = DependencyManager.Manifest.packages[packageIndex].name;
+
+            if (!selected)
+            {
+                _editingPackage.dependencies.RemoveAll(pkg => pkg == manifestPackageName);
+                return;
+            }
+
+            if (!_editingPackage.dependencies.Contains(manifestPackageName))
+                _editingPackage.dependencies.Add(manifestPackageName);
+        }
+
+        private void OnPackageSelectionChange(bool selected)
+        {
+            OnPackageSelectionChange(_currentPackageIndex, selected);
+        }
+
+        private Button MakeRemoveButtonForDependency(string dependency)
+        {
+            return new Button("-", () => { _editingPackage.dependencies.Remove(dependency); }, 24);
+        }
+
+        private Button MakeAddDependencyButton()
+        {
+            return new Button("+",
+                () =>
+                {
+                    _editingPackage.dependencies.Add(_newDependencyName);
+                    _newDependencyName = "";
+                }, 24);
         }
 
         protected override void Draw()
         {
-            var packagesLength = DependencyManager.Manifest.packages.Length;
+            var manifestPackagesAmount = DependencyManager.Manifest.packages.Length;
 
-            if (_selections == null || packagesLength != _selections.Length)
-                _selections = new bool[packagesLength];
+            if (_selectedPackagesMask == null || manifestPackagesAmount != _selectedPackagesMask.Length)
+                _selectedPackagesMask = new bool[manifestPackagesAmount];
 
-            var heading = _package.name == null
-                ? "Select Dependencies"
-                : "Select dependencies of " + _shortname;
-
-            AddSection(heading, () =>
+            AddSection(_heading, () =>
             {
-                for (var i = 0; i < packagesLength; i++)
+                for (var i = 0; i < manifestPackagesAmount; i++)
                 {
+                    _currentPackageIndex = i;
                     var manifestPackage = DependencyManager.Manifest.packages[i];
-                    Checkbox(manifestPackage.name, ref _selections[i], selected =>
-                    {
-                        if (selected)
-                        {
-                            if (!_package.dependencies.Contains(manifestPackage.name))
-                                _package.dependencies.Add(manifestPackage.name);
-                        }
-                        else
-                        {
-                            _package.dependencies.RemoveAll(pkg => pkg == manifestPackage.name);
-                        }
-                    }, expandWidth: true);
+                    Checkbox(manifestPackage.name, ref _selectedPackagesMask[i], OnPackageSelectionChange,
+                        expandWidth: true);
                 }
             });
+
             AddSection("Custom/external", () =>
             {
-                for (var i = 0; i < _package.dependencies.Count; i++)
+                for (var i = 0; i < _editingPackage.dependencies.Count; i++)
                 {
-                    var dependency = _package.dependencies[i];
+                    var dependency = _editingPackage.dependencies[i];
                     if (DependencyManager.Manifest.PackageExists(dependency)) continue;
-                    StatusLabel($"[{i}]", 35, dependency, GUIStyles.DefaultLabel, null, new Button("-", () =>
-                    {
-                        _package.dependencies.Remove(dependency);
-                    }, 24));
+                    StatusLabel($"[{i}]", 35, dependency, GUIStyles.DefaultLabel, null,
+                        buttons: MakeRemoveButtonForDependency(dependency));
                 }
 
-                var addButton = new Button("+",
-                    () =>
-                    {
-                        _package.dependencies.Add(_newDependencyName);
-                        _newDependencyName = "";
-                    }, 24);
-                
-                InputField($"[{_package.dependencies.Count}]", 35, ref _newDependencyName, buttons: addButton);
-                
+                InputField($"[{_editingPackage.dependencies.Count}]", 35, ref _newDependencyName, 
+                    buttons: MakeAddDependencyButton());
                 
                 GUILayout.FlexibleSpace();
                 HorizontalButton(new Button("Done", Close));
@@ -81,18 +97,22 @@ namespace TwistCore.DependencyManagement
             var window = w as DependencyListWindow;
             if (window == null) return;
 
-            window._selections = new bool[DependencyManager.Manifest.packages.Length];
-            window._package = package ?? new DependencyManifest.Package();
+            var manifestPackagesAmount = DependencyManager.Manifest.packages.Length;
+            window._selectedPackagesMask = new bool[manifestPackagesAmount];
+            window._editingPackage = package ?? new DependencyManifest.Package();
+            window._heading = "Select Dependencies";
 
             if (package != null)
             {
-                window._shortname = package.name.Split('.').LastOrDefault();
+                window._editingPackageShortname = package.name.Split('.').LastOrDefault();
+                window._heading = "Select dependencies of " + window._editingPackageShortname;
+
                 foreach (var dependency in package.dependencies)
                 {
                     var dependencyIndex =
                         Array.FindIndex(DependencyManager.Manifest.packages, p => p.name == dependency);
                     if (dependencyIndex != -1)
-                        window._selections[dependencyIndex] = true;
+                        window._selectedPackagesMask[dependencyIndex] = true;
                 }
             }
 

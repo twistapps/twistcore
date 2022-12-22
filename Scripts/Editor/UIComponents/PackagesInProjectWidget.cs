@@ -71,7 +71,7 @@ namespace TwistCore.Editor.UIComponents
             Window.AddSection("Packages In Project:", () =>
             {
                 Window.ButtonLabel("Reload Packages", new Button("Refresh", () => PersistentEditorData.PurgePackagesInProjectCache()));
-                Window.Space(10);
+                //Window.Space(10);
                 var packages = PersistentEditorData.PackagesInProjectCached.ToArray();
 
                 var upToDatePackages = new List<PackageData>();

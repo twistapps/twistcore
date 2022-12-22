@@ -28,7 +28,7 @@ namespace TwistCore.PackageDevelopment
         public Author author;
 
         public Repository repository;
-        public VersionInfo VersionInfoInfo => _versionInfo ??= new VersionInfo(version);
+        public VersionInfo VersionInfo => _versionInfo ??= new VersionInfo(version);
 
         private VersionComparison updateInfo;
         public VersionComparison UpdateInfo => updateInfo ??= GithubVersionControl.FetchUpdates(name);
