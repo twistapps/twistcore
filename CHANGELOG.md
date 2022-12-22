@@ -1,3 +1,10 @@
+## [0.16.1](https://github.com/twistapps/twistcore/compare/0.16.0...0.16.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* Output folder ([e368fc9](https://github.com/twistapps/twistcore/commit/e368fc9b706bccb4c684fe7675c687da4a5b0944))
+
 # [0.16.0](https://github.com/twistapps/twistcore/compare/0.15.1...0.16.0) (2022-12-22)
 
 
