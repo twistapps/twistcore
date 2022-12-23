@@ -7,7 +7,7 @@ namespace TwistCore
 {
     public static class Utils
     {
-        public static Tuple<T1, T2>[] ToTuples<T1, T2>(T1[] arr1, T2[] arr2, bool suppressWarnings = false)
+        public static Tuple<T1, T2>[] MakeTuplePairs<T1, T2>(T1[] arr1, T2[] arr2, bool suppressWarnings = false)
         {
             var count = Mathf.Min(arr1.Length, arr2.Length);
             if (!suppressWarnings && arr1.Length != arr2.Length)
@@ -22,7 +22,7 @@ namespace TwistCore
         public static Tuple<T1, T2>[] ToTuplesWith<T1, T2>(this IEnumerable<T1> arr, IEnumerable<T2> other,
             bool suppressWarnings = false)
         {
-            return ToTuples(arr.ToArray(), other.ToArray(), suppressWarnings);
+            return MakeTuplePairs(arr.ToArray(), other.ToArray(), suppressWarnings);
         }
     }
 }

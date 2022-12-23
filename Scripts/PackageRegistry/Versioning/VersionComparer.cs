@@ -3,20 +3,20 @@
 namespace TwistCore.PackageRegistry.Versioning
 {
     [Serializable]
-    public class VersionComparison
+    public class VersionComparer
     {
         private const string Zero = "0.0.0";
         private readonly VersionInfo _current, _next;
 
-        public string NewVersion => _next.ToString();
+        public string NextVersion => _next.ToString();
 
-        public VersionComparison(string currentVersion, string nextVersion)
+        public VersionComparer(string currentVersion, string nextVersion)
         {
             _current = new VersionInfo(currentVersion);
             _next = new VersionInfo(nextVersion);
         }
 
-        public VersionComparison()
+        public VersionComparer()
         {
             _current = new VersionInfo(Zero);
             _next = new VersionInfo(Zero);

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace TwistCore.Editor.UIComponents
 {
-    public class PackagesInProjectWidget : SettingsUIComponent<TwistCoreSettings>
+    public class PackagesInProjectWidget : GuiWidget<TwistCoreSettings>
     {
 
         private void DrawUpToDatePackages(List<PackageData> packages)
@@ -33,7 +33,7 @@ namespace TwistCore.Editor.UIComponents
                 EditorGUI.indentLevel++;
                 Window.StatusLabel("Full Name", package.name, GUIStyles.DefaultLabel);
                 Window.LabelWarning("Version", package.version, true);
-                Window.StatusLabel("New Version", package.UpdateInfo.NewVersion, EditorStyles.linkLabel);
+                Window.StatusLabel("New Version", package.UpdateInfo.NextVersion, EditorStyles.linkLabel);
                 Window.ButtonLabel("",  new Button("Download Update",
                     () =>
                     {

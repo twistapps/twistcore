@@ -7,10 +7,10 @@ namespace TwistCore.Editor.UIComponents
     public static class SettingsUIFramework
     {
         private static readonly Dictionary<IPackageSettingsWindow<SettingsAsset>,
-                Dictionary<string, ISettingsUIComponent<SettingsAsset>>>
+                Dictionary<string, IGuiWidget<SettingsAsset>>>
             Cache =
                 new Dictionary<IPackageSettingsWindow<SettingsAsset>,
-                    Dictionary<string, ISettingsUIComponent<SettingsAsset>>>();
+                    Dictionary<string, IGuiWidget<SettingsAsset>>>();
 
         private static Type GetTypeByName(string name)
         {
@@ -19,7 +19,7 @@ namespace TwistCore.Editor.UIComponents
         }
 
         private static void SetupCachedComponent<T>(IPackageSettingsWindow<T> boundWindow,
-            ISettingsUIComponent<T> instance, string componentName)
+            IGuiWidget<T> instance, string componentName)
             where T : SettingsAsset
         {
             instance.BindWindow(boundWindow);
@@ -31,7 +31,7 @@ namespace TwistCore.Editor.UIComponents
             where T : SettingsAsset
         {
             if (!Cache.ContainsKey(bind))
-                Cache.Add(bind, new Dictionary<string, ISettingsUIComponent<SettingsAsset>>());
+                Cache.Add(bind, new Dictionary<string, IGuiWidget<SettingsAsset>>());
 
             if (!Cache[bind].ContainsKey(component))
             {
@@ -41,7 +41,7 @@ namespace TwistCore.Editor.UIComponents
                 if (type.IsGenericTypeDefinition)
                     resultingType = type.MakeGenericType(typeof(T));
 
-                if (Activator.CreateInstance(resultingType) is ISettingsUIComponent<T> instance)
+                if (Activator.CreateInstance(resultingType) is IGuiWidget<T> instance)
                     SetupCachedComponent(bind, instance, component);
                 else
                     SetupCachedComponent(bind, Activator.CreateInstance<UnsupportedNotification>(), component);

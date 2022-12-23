@@ -38,7 +38,7 @@ namespace TwistCore.PackageDevelopment
         public static bool IsGithubPackage(string packageName)
         {
             if (GetSource(packageName) != PackageSource.Git) return false;
-            var packageInfo = PackageRegistryUtils.Get(packageName);
+            var packageInfo = UPMCollection.Get(packageName);
             return packageInfo.repository.url.Contains("https://github.com/");
         }
 

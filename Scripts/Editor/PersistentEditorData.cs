@@ -6,6 +6,7 @@ using TwistCore.PackageRegistry;
 using TwistCore.PackageRegistry.Versioning;
 using UnityEditor;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore.Editor
 {
@@ -15,16 +16,16 @@ namespace TwistCore.Editor
         [SerializeField] private bool gitAvailable;
         [SerializeField] private string gitVersion;
 
-        [SerializeField] private VersionComparison coreUpdateInfo;
+        [SerializeField] private VersionComparer coreUpdateInfo;
 
-        public VersionComparison CoreUpdateInfo => coreUpdateInfo ??= FetchCoreUpdates();
+        public VersionComparer CoreUpdateInfo => coreUpdateInfo ??= FetchCoreUpdates();
 
         public bool GitAvailable => gitInitialized ? gitAvailable : InitializeGit() != null;
         public string GitVersion => gitInitialized ? gitVersion : InitializeGit();
 
-        private static VersionComparison FetchCoreUpdates()
+        private static VersionComparer FetchCoreUpdates()
         {
-            var package = PackageRegistryUtils.Get(TwistCore.PackageName);
+            var package = UPMCollection.Get(TwistCore.PackageName);
             return GithubVersionControl.FetchUpdates(package);
         }
 
@@ -50,22 +51,19 @@ namespace TwistCore.Editor
         [SerializeField] private PackageData[] packagesInProject;
 
         public static IEnumerable<PackageData> PackagesInProjectCached =>
-            instance.packagesInProject ??= ListPackagesInProject().ToArray();
+            instance.packagesInProject ??= UPMCollection.Packages.Select(ToPackageData).ToArray();
+        
+        public static IEnumerable<PackageData> PackagesInProject => UPMCollection.Packages.Select(ToPackageData).ToArray();
 
-        public static IEnumerable<PackageData> ListPackagesInProject()
+        private static PackageData ToPackageData(PackageInfo packageInfo) => (PackageData)packageInfo;
+        public static Manifest.Package FindManifestPackage(PackageData package)
         {
-            instance.packagesInProject = DependencyManager.Manifest.packages
-                .Select(package => (PackageData)PackageRegistryUtils.Get(package.name))
-                .Where(p => p != null)
-                .ToArray();
-
-            return instance.packagesInProject;
+            return ManifestEditor.Manifest.Get(package.name);
         }
-
         public static void PurgePackagesInProjectCache()
         {
             instance.packagesInProject = null;
-            PackageRegistryUtils.LoadCoreDependentPackages();
+            UPMCollection.ListPackages();
         }
 
         #endregion

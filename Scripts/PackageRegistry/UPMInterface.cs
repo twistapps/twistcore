@@ -47,7 +47,7 @@ namespace TwistCore.PackageRegistry
 
         public static PackageInfo Update(string packageName)
         {
-            var packageInfo = PackageRegistryUtils.Get(packageName);
+            var packageInfo = UPMCollection.Get(packageName);
             return Update(packageInfo);
         }
 

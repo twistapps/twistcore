@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace TwistCore.ProgressWindow.Editor
 {
-    public static class TwistTaskFramework
+    public static class TaskExtensions
     {
         public static TaskProgress FinishSynchronously(this IEnumerator<TaskProgress> task)
         {

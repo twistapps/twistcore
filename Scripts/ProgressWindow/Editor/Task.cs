@@ -1,17 +1,18 @@
-﻿using System.Collections;
+﻿#if EDITOR_COROUTINES
+using System.Collections;
 using System.Collections.Generic;
 using Unity.EditorCoroutines.Editor;
 
 namespace TwistCore.ProgressWindow.Editor
 {
-    public class TwistTask
+    public class Task
     {
         private readonly IEnumerator<TaskProgress> _coroutine;
         public readonly string Description;
         public bool Completed;
         public float ProgressAmount;
 
-        public TwistTask(IEnumerator<TaskProgress> coroutine, string description)
+        public Task(IEnumerator<TaskProgress> coroutine, string description)
         {
             _coroutine = coroutine;
             Description = description;
@@ -38,3 +39,4 @@ namespace TwistCore.ProgressWindow.Editor
         }
     }
 }
+#endif

@@ -16,7 +16,7 @@ namespace TwistCore.CodeGen
         public static void SyncTemplateFoldersFromAllRegisteredPackages()
         {
             const string templateFolderSlug = "ScriptTemplates";
-            var sourceFolders = PackageRegistryUtils.Collection.Select(
+            var sourceFolders = UPMCollection.Packages.Select(
                 package => Path.Combine(package.assetPath, templateFolderSlug))
                 .Where(Directory.Exists)
                 .ToArray();

@@ -7,14 +7,13 @@ using UnityEngine;
 
 namespace TwistCore.DependencyManagement
 {
-    public class DependencyManagerSettingsWindow : PackageSettingsWindow<DependencyManagerSettings>
+    public class ManifestEditorSettingsWindow : PackageSettingsWindow<ManifestEditorSettings>
     {
-        private bool _justEnteredManifestEditMode;
 
         private static string ManifestURL =>
-            Settings.useCustomManifestURL ? Settings.manifestURL : DependencyManager.DefaultManifestURL;
+            Settings.useCustomManifestURL ? Settings.manifestURL : ManifestEditor.DefaultManifestURL;
 
-        private void SetEditingPackage(DependencyManifest.Package package)
+        private void SetEditingPackage(Manifest.Package package)
         {
             var nameParts = package.name.Split('.');
             var organization = nameParts[1];
@@ -25,59 +24,58 @@ namespace TwistCore.DependencyManagement
             Settings.editingPackageURL = package.url;
             Settings.editingPackageDefineSymbols = package.scriptingDefineSymbols;
             // ReSharper disable once AccessToModifiedClosure
-            Settings.editingPackage = Array.FindIndex(DependencyManager.Manifest.packages, p => p.name == package.name);
-            DependencyManager.instance.usingLocalManifest = true;
-            _justEnteredManifestEditMode = true;
+            Settings.editingPackage = Array.FindIndex(ManifestEditor.Manifest.packages, p => p.name == package.name);
+            ManifestEditor.instance.usingLocalManifest = true;
         }
 
-        private static void RemovePackage(DependencyManifest.Package package)
+        private static void RemovePackage(Manifest.Package package)
         {
             if (EditorUtility.DisplayDialog(
                     "Package Removal Confirmation",
                     $"Are you sure you want to remove {package.name} from manifest?",
                     "Remove",
                     "Cancel"))
-                DependencyManager.RemovePackageFromManifest(package);
+                ManifestEditor.RemovePackageFromManifest(package);
         }
 
-        private void ListDependencies(DependencyManifest.Package package)
+        private void ListDependencies(Manifest.Package package)
         {
             var dependenciesAmount = package.dependencies?.Count ?? 0;
             var dependenciesStatus = $"Dependencies[{dependenciesAmount}]";
             ButtonLabelShrinkWidth(dependenciesStatus,
-                new Button("Change", () => { DependencyListWindow.ShowSettings(package); }, 60));
+                new Button("Change", () => { DependencyPickerWindow.Show(package); }, 60));
         }
 
-        protected override void Draw()
+        protected override void DrawGUI()
         {
             var manifestSource = "Manifest source";
             AddSection("General", () =>
             {
-                if (DependencyManager.instance.usingLocalManifest)
+                if (ManifestEditor.instance.usingLocalManifest)
                 {
                     LabelWarning(manifestSource, "Local (edit mode)", true,
-                        new Button("Switch", () =>
+                        new Button("Switch", ButtonStyles.Dimm, () =>
                         {
-                            DependencyManager.LoadManifestFromURL();
+                            ManifestEditor.LoadManifestFromURL();
                             ResetFoldouts();
                             Settings.editingPackage = -1;
-                            PackageRegistryUtils.PurgeCollection();
+                            UPMCollection.PurgeCache();
                         }));
                 }
                 else
                 {
                     LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", 
                         !Settings.useCustomManifestURL,
-                        new Button("Switch", () =>
+                        new Button("Switch", ButtonStyles.Dimm, () =>
                         {
-                            DependencyManager.LoadManifestFromFile();
+                            ManifestEditor.LoadManifestFromFile();
                             ResetFoldouts();
-                            PackageRegistryUtils.PurgeCollection();
+                            UPMCollection.PurgeCache();
                         }));
-                    ButtonLabel("Download Manifest from web", new Button("Update", () =>
+                    ButtonLabel("Download Manifest from web", new Button("Update", ButtonStyles.Dimm, () =>
                     {
-                        DependencyManager.LoadManifestFromURL();
-                        DependencyManager.Manifest.Save();
+                        ManifestEditor.LoadManifestFromURL();
+                        ManifestEditor.Manifest.Save();
                     }));
                 }
             });
@@ -88,12 +86,12 @@ namespace TwistCore.DependencyManagement
 
             AddSection("Edit Manifest", () =>
             {
-                if (DependencyManager.Manifest.packages.Length < 1)
+                if (ManifestEditor.Manifest.packages.Length < 1)
                     CallToAction("Manifest is empty.");
 
-                for (var i = 0; i < DependencyManager.Manifest.packages.Length; i++)
+                for (var i = 0; i < ManifestEditor.Manifest.packages.Length; i++)
                 {
-                    var package = DependencyManager.Manifest.packages[i];
+                    var package = ManifestEditor.Manifest.packages[i];
 
                     var nameParts = package.name.Split('.');
                     var organization = nameParts[1];
@@ -103,12 +101,6 @@ namespace TwistCore.DependencyManagement
                     {
                         AddSection(package.name, () =>
                         {
-                            // if (_justEnteredManifestEditMode && !FoldoutManager.CurrentElementIsOpen)
-                            // {
-                            //     FoldoutManager.SetCurrentElement(true);
-                            //     _justEnteredManifestEditMode = false;
-                            // }
-
                             ListDependencies(package);
 
                             InputField("Name", ref Settings.editingPackageName);
@@ -124,8 +116,8 @@ namespace TwistCore.DependencyManagement
                                         var fullName =
                                             $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
                                         // ReSharper disable once AccessToModifiedClosure
-                                        DependencyManager.EditPackage(i, fullName, Settings.editingPackageURL);
-                                        DependencyManager.SetDefineSymbols(i, Settings.editingPackageDefineSymbols);
+                                        ManifestEditor.EditPackage(i, fullName, Settings.editingPackageURL);
+                                        ManifestEditor.SetDefineSymbols(i, Settings.editingPackageDefineSymbols);
                                         Settings.editingPackage = -1;
                                     }));
                         }, foldout: true);
@@ -134,9 +126,9 @@ namespace TwistCore.DependencyManagement
 
                     AddSection(package.name, () =>
                     {
-                        var editButton = new Button("Edit",
+                        var editButton = new Button("Edit", ButtonStyles.Dimm,
                             () => { SetEditingPackage(package); });
-                        var removeButton = new Button("Remove",
+                        var removeButton = new Button("Remove", ButtonStyles.Dimm,
                             () => { RemovePackage(package); });
 
                         ListDependencies(package);
@@ -160,12 +152,12 @@ namespace TwistCore.DependencyManagement
                 
                 var dependenciesStatus = $"Dependencies[{Settings.newPackageDependencies?.Count ?? 0}]";
                 ButtonLabelShrinkWidth(dependenciesStatus, 16,
-                    new Button("Change", () => { DependencyListWindow.ShowSettings(null); }, 60));
+                    new Button("Change", () => { DependencyPickerWindow.Show(null); }, 60));
 
-                ButtonLabel("", new Button("Add Package",
+                ButtonLabel("", new Button("Add Package", ButtonStyles.Dimm,
                     () =>
                     {
-                        DependencyManager.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL,
+                        ManifestEditor.RegisterPackage(Settings.newPackageName, Settings.newPackageGitURL,
                             Settings.newPackageDependencies, Settings.newPackageDefineSymbols);
                     }, 110));
             }, ref Settings.addPackageEnabled);

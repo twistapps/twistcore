@@ -26,13 +26,13 @@ namespace TwistCore.PackageDevelopment
             var files = Directory.GetFiles(packageFolder);
             var asmdef = files.FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
             if (!string.IsNullOrEmpty(asmdef)) return asmdef;
-            Debug.Log($"Looking for {package.Alias()}");
-            foreach (var assembly in CompilationPipeline.GetAssemblies())
-            {
-                if (assembly.name.ToLower().Contains(package.Alias()))
-                    return assembly.outputPath;
-            }
-            Debug.Log($"{package.Alias()} not found");
+            // Debug.Log($"Looking for {package.Alias()}");
+            // foreach (var assembly in CompilationPipeline.GetAssemblies())
+            // {
+            //     if (assembly.name.ToLower().Contains(package.Alias()))
+            //         return assembly.outputPath;
+            // }
+            // Debug.Log($"{package.Alias()} not found");
 
             return null;
         }

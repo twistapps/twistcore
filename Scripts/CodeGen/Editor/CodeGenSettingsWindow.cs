@@ -5,7 +5,7 @@ namespace TwistCore.CodeGen.Editor
 {
     internal class CodeGenWindow : PackageSettingsWindow<CodeGenSettings>
     {
-        protected override void Draw()
+        protected override void DrawGUI()
         {
             BeginSection("CodeGen Settings");
             Checkbox("Auto Generate Scripts On Compile", ref Settings.autoGenerateOnCompile);

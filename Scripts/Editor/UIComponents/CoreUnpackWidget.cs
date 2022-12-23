@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TwistCore.Editor.UIComponents
 {
-    public class CoreUnpackWidget<T> : SettingsUIComponent<T> where T : SettingsAsset
+    public class CoreUnpackWidget<T> : GuiWidget<T> where T : SettingsAsset
     {
         public override void Draw()
         {

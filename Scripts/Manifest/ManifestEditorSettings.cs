@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TwistCore.DependencyManagement
 {
-    public class DependencyManagerSettings : SettingsAsset
+    public class ManifestEditorSettings : SettingsAsset
     {
         public bool useCustomManifestURL;
         public bool addPackageEnabled;

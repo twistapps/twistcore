@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TwistCore.DependencyManagement
 {
     [Serializable]
-    public class DependencyManifest
+    public class Manifest
     {
         public Package[] packages = Array.Empty<Package>();
 

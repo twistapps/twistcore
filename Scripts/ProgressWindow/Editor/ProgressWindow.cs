@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if EDITOR_COROUTINES
+using UnityEditor;
 using UnityEngine;
 
 namespace TwistCore.ProgressWindow.Editor
@@ -43,3 +44,4 @@ namespace TwistCore.ProgressWindow.Editor
         // }
     }
 }
+#endif

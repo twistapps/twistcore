@@ -1,6 +1,6 @@
 ﻿namespace TwistCore.Editor.UIComponents
 {
-    public class UnsupportedNotification : SettingsUIComponent<SettingsAsset>
+    public class UnsupportedNotification : GuiWidget<SettingsAsset>
     {
         public override void Draw()
         {

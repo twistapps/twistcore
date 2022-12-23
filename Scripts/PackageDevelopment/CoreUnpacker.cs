@@ -59,11 +59,11 @@ namespace TwistCore.PackageDevelopment
                 yield break;
             }
 
-            var core = PackageRegistryUtils.Get(packageToUnpack);
+            var core = UPMCollection.Get(packageToUnpack);
             var corePath = core.assetPath;
 
             Debug.Log(packageName);
-            var package = PackageRegistryUtils.Get(packageName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
             var packagePath = package.assetPath;
 
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
@@ -142,7 +142,7 @@ namespace TwistCore.PackageDevelopment
             RemoveAsmdefDependency(packageName, packageToUnpack);
             
             //add dependencies of embedded package
-            foreach (var dependency in DependencyManager.Manifest.Get(packageToUnpack).dependencies)
+            foreach (var dependency in ManifestEditor.Manifest.Get(packageToUnpack).dependencies)
             {
                 AddExternalAsmdefDependency(packageName, dependency);
                 //AddAsmdefDependency(packageName, dependency);
@@ -165,7 +165,7 @@ namespace TwistCore.PackageDevelopment
             yield return progress.Next();
 
             progress.Log("Removing dir " + outputDirectoryName);
-            var package = PackageRegistryUtils.Get(packageName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
             var packagePath = package.assetPath;
 
             var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
@@ -190,7 +190,7 @@ namespace TwistCore.PackageDevelopment
             AddAsmdefDependency(packageName, unpackedPackage);
             
             //remove dependencies of embedded package
-            foreach (var dependency in DependencyManager.Manifest.Get(unpackedPackage).dependencies)
+            foreach (var dependency in ManifestEditor.Manifest.Get(unpackedPackage).dependencies)
             {
                 RemoveExternalAsmdefDependency(packageName, dependency);
             }
@@ -202,13 +202,13 @@ namespace TwistCore.PackageDevelopment
 
         public static void RemoveAsmdefDependency(string packageName, string dependencyName)
         {
-            var package = PackageRegistryUtils.Get(packageName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
             var asmdef = package.Asmdef();
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
-            var dependencyGuid = "GUID:" + PackageRegistryUtils.GetFromFullCollection(dependencyName).AsmdefGuid();
+            var dependencyGuid = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid();
 
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
@@ -224,7 +224,7 @@ namespace TwistCore.PackageDevelopment
 
         private static string GetExternalPackageGuid(string packageName)
         {
-            var alias = PackageRegistryUtils.GetFromFullCollection(packageName).Alias();
+            var alias = UPMCollection.GetFromAllPackages(packageName).Alias();
 
             var files = Directory.GetFiles(Path.Combine("Packages", packageName), "*.asmdef",
                 SearchOption.AllDirectories);
@@ -235,7 +235,7 @@ namespace TwistCore.PackageDevelopment
 
         public static void AddExternalAsmdefDependency(string packageName, string dependencyName)
         {
-            var package = PackageRegistryUtils.Get(packageName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
@@ -255,7 +255,7 @@ namespace TwistCore.PackageDevelopment
         
         public static void RemoveExternalAsmdefDependency(string packageName, string dependencyName)
         {
-            var package = PackageRegistryUtils.Get(packageName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
             var asmdef = package.Asmdef();
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
@@ -277,7 +277,7 @@ namespace TwistCore.PackageDevelopment
         
         public static void AddAsmdefDependency(string packageName, string dependencyName)
         {
-            var package = PackageRegistryUtils.Get(packageName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
@@ -286,7 +286,7 @@ namespace TwistCore.PackageDevelopment
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
 
-            var dependencyGuid = "GUID:" + PackageRegistryUtils.GetFromFullCollection(dependencyName).AsmdefGuid();
+            var dependencyGuid = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid();
 
             //CompilationPipeline.GUIDToAssemblyDefinitionReferenceGUID()
             

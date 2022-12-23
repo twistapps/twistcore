@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace TwistCore.DependencyManagement
 {
-    public class DependencyListWindow : PackageSettingsWindow<DependencyManagerSettings>
+    public class DependencyPickerWindow : PackageSettingsWindow<ManifestEditorSettings>
     {
         private int _currentPackageIndex;
-        private DependencyManifest.Package _editingPackage;
+        private Manifest.Package _editingPackage;
         private string _editingPackageShortname;
         private string _heading = "Select Dependencies";
         private string _newDependencyName = "";
@@ -18,12 +18,12 @@ namespace TwistCore.DependencyManagement
         private void OnDestroy()
         {
             if (_editingPackage.name == null) Settings.newPackageDependencies = _editingPackage.dependencies;
-            DependencyManager.UpdateDependencies(_editingPackage, _editingPackage.dependencies);
+            ManifestEditor.UpdateDependencies(_editingPackage, _editingPackage.dependencies);
         }
 
         private void OnPackageSelectionChange(int packageIndex, bool selected)
         {
-            var manifestPackageName = DependencyManager.Manifest.packages[packageIndex].name;
+            var manifestPackageName = ManifestEditor.Manifest.packages[packageIndex].name;
 
             if (!selected)
             {
@@ -55,9 +55,9 @@ namespace TwistCore.DependencyManagement
                 }, 24);
         }
 
-        protected override void Draw()
+        protected override void DrawGUI()
         {
-            var manifestPackagesAmount = DependencyManager.Manifest.packages.Length;
+            var manifestPackagesAmount = ManifestEditor.Manifest.packages.Length;
 
             if (_selectedPackagesMask == null || manifestPackagesAmount != _selectedPackagesMask.Length)
                 _selectedPackagesMask = new bool[manifestPackagesAmount];
@@ -67,7 +67,7 @@ namespace TwistCore.DependencyManagement
                 for (var i = 0; i < manifestPackagesAmount; i++)
                 {
                     _currentPackageIndex = i;
-                    var manifestPackage = DependencyManager.Manifest.packages[i];
+                    var manifestPackage = ManifestEditor.Manifest.packages[i];
                     Checkbox(manifestPackage.name, ref _selectedPackagesMask[i], OnPackageSelectionChange,
                         expandWidth: true);
                 }
@@ -78,7 +78,7 @@ namespace TwistCore.DependencyManagement
                 for (var i = 0; i < _editingPackage.dependencies.Count; i++)
                 {
                     var dependency = _editingPackage.dependencies[i];
-                    if (DependencyManager.Manifest.PackageExists(dependency)) continue;
+                    if (ManifestEditor.Manifest.PackageExists(dependency)) continue;
                     StatusLabel($"[{i}]", 35, dependency, GUIStyles.DefaultLabel, null,
                         buttons: MakeRemoveButtonForDependency(dependency));
                 }
@@ -91,15 +91,15 @@ namespace TwistCore.DependencyManagement
             });
         }
 
-        public static void ShowSettings(DependencyManifest.Package package)
+        public static void Show(Manifest.Package package)
         {
             ShowWindow(out var w, true);
-            var window = w as DependencyListWindow;
+            var window = w as DependencyPickerWindow;
             if (window == null) return;
 
-            var manifestPackagesAmount = DependencyManager.Manifest.packages.Length;
+            var manifestPackagesAmount = ManifestEditor.Manifest.packages.Length;
             window._selectedPackagesMask = new bool[manifestPackagesAmount];
-            window._editingPackage = package ?? new DependencyManifest.Package();
+            window._editingPackage = package ?? new Manifest.Package();
             window._heading = "Select Dependencies";
 
             if (package != null)
@@ -110,7 +110,7 @@ namespace TwistCore.DependencyManagement
                 foreach (var dependency in package.dependencies)
                 {
                     var dependencyIndex =
-                        Array.FindIndex(DependencyManager.Manifest.packages, p => p.name == dependency);
+                        Array.FindIndex(ManifestEditor.Manifest.packages, p => p.name == dependency);
                     if (dependencyIndex != -1)
                         window._selectedPackagesMask[dependencyIndex] = true;
                 }

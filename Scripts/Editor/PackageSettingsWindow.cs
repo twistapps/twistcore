@@ -97,7 +97,7 @@ namespace TwistCore.Editor
             FoldoutManager.GUICycle();
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             GUILayout.Space(5);
-            Draw();
+            DrawGUI();
             EditorGUILayout.EndScrollView();
             WatchChangesAbove();
         }
@@ -138,7 +138,10 @@ namespace TwistCore.Editor
             bool foldout = false)
         {
             FoldoutManager.NextSectionStart(foldout ? heading : null);
-            EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
+            if (EditorGUIUtility.isProSkin)
+                EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
+            else
+                EditorGUILayout.BeginVertical();
             if (addDivider) EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
             var style = new GUIStyle("BoldLabel");
@@ -162,7 +165,10 @@ namespace TwistCore.Editor
             Action<bool> onEnabledChange = null, int width = -1)
         {
             FoldoutManager.NextSectionStart();
-            EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
+            if (EditorGUIUtility.isProSkin)
+                EditorGUILayout.BeginVertical(new GUIStyle("ObjectPickerBackground"));
+            else
+                EditorGUILayout.BeginVertical();
             if (addDivider) EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             using (var l = new EditorGUILayout.HorizontalScope())
             {
@@ -407,11 +413,24 @@ namespace TwistCore.Editor
 
         public void Heading(string text, params Button[] buttons)
         {
+            Heading(text, false, false, buttons);
+        }
+        
+        public void Heading(string text, bool expandWidth=false, params Button[] buttons)
+        {
+            Heading(text, expandWidth, false, buttons);
+        }
+        
+        public void Heading(string text, bool expandWidth=false, bool center=false, params Button[] buttons)
+        {
             if (!FoldoutManager.CurrentElementIsOpen) return;
             using (var l = new EditorGUILayout.HorizontalScope())
             {
-                var layoutOptions =
+                if (center) GUILayout.FlexibleSpace();
+                    var layoutOptions =
                     buttons.Length > 0 ? new[] { GUILayout.ExpandWidth(true) } : DefaultLabelLayoutOptions;
+                //todo: Compute label width, possible solution https://forum.unity.com/threads/make-a-labels-width-match-its-content.778436/#post-5183531
+                if (expandWidth) layoutOptions = new[] { GUILayout.ExpandWidth(true), GUILayout.Width(text.Length * 7) };
                 EditorGUILayout.LabelField(text, EditorStyles.boldLabel, layoutOptions);
                 if (buttons.Length > 0)
                     foreach (var button in buttons)
@@ -419,6 +438,7 @@ namespace TwistCore.Editor
                         button.Construct(70);
                         GUILayout.Space(9);
                     }
+                if (center) GUILayout.FlexibleSpace();
             }
 
             GUILayout.Space(ElementMarginBottom);
@@ -554,7 +574,7 @@ namespace TwistCore.Editor
             }
         }
 
-        protected abstract void Draw();
+        protected abstract void DrawGUI();
 
         /// <summary>
         ///     Update the actual asset file if any value above this has changed.
@@ -583,7 +603,7 @@ namespace TwistCore.Editor
             Vector2 minSize = default)
         {
             Settings = SettingsUtility.Load<TSettings>();
-            Debug.Log($"Displaying {TraceCallingType().Name}");
+            //Debug.Log($"Displaying {TraceCallingType().Name}");
             window =
                 GetWindow(TraceCallingType(), utility, Settings.GetEditorWindowTitle()) as
                     PackageSettingsWindow<TSettings>;
@@ -601,7 +621,8 @@ namespace TwistCore.Editor
     public class Button
     {
         private readonly string _innerText;
-        private readonly Action _onClick;
+        private Action _onClick;
+        private readonly GUIStyle _style = ButtonStyles.Default;
 
         private int _widthOverride;
 
@@ -611,10 +632,24 @@ namespace TwistCore.Editor
             _onClick = onClick;
             if (widthOverride != 0) OverrideWidth(widthOverride);
         }
+        
+        public Button(string innerText, GUIStyle style, Action onClick = null, int widthOverride = 0)
+        {
+            _innerText = innerText;
+            _onClick = onClick;
+            _style = style ?? ButtonStyles.Default;
+            if (widthOverride != 0) OverrideWidth(widthOverride);
+        }
 
         public void OverrideWidth(int forcedWidth)
         {
             _widthOverride = forcedWidth;
+        }
+
+        public Button Disable()
+        {
+            _onClick = null;
+            return this;
         }
 
         public void Construct(int width = 120)
@@ -622,7 +657,7 @@ namespace TwistCore.Editor
             using (new EditorGUI.DisabledScope(_onClick == null))
             {
                 if (_widthOverride != 0) width = _widthOverride;
-                if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton"), GUILayout.Width(width)))
+                if (GUILayout.Button(_innerText, _style, GUILayout.Width(width)))
                     _onClick?.Invoke();
             }
         }
@@ -631,10 +666,18 @@ namespace TwistCore.Editor
         {
             using (new EditorGUI.DisabledScope(_onClick == null))
             {
-                if (GUILayout.Button(_innerText, new GUIStyle("ToolbarButton"), options))
+                if (GUILayout.Button(_innerText, _style, options))
                     _onClick?.Invoke();
             }
         }
+    }
+
+    public static class ButtonStyles
+    {
+        public static readonly GUIStyle Default = new GUIStyle("Button");
+
+        public static readonly GUIStyle Dimm =
+            EditorGUIUtility.isProSkin ? new GUIStyle("ToolbarButton") : new GUIStyle("Button");
     }
 
     public class Section

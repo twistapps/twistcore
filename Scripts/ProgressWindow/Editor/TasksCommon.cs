@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace TwistCore.ProgressWindow.Editor
 {
-    public static class CommonTasks
+    public static class TasksCommon
     {
         public static IEnumerator<TaskProgress> Sleep(int seconds)
         {

@@ -25,14 +25,14 @@ namespace TwistCore.Editor
         {
             foreach (var packageInfo in packageRegistrationEventArgs.added)
             {
-                var manifestPackage = DependencyManager.Manifest.Get(packageInfo.name);
+                var manifestPackage = ManifestEditor.Manifest.Get(packageInfo.name);
                 if (manifestPackage != null)
                     AddSymbols(manifestPackage.scriptingDefineSymbols);
             }
 
             foreach (var packageInfo in packageRegistrationEventArgs.removed)
             {
-                var manifestPackage = DependencyManager.Manifest.Get(packageInfo.name);
+                var manifestPackage = ManifestEditor.Manifest.Get(packageInfo.name);
                 if (manifestPackage != null)
                     RemoveSymbols(manifestPackage.scriptingDefineSymbols);
             }
@@ -40,8 +40,8 @@ namespace TwistCore.Editor
         
         public static void RefreshAllSymbols()
         {
-            var packagesInProject = PackageRegistryUtils.Collection;
-            foreach (var manifestPackage in DependencyManager.Manifest.packages)
+            var packagesInProject = UPMCollection.Packages;
+            foreach (var manifestPackage in ManifestEditor.Manifest.packages)
             {
                 if (string.IsNullOrEmpty(manifestPackage.scriptingDefineSymbols))
                     continue;

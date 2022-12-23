@@ -1,24 +1,26 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+#if EDITOR_COROUTINES
+using System.Collections;
 using Unity.EditorCoroutines.Editor;
+#endif
 
 namespace TwistCore.ProgressWindow.Editor
 {
     public static class TaskManager
     {
+#if EDITOR_COROUTINES
         private const float WaitSecondsAfterAllTasksDone = 1;
 
-        public static readonly Queue<TwistTask> Queue = new Queue<TwistTask>();
+        public static readonly Queue<Task> Queue = new Queue<Task>();
         public static readonly List<string> Logs = new List<string>();
 
-        public static TwistTask CurrentTask;
+        public static Task CurrentTask;
 
         [UsedImplicitly] public static EditorCoroutine QueueRunnerCoroutine;
 
         private static ProgressWindow _window;
-        private static List<Action> _onComplete = new List<Action>();
 
 
         public static void AddLogs(string text)
@@ -26,23 +28,10 @@ namespace TwistCore.ProgressWindow.Editor
             Logs.Add(CurrentTask.Description + ": " + text);
         }
 
-        /// <summary>
-        ///     Actions that will be performed synchronously after all tasks are done:
-        ///     use for coroutine-breaking things like script recompilation.
-        /// </summary>
-        /// <param name="action"></param>
-        public static void ExecuteOnCompletion(Action action)
-        {
-            _onComplete.Add(action);
-            
-            if (CurrentTask == null && Queue.Count == 0)
-                InvokeAllOnCompleteActions();
-        }
-
         public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
             Action onComplete = null)
         {
-            Queue.Enqueue(new TwistTask(coroutine, description));
+            Queue.Enqueue(new Task(coroutine, description));
             if (onComplete != null) _onComplete.Add(onComplete);
 
             if (_window == null)
@@ -53,13 +42,6 @@ namespace TwistCore.ProgressWindow.Editor
 
             QueueRunnerCoroutine ??= EditorCoroutineUtility.StartCoroutineOwnerless(
                 ExecuteTasks());
-        }
-
-        private static void InvokeAllOnCompleteActions()
-        {
-            foreach (var action in _onComplete)
-                action?.Invoke();
-            _onComplete = new List<Action>();
         }
 
         private static IEnumerator ExecuteTasks()
@@ -80,6 +62,42 @@ namespace TwistCore.ProgressWindow.Editor
 
             EditorCoroutineUtility.StopCoroutine(QueueRunnerCoroutine);
             QueueRunnerCoroutine = null;
+        }
+#else
+        public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
+            Action onComplete = null)
+        {
+            if (onComplete != null) _onComplete.Add(onComplete);
+            coroutine.FinishSynchronously();
+            InvokeAllOnCompleteActions();
+        }
+
+        public static void AddLogs(string text)
+        {
+        }
+#endif
+        private static List<Action> _onComplete = new List<Action>();
+
+        /// <summary>
+        ///     Actions that will be performed synchronously after all tasks are done:
+        ///     use for coroutine-breaking things like script recompilation.
+        /// </summary>
+        /// <param name="action"></param>
+        public static void ExecuteOnCompletion(Action action)
+        {
+            _onComplete.Add(action);
+
+#if EDITOR_COROUTINES
+            if (CurrentTask == null && Queue.Count == 0)
+                InvokeAllOnCompleteActions();
+#endif
+        }
+
+        private static void InvokeAllOnCompleteActions()
+        {
+            foreach (var action in _onComplete)
+                action?.Invoke();
+            _onComplete = new List<Action>();
         }
     }
 }

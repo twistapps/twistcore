@@ -4,12 +4,12 @@ using TwistCore.ProgressWindow.Editor;
 // ReSharper disable once CheckNamespace
 namespace TwistCore.Editor.UIComponents
 {
-    public class DependencyManagerWidget : SettingsUIComponent<TwistCoreSettings>
+    public class ManifestEditorWidget : GuiWidget<TwistCoreSettings>
     {
         private static void Open()
         {
-            TaskManager.Enqueue(DependencyManager.LoadManifestAsync(), "Fetching manifest",
-                DependencyManagerSettingsWindow.ShowSettings);
+            TaskManager.Enqueue(ManifestEditor.LoadManifestAsync(), "Fetching manifest",
+                ManifestEditorSettingsWindow.ShowSettings);
         }
         
         public override void Draw()

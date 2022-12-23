@@ -11,7 +11,7 @@ namespace TwistCore.Editor
 {
     public class TwistCoreSettingsWindow : PackageSettingsWindow<TwistCoreSettings>
     {
-        protected override void Draw()
+        protected override void DrawGUI()
         {
             BeginSection("Requirements");
 
@@ -23,7 +23,7 @@ namespace TwistCore.Editor
 
 
             // var corePackageName = TwistCoreDefinitions.PackageName;
-            var corePackage = PackageRegistryUtils.Get(TwistCore.PackageName);
+            var corePackage = UPMCollection.Get(TwistCore.PackageName);
             
             if (PackageLock.IsInDevelopmentMode(TwistCore.PackageName))
             {
@@ -65,7 +65,7 @@ namespace TwistCore.Editor
                 //     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
                 //         150));
 
-                this.DrawCachedComponent("DependencyManagerWidget");
+                this.DrawCachedComponent("ManifestEditorWidget");
             });
             
             this.DrawCachedComponent("PackagesInProjectWidget");
@@ -74,6 +74,10 @@ namespace TwistCore.Editor
             InputField("Name", ref Settings.newPackageName);
             InputField("Displayname", ref Settings.newPackageDisplayname);
             InputField("Description", ref Settings.newPackageDescription);
+
+            var _ = false;
+            Checkbox("Add to Manifest", ref _);
+            Checkbox("Initialize Git", ref _);
 
             HorizontalButton(new Button("Create Package", PackageCreationTool.CreatePackageBasedOnSettings));
             EndSection();
