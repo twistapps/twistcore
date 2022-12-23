@@ -60,10 +60,16 @@ namespace TwistCore.Editor
         {
             return ManifestEditor.Manifest.Get(package.name);
         }
-        public static void PurgePackagesInProjectCache()
+
+        [InitializeOnLoadMethod]
+        private static void RegisterEvents()
+        {
+            UPMCollection.CachePurgedEvent += PurgePackagesInProjectCache;
+        }
+        
+        private static void PurgePackagesInProjectCache()
         {
             instance.packagesInProject = null;
-            UPMCollection.ListPackages();
         }
 
         #endregion

@@ -88,7 +88,7 @@ namespace TwistCore.Editor
         {
             var package = TwistCore.PackageName;
             UPMInterface.Update(package);
-            PersistentEditorData.PurgePackagesInProjectCache();
+            UPMCollection.PurgeCache();
         }
 
         [MenuItem("Tools/Twist Apps/Twist Core Settings")]

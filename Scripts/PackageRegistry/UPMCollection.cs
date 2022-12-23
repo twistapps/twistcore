@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TwistCore.DependencyManagement;
 using UnityEditor.PackageManager;
@@ -11,6 +12,8 @@ namespace TwistCore.PackageRegistry
         private static PackageCollection _allPackages;
         public static PackageInfo[] Packages => _packages ?? ListPackages();
         public static PackageCollection AllPackages => _allPackages ?? ListAllPackages();
+
+        public static Action CachePurgedEvent; 
 
         public static PackageInfo[] ListPackages()
         {
@@ -40,6 +43,8 @@ namespace TwistCore.PackageRegistry
         {
             Debug.Log("Purging package registry collection...");
             _packages = null;
+            _allPackages = null;
+            CachePurgedEvent.Invoke();
         }
 
         public static PackageInfo Get(string packageName)

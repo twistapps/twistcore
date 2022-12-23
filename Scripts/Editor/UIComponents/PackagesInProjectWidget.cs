@@ -38,7 +38,7 @@ namespace TwistCore.Editor.UIComponents
                     () =>
                     {
                         UPMInterface.Update(package.name);
-                        PersistentEditorData.PurgePackagesInProjectCache();
+                        UPMCollection.PurgeCache();
                     }, widthOverride:120));
                 EditorGUI.indentLevel--;
                 //Window.Divider();
@@ -70,7 +70,7 @@ namespace TwistCore.Editor.UIComponents
         {
             Window.AddSection("Packages In Project:", () =>
             {
-                Window.ButtonLabel("Reload Packages", new Button("Refresh", () => PersistentEditorData.PurgePackagesInProjectCache()));
+                Window.ButtonLabel("Reload Packages", new Button("Refresh", UPMCollection.PurgeCache));
                 //Window.Space(10);
                 var packages = PersistentEditorData.PackagesInProjectCached.ToArray();
 

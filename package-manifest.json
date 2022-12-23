@@ -4,16 +4,17 @@
             "name": "com.twistapps.twistcore",
             "url": "https://github.com/twistapps/twistcore.git",
             "source": "github",
-            "scriptingDefineSymbols": "TWIST_CORE",
+            "scriptingDefineSymbols": "TWISTCORE",
             "dependencies": [
-                "com.unity.editorcoroutines"
+                "com.unity.editorcoroutines",
+                "com.twistapps.modula"
             ]
         },
         {
             "name": "com.twistapps.modula",
             "url": "https://github.com/twistapps/modula.git",
             "source": "github",
-            "scriptingDefineSymbols": "TWIST_MODULA",
+            "scriptingDefineSymbols": "MODULA",
             "dependencies": []
         },
         {

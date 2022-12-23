@@ -64,8 +64,7 @@ namespace TwistCore
 
         private void DrawInfo(Manifest.Package package)
         {
-            AddSection(package.name,
-                () =>
+            AddSection(package.name, () =>
                 {
                     StatusLabel("Source:", 90, package.source,
                         buttons: new Button("Resolve", () => { UPMInterface.Install(package.name); }));
