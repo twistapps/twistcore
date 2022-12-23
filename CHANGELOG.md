@@ -1,3 +1,12 @@
+# [0.19.0](https://github.com/twistapps/twistcore/compare/0.18.0...0.19.0) (2022-12-23)
+
+
+### Features
+
+* closes [#10](https://github.com/twistapps/twistcore/issues/10) ([8c4af15](https://github.com/twistapps/twistcore/commit/8c4af157b84fc55c2051db4c22bd04e33803752f))
+* EditorCoroutines define symbols setter ([#10](https://github.com/twistapps/twistcore/issues/10)) ([65e954c](https://github.com/twistapps/twistcore/commit/65e954c20a43078b4aa77e0a3bb6a958e4940630))
+* Install missing dependencies ([#10](https://github.com/twistapps/twistcore/issues/10)) ([ed0370b](https://github.com/twistapps/twistcore/commit/ed0370b1e54a123e367b3cf3ab6d2b08d80c8228))
+
 # [0.18.0](https://github.com/twistapps/twistcore/compare/0.17.0...0.18.0) (2022-12-22)
 
 
