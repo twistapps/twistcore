@@ -1,3 +1,10 @@
+## [0.19.1](https://github.com/twistapps/twistcore/compare/0.19.0...0.19.1) (2022-12-23)
+
+
+### Bug Fixes
+
+* Cache consistency ([50b9122](https://github.com/twistapps/twistcore/commit/50b9122a9181359435b2d0b7bcaf2ad7c2ffa51f))
+
 # [0.19.0](https://github.com/twistapps/twistcore/compare/0.18.0...0.19.0) (2022-12-23)
 
 
