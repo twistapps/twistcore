@@ -6,4 +6,9 @@ public class $NAME$Settings : SettingsAsset
     {
         return "$DISPLAYNAME$";
     }
+
+    public override string GetPackageName()
+    {
+        return "com.%ORGANIZATION%.%NAME_LOWERCASE%";
+    }
 }

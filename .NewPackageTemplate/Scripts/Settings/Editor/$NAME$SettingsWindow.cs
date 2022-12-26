@@ -7,17 +7,13 @@ namespace TwistCore
     
     public class $NAME$SettingsWindow : PackageSettingsWindow<$NAME$Settings>
     {
-        protected override void OnGUI()
+        private override void OnDrawGUI()
         {
-            base.OnGUI();
-            
-            BeginSection("General");
-            HorizontalButtons(
-                new Button("Dummy", () => Debug.Log("Hello World")),
-                new Button("Dummy 2", () => Debug.Log("Hello World!!!")));
-            EndSection();
-            
-            WatchChangesAbove(); 
+            AddSection("General", () =>
+            {
+                Header("Hello World!");
+                Header("Edit this in '$NAME$SettingsWindow' file.");
+            })
         }
 
         [MenuItem("Tools/Twist Apps/$DISPLAYNAME$ Settings")]
