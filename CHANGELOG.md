@@ -1,3 +1,10 @@
+## [0.19.3](https://github.com/twistapps/twistcore/compare/0.19.2...0.19.3) (2022-12-26)
+
+
+### Bug Fixes
+
+* New Package Template bump ([75084e2](https://github.com/twistapps/twistcore/commit/75084e2844d96afee4922020b211d6468b19aae4))
+
 ## [0.19.2](https://github.com/twistapps/twistcore/compare/0.19.1...0.19.2) (2022-12-26)
 
 
