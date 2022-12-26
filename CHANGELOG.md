@@ -1,3 +1,10 @@
+## [0.19.2](https://github.com/twistapps/twistcore/compare/0.19.1...0.19.2) (2022-12-26)
+
+
+### Bug Fixes
+
+* Choose install query depending on source ([a6378a8](https://github.com/twistapps/twistcore/commit/a6378a8fdf125aa45baf4043c395b6f5c01cffab))
+
 ## [0.19.1](https://github.com/twistapps/twistcore/compare/0.19.0...0.19.1) (2022-12-23)
 
 
