@@ -67,7 +67,7 @@ namespace TwistCore
             AddSection(package.name, () =>
                 {
                     StatusLabel("Source:", 90, package.source,
-                        buttons: new Button("Resolve", () => { UPMInterface.Install(package.name); }));
+                        buttons: new Button("Resolve", () => { InstallPackage(package); }));
                     StatusLabel("Parent:", 90, package.url);
                 }, foldout: true);
         }
@@ -104,14 +104,20 @@ namespace TwistCore
             _somePackagesHaveUpdates = _haveUpdates.Count > 0;
         }
 
+        private static void InstallPackage(Manifest.Package package)
+        {
+            var sourceAddress = package.source == "github" ? package.url : package.name;
+            UPMInterface.Install(sourceAddress);
+        }
+
         private static void InstallAllDependencies()
         {
-            foreach (var package in _notInstalled) UPMInterface.Install(package.name);
+            foreach (var package in _notInstalled) InstallPackage(package);
         }
 
         private static void UpdateAllDependencies()
         {
-            foreach (var package in _haveUpdates) UPMInterface.Install(package.name);
+            foreach (var package in _haveUpdates) InstallPackage(package);
         }
 
         public static void OnReloadAssets()
