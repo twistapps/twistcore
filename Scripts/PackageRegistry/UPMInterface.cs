@@ -1,6 +1,8 @@
 ﻿using System.Threading;
+using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore.PackageRegistry
 {
@@ -35,6 +37,7 @@ namespace TwistCore.PackageRegistry
             switch (addRequest.Status)
             {
                 case StatusCode.Success:
+                    AssetDatabase.Refresh();
                     return addRequest.Result;
                 case StatusCode.Failure:
                     Debug.LogError(
