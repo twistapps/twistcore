@@ -1,3 +1,10 @@
+## [0.19.5](https://github.com/twistapps/twistcore/compare/0.19.4...0.19.5) (2022-12-27)
+
+
+### Bug Fixes
+
+* add missing comma ([ce5420a](https://github.com/twistapps/twistcore/commit/ce5420a6a4ea91074e4f004d6495f62924b9021d))
+
 ## [0.19.4](https://github.com/twistapps/twistcore/compare/0.19.3...0.19.4) (2022-12-27)
 
 
