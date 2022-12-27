@@ -430,7 +430,7 @@ namespace TwistCore.Editor
                     var layoutOptions =
                     buttons.Length > 0 ? new[] { GUILayout.ExpandWidth(true) } : DefaultLabelLayoutOptions;
                 //todo: Compute label width, possible solution https://forum.unity.com/threads/make-a-labels-width-match-its-content.778436/#post-5183531
-                if (expandWidth) layoutOptions = new[] { GUILayout.ExpandWidth(true), GUILayout.Width(text.Length * 7) };
+                if (expandWidth) layoutOptions = new[] { GUILayout.ExpandWidth(true), GUILayout.Width(text.Length * 6.6f) };
                 EditorGUILayout.LabelField(text, EditorStyles.boldLabel, layoutOptions);
                 if (buttons.Length > 0)
                     foreach (var button in buttons)

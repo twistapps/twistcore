@@ -12,7 +12,7 @@ namespace TwistCore
             AddSection("General", () =>
             {
                 Heading("Hello World!");
-                Heading("Edit this in '$NAME$SettingsWindow' file.");
+                Heading("Edit this in 'VisualEditorSettingsWindow' file.", true);
             });
         }
 
