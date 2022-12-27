@@ -11,8 +11,8 @@ namespace TwistCore
         {
             AddSection("General", () =>
             {
-                Header("Hello World!");
-                Header("Edit this in '$NAME$SettingsWindow' file.");
+                Heading("Hello World!");
+                Heading("Edit this in '$NAME$SettingsWindow' file.");
             });
         }
 
