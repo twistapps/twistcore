@@ -13,7 +13,7 @@ namespace TwistCore
             {
                 Header("Hello World!");
                 Header("Edit this in '$NAME$SettingsWindow' file.");
-            })
+            });
         }
 
         [MenuItem("Tools/Twist Apps/$DISPLAYNAME$ Settings")]
