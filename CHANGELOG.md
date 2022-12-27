@@ -1,3 +1,10 @@
+## [0.19.4](https://github.com/twistapps/twistcore/compare/0.19.3...0.19.4) (2022-12-27)
+
+
+### Bug Fixes
+
+* Method name ([03dea52](https://github.com/twistapps/twistcore/commit/03dea5224b5ab572cd1024bf1f35a603cfec2a03))
+
 ## [0.19.3](https://github.com/twistapps/twistcore/compare/0.19.2...0.19.3) (2022-12-26)
 
 
