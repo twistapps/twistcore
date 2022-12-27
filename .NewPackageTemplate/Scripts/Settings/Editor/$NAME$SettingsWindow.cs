@@ -7,7 +7,7 @@ namespace TwistCore
     
     public class $NAME$SettingsWindow : PackageSettingsWindow<$NAME$Settings>
     {
-        private override void DrawGUI()
+        protected override void DrawGUI()
         {
             AddSection("General", () =>
             {
