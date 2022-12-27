@@ -9,6 +9,6 @@ public class $NAME$Settings : SettingsAsset
 
     public override string GetPackageName()
     {
-        return "com.%ORGANIZATION%.%NAME_LOWERCASE%";
+        return "com.$ORGANIZATION$.$NAME_LOWERCASE$";
     }
 }
