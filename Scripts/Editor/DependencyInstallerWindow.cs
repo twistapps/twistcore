@@ -59,6 +59,13 @@ namespace TwistCore
                     HorizontalButtons(updateButton, installButton);
                 else
                     HorizontalButton(new Button("Done", Close));
+                Divider();
+                using (var l = new EditorGUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    CheckboxSmall("don't show this again", ref Settings.dontAutoShowDependencyInstaller);
+                }
+                GUILayout.Space(-15);
             });
         }
 
@@ -122,7 +129,8 @@ namespace TwistCore
 
         public static void OnReloadAssets()
         {
-            if (_somePackagesNotInstalled)
+            if (Settings == null) Settings = SettingsUtility.Load<TwistCoreSettings>(); 
+            if (_somePackagesNotInstalled && !Settings.dontAutoShowDependencyInstaller)
                 ShowSettings();
         }
 

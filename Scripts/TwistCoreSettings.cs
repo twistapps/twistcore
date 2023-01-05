@@ -4,6 +4,7 @@ namespace TwistCore
     {
         public bool packageDevelopment;
         public bool debug;
+        public bool dontAutoShowDependencyInstaller;
 
         public bool enablePackageCreation;
         public string newPackageName;
