@@ -64,12 +64,16 @@ namespace TwistCore.ProgressWindow.Editor
             QueueRunnerCoroutine = null;
         }
 #else
+        private static bool _hasInProgressTasks = false;
+        
         public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
             Action onComplete = null)
         {
+            _hasInProgressTasks = true;
             if (onComplete != null) _onComplete.Add(onComplete);
             coroutine.FinishSynchronously();
             InvokeAllOnCompleteActions();
+            _hasInProgressTasks = false;
         }
 
         public static void AddLogs(string text)
@@ -86,9 +90,12 @@ namespace TwistCore.ProgressWindow.Editor
         public static void ExecuteOnCompletion(Action action)
         {
             _onComplete.Add(action);
-
+            
 #if EDITOR_COROUTINES
             if (CurrentTask == null && Queue.Count == 0)
+                InvokeAllOnCompleteActions();
+#else
+            if (!_hasInProgressTasks)
                 InvokeAllOnCompleteActions();
 #endif
         }
