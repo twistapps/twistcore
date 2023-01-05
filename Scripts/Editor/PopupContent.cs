@@ -6,8 +6,8 @@ namespace TwistCore.Editor
 {
     public class PopupContent
     {
-        public GUIContent[] entries;
-        public int selectedIndex;
+        public readonly GUIContent[] Entries;
+        public int SelectedIndex;
 
         public PopupContent()
         {
@@ -15,14 +15,14 @@ namespace TwistCore.Editor
 
         public PopupContent(IEnumerable<string> entries)
         {
-            this.entries = entries.Select(e => new GUIContent(e)).ToArray();
+            this.Entries = entries.Select(e => new GUIContent(e)).ToArray();
         }
 
-        public string Selected => entries[selectedIndex].text;
+        public string Selected => Entries[SelectedIndex].text;
 
         public PopupContent Select(int index)
         {
-            selectedIndex = index;
+            SelectedIndex = index;
             return this;
         }
     }

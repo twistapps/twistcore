@@ -16,14 +16,14 @@ namespace TwistCore.Editor.UIComponents
         {
             Debug.Log("Unpacking core library...");
             TaskManager.Enqueue(
-                CoreUnpacker.UnpackIntoPackageFolderCoroutine(PackageName, global::TwistCore.TwistCore.PackageName, "TwistCore"),
+                CoreUnpacker.UnpackIntoPackageFolderCoroutine(PackageName, TwistCore.PackageName, "TwistCore"),
                 "Unpacking Core Library");
         }
 
         private void RemoveCore()
         {
             TaskManager.Enqueue(
-                CoreUnpacker.RemoveUnpacked(PackageName, global::TwistCore.TwistCore.PackageName, "TwistCore"),
+                CoreUnpacker.RemoveUnpacked(PackageName, TwistCore.PackageName, "TwistCore"),
                 "Removing Unpacked Library");
         }
     }

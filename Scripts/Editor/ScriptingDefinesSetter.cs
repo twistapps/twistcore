@@ -66,6 +66,7 @@ namespace TwistCore.Editor
 
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTarget, modifiedSymbols);
             Debug.Log($"Added '{entry}' to scripting defines...");
+            
         }
 
         public static void RemoveSymbols(string entry)

@@ -11,7 +11,7 @@ namespace TwistCore.Editor
         private const int HorizontalButtonsMargin = 10;
         private const int ElementMarginBottom = 3;
 
-        private static TSettings _settings;
+        //private static TSettings _settings;
         protected static TSettings Settings;
 
         // protected static TSettings Settings
@@ -423,16 +423,16 @@ namespace TwistCore.Editor
 
             using (new EditorGUI.DisabledScope(_currentSection.Disabled))
             {
-                var oldValue = content.selectedIndex;
+                var oldValue = content.SelectedIndex;
 
                 if (text != null)
-                    content.selectedIndex =
-                        EditorGUILayout.Popup(new GUIContent(text), content.selectedIndex, content.entries);
+                    content.SelectedIndex =
+                        EditorGUILayout.Popup(new GUIContent(text), content.SelectedIndex, content.Entries);
                 else
-                    content.selectedIndex = EditorGUILayout.Popup(content.selectedIndex, content.entries);
+                    content.SelectedIndex = EditorGUILayout.Popup(content.SelectedIndex, content.Entries);
 
 
-                var index = content.selectedIndex;
+                var index = content.SelectedIndex;
 
                 if (oldValue == index) return;
                 onValueChanged?.Invoke(index);

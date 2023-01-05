@@ -4,8 +4,6 @@ namespace TwistCore.CodeGen.Editor
 {
     public static class CodeGenDefinitions
     {
-        private const string PackageName = "com.twistapps.twistcore";
-
         internal const string DefaultTemplate = "CodeGenTemplate";
         private static string TwistappsFolder => Path.Combine("Assets", "TwistApps");
         public static string GeneratedFolder => Path.Combine(TwistappsFolder, "GeneratedScripts");

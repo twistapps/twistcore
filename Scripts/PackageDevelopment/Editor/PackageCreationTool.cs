@@ -29,7 +29,7 @@ namespace TwistCore.PackageDevelopment.Editor
             GitCmd.ExecuteCommand(newPackageFolder, "init");
 
             var files = Directory
-                .EnumerateFiles(global::TwistCore.TwistCore.NewPackageTemplateFolder, "*.*", SearchOption.AllDirectories)
+                .EnumerateFiles(TwistCore.NewPackageTemplateFolder, "*.*", SearchOption.AllDirectories)
                 .ToArray();
 
             var builder = CreateCodeGenBuilder();
@@ -69,7 +69,7 @@ namespace TwistCore.PackageDevelopment.Editor
             var directory =
                 path.Substring(0, path.Length - Path.GetFileName(path).Length - 1); //Get current file's directory
             directory = FolderSync.MakeRelativePath(directory,
-                global::TwistCore.TwistCore.NewPackageTemplateFolder); //Trim file path relative to template folder as root dir
+                TwistCore.NewPackageTemplateFolder); //Trim file path relative to template folder as root dir
             return directory;
         }
 

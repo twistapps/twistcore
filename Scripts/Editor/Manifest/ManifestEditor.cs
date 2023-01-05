@@ -16,15 +16,15 @@ namespace TwistCore.Editor
         [SerializeField] private Manifest manifest;
         [SerializeField] public bool usingLocalManifest;
 
-        internal static string ManifestPath => UPMCollection.Get(global::TwistCore.TwistCore.PackageName).source == PackageSource.Embedded
-            ? Path.Combine("Packages", global::TwistCore.TwistCore.PackageName, global::TwistCore.TwistCore.ManifestFilename)
-            : Path.Combine("Assets", "TwistApps", "Resources", global::TwistCore.TwistCore.ManifestFilename);
+        internal static string ManifestPath => UPMCollection.Get(TwistCore.PackageName).source == PackageSource.Embedded
+            ? Path.Combine("Packages", TwistCore.PackageName, TwistCore.ManifestFilename)
+            : Path.Combine("Assets", "TwistApps", "Resources", TwistCore.ManifestFilename);
 
         public static Manifest Manifest => instance.manifest ??= FetchManifest();
         private static ManifestEditorSettings Settings => SettingsUtility.Load<ManifestEditorSettings>();
 
         public static string DefaultManifestURL =>
-            Github.GetPackageRootURL(global::TwistCore.TwistCore.PackageName) + global::TwistCore.TwistCore.ManifestFilename;
+            Github.GetPackageRootURL(TwistCore.PackageName) + TwistCore.ManifestFilename;
 
         private static Manifest FetchManifest()
         {

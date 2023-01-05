@@ -125,8 +125,6 @@ namespace TwistCore.Editor
         public static IEnumerator<TaskProgress> SyncFoldersTask(string outputFolder, bool ignoreMetafiles,
             params string[] inputFolders)
         {
-            const string metafileMask = "*.meta";
-
             // overallProgress = new TaskProgress(inputFolders.Length);
             var progress = new TaskProgress(inputFolders.Length);
             yield return progress.Log($"Syncing {inputFolders.Length} folders...").Sleep(1.3f);

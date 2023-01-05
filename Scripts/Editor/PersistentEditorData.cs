@@ -24,7 +24,7 @@ namespace TwistCore.Editor
 
         private static VersionComparer FetchCoreUpdates()
         {
-            var package = UPMCollection.Get(global::TwistCore.TwistCore.PackageName);
+            var package = UPMCollection.Get(TwistCore.PackageName);
             return GithubVersionControl.FetchUpdates(package);
         }
 
