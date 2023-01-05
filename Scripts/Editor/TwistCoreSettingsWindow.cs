@@ -3,6 +3,7 @@ using TwistCore.Editor.UIComponents;
 using TwistCore.PackageDevelopment.Editor;
 using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace TwistCore.Editor
@@ -21,9 +22,9 @@ namespace TwistCore.Editor
 
 
             // var corePackageName = TwistCoreDefinitions.PackageName;
-            var corePackage = UPMCollection.Get(global::TwistCore.TwistCore.PackageName);
+            var corePackage = UPMCollection.Get(TwistCore.PackageName);
 
-            if (PackageLock.IsInDevelopmentMode(global::TwistCore.TwistCore.PackageName))
+            if (PackageLock.IsInDevelopmentMode(TwistCore.PackageName))
             {
                 LabelWarning(corePackage.displayName, "Development Mode", true, new Button(corePackage.version));
             }
@@ -31,7 +32,7 @@ namespace TwistCore.Editor
             {
                 var status = "Up to date";
                 var version = PersistentEditorData.PackagesInProjectCached
-                    .FirstOrDefault(p => p.name == global::TwistCore.TwistCore.PackageName)
+                    .FirstOrDefault(p => p.name == TwistCore.PackageName)
                     ?.UpdateInfo;
                 if (version != null)
                 {
@@ -62,6 +63,11 @@ namespace TwistCore.Editor
                 //     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
                 //         150));
 
+                Checkbox("Core Debug Mode", ref Settings.debug, (val) =>
+                {
+                    CustomScriptingDefines.SetAll();
+                    //CompilationPipeline.RequestScriptCompilation();
+                });
                 this.DrawCachedComponent("ManifestEditorWidget");
             });
 
@@ -83,7 +89,7 @@ namespace TwistCore.Editor
         // ReSharper disable once UnusedMember.Local
         private void UpdatePackage()
         {
-            var package = global::TwistCore.TwistCore.PackageName;
+            var package = TwistCore.PackageName;
             UPMInterface.Update(package);
             UPMCollection.PurgeCache();
         }
