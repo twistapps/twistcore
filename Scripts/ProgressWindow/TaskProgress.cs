@@ -17,7 +17,8 @@
         public TaskProgress Log(string text)
         {
             LatestLog = text;
-            TaskManager.AddLogs(text);
+            //todo:re-enable logs
+            //TaskManager.AddLogs(text);
             return this;
         }
 

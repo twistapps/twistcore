@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TwistCore.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace TwistCore.DependencyManagement
@@ -24,13 +25,11 @@ namespace TwistCore.DependencyManagement
         private void OnPackageSelectionChange(int packageIndex, bool selected)
         {
             var manifestPackageName = ManifestEditor.Manifest.packages[packageIndex].name;
-
             if (!selected)
             {
                 _editingPackage.dependencies.RemoveAll(pkg => pkg == manifestPackageName);
                 return;
             }
-
             if (!_editingPackage.dependencies.Contains(manifestPackageName))
                 _editingPackage.dependencies.Add(manifestPackageName);
         }
@@ -47,12 +46,37 @@ namespace TwistCore.DependencyManagement
 
         private Button MakeAddDependencyButton()
         {
-            return new Button("+",
+            var button = new Button("+",
                 () =>
                 {
-                    _editingPackage.dependencies.Add(_newDependencyName);
+                    if (_editingPackage.dependencies.Contains(_newDependencyName))
+                    {
+                        var packageName = _editingPackage?.name;
+                        if (!string.IsNullOrEmpty(packageName)) 
+                            packageName += " ";
+                        else 
+                            packageName = "";
+                        EditorUtility.DisplayDialog("Dependency not added",
+                            $"Package {packageName}already contains {_newDependencyName} as its dependency",
+                            "Ok");
+                        return;
+                    }
+                    
+                    var existingIndex = ManifestEditor.Manifest.IndexOf(_newDependencyName);
+                    if (existingIndex > -1)
+                    {
+                        _selectedPackagesMask[existingIndex] = true;
+                        OnPackageSelectionChange(existingIndex, true);
+                    }
+                    else
+                    {
+                        _editingPackage.dependencies.Add(_newDependencyName);
+                    }
                     _newDependencyName = "";
                 }, 24);
+            if (string.IsNullOrEmpty(_newDependencyName))
+                button.Disable();
+            return button;
         }
 
         protected override void DrawGUI()

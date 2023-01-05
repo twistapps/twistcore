@@ -1,8 +1,13 @@
 {
-    "name": "TwistCore",
-    "rootNamespace": "TwistCore",
-    "references": [],
-    "includePlatforms": [],
+    "name": "TwistCore.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a014060d3306b9046bd366f709ec225e",
+        "GUID:478a2357cc57436488a56e564b08d223"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

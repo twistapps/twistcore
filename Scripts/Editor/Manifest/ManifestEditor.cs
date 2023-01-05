@@ -6,12 +6,17 @@ using TwistCore.Editor;
 using TwistCore.PackageRegistry;
 using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace TwistCore.DependencyManagement
 {
     public class ManifestEditor : ScriptableSingleton<ManifestEditor>
     {
+        internal static string ManifestPath => UPMCollection.Get(TwistCore.PackageName).source == PackageSource.Embedded
+            ? Path.Combine("Packages", TwistCore.PackageName, TwistCore.ManifestFilename)
+            : Path.Combine("Assets", "TwistApps", "Resources", TwistCore.ManifestFilename);
+        
         [SerializeField] private Manifest manifest;
         [SerializeField] public bool usingLocalManifest;
 
@@ -38,8 +43,8 @@ namespace TwistCore.DependencyManagement
         public static void LoadManifestFromFile()
         {
             instance.usingLocalManifest = true;
-            instance.manifest = File.Exists(TwistCore.ManifestPath)
-                ? JsonUtility.FromJson<Manifest>(File.ReadAllText(TwistCore.ManifestPath))
+            instance.manifest = File.Exists(ManifestPath)
+                ? JsonUtility.FromJson<Manifest>(File.ReadAllText(ManifestPath))
                 : new Manifest();
         }
 

@@ -144,6 +144,9 @@ namespace TwistCore.DependencyManagement
                 }
             });
             
+            GUILayout.Space(20);
+            GUILayout.FlexibleSpace();
+            
             AddSection("Add Package to Manifest", () =>
             {
                 InputField("Full Name", ref Settings.newPackageName);

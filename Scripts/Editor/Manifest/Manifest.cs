@@ -38,9 +38,14 @@ namespace TwistCore.DependencyManagement
             return packages.FirstOrDefault(p => p.name == name) != null;
         }
 
+        public int IndexOf(string name)
+        {
+            return Array.FindIndex(packages,p => p.name == name);
+        }
+
         public void Save()
         {
-            File.WriteAllText(TwistCore.ManifestPath, JsonUtility.ToJson(this, true));
+            File.WriteAllText(ManifestEditor.ManifestPath, JsonUtility.ToJson(this, true));
         }
 
         public Package Get(string packageName)
