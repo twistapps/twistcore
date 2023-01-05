@@ -1,3 +1,21 @@
+# [0.20.0](https://github.com/twistapps/twistcore/compare/0.19.5...0.20.0) (2023-01-05)
+
+
+### Bug Fixes
+
+* OnCompleteActions proper invocation ([5005289](https://github.com/twistapps/twistcore/commit/5005289b975f7ff1b0a4f1a9b9a3755a3a11e039))
+* Remade ProgressWindow logs ([0757f31](https://github.com/twistapps/twistcore/commit/0757f310cb827dfec7a938542dd14731b47bad75))
+
+
+### Features
+
+* Core Debug Mode w/ sc defines ([938ed33](https://github.com/twistapps/twistcore/commit/938ed33aefbf0af1e8ef9b62f89c6a6de396a5d0))
+* CustomScriptingDefines ([fe4e84d](https://github.com/twistapps/twistcore/commit/fe4e84d15a130686eab0c83cec533fd087b201da))
+* Don't show again checkbox ([8741b99](https://github.com/twistapps/twistcore/commit/8741b9966d39646f5d15b68acb370a8c62d69cfe))
+* Editor only asmdef ([bb355f0](https://github.com/twistapps/twistcore/commit/bb355f0a65ec8876d3556af582f48fd9dc0b0088))
+* PopupFrom() ([0dbf07f](https://github.com/twistapps/twistcore/commit/0dbf07f6eb6d67c3f11e621aab5ba45ca2b20258))
+* RuntimeChecker ([ac94342](https://github.com/twistapps/twistcore/commit/ac94342de56d6c0669daf75eab9a9ee08400d917))
+
 ## [0.19.5](https://github.com/twistapps/twistcore/compare/0.19.4...0.19.5) (2022-12-27)
 
 
