@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 #if EDITOR_COROUTINES
 #endif
 
@@ -14,7 +15,7 @@ namespace TwistCore.ProgressWindow.Editor
         private const float WaitSecondsAfterAllTasksDone = 1;
 
         public static readonly Queue<Task> Queue = new Queue<Task>();
-        public static readonly List<string> Logs = new List<string>();
+        public static readonly List<TaskLogs> Logs = new List<TaskLogs>();
 
         public static Task CurrentTask;
 
@@ -23,10 +24,10 @@ namespace TwistCore.ProgressWindow.Editor
         private static ProgressWindow _window;
 
 
-        public static void AddLogs(string text)
-        {
-            Logs.Add(CurrentTask.Description + ": " + text);
-        }
+        // public static void AddLogs(string text)
+        // {
+        //     Logs.Add(CurrentTask.Description + ": " + text);
+        // }
 
         public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
             Action onComplete = null)
@@ -51,6 +52,7 @@ namespace TwistCore.ProgressWindow.Editor
             {
                 CurrentTask = Queue.Dequeue();
                 yield return CurrentTask.Execute(_window);
+                GatherLogsFrom(CurrentTask);
             }
 
             yield return new EditorWaitForSeconds(WaitSecondsAfterAllTasksDone);
@@ -62,6 +64,19 @@ namespace TwistCore.ProgressWindow.Editor
 
             EditorCoroutineUtility.StopCoroutine(QueueRunnerCoroutine);
             QueueRunnerCoroutine = null;
+        }
+
+        private static void GatherLogsFrom(Task task)
+        {
+            foreach (var log in task.Progress.Logs)
+            {
+                Logs.Add(new TaskLogs
+                {
+                    title = CurrentTask.Description,
+                    text = log.text
+                });
+            }
+            task.Progress.Logs.Clear();
         }
 #else
         private static bool _hasInProgressTasks = false;

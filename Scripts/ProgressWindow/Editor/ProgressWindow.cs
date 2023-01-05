@@ -1,4 +1,5 @@
 ﻿#if EDITOR_COROUTINES
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,8 +22,8 @@ namespace TwistCore.ProgressWindow.Editor
             EditorGUI.ProgressBar(progressBarRect, currentTask?.ProgressAmount ?? 0, statusText);
             EditorGUILayout.Space(40);
 
-            var logs = TaskManager.Logs;
-            for (var i = logs.Count - 1; i >= 0; i--)
+            var logs = TaskManager.Logs.Select(l => $"{l.title}: {l.text}").ToArray();
+            for (var i = logs.Length - 1; i >= 0; i--)
                 EditorGUILayout.LabelField(logs[i]);
         }
 
@@ -36,12 +37,14 @@ namespace TwistCore.ProgressWindow.Editor
             return window;
         }
 
-        // [MenuItem("Tools/Twist Apps/Progress Window")]
-        // public static void OnMenuItemClick()
-        // {
-        //     const int seconds = 3;
-        //     TaskManager.Enqueue(CommonTasks.Sleep(seconds), $"Sleeping for {seconds}s");
-        // }
+#if TWISTCORE_DEBUG
+        [MenuItem("Tools/Twist Apps/Commands/Test Progress Window")]
+        public static void OnMenuItemClick()
+        {
+            const int seconds = 3;
+            TaskManager.Enqueue(TasksCommon.Sleep(seconds), $"Sleeping for {seconds}s");
+        }
+#endif
     }
 }
 #endif

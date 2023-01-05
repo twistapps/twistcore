@@ -1,8 +1,22 @@
-﻿namespace TwistCore.ProgressWindow
+﻿using System.Collections.Generic;
+
+namespace TwistCore.ProgressWindow
 {
+    public struct TaskLogs
+    {
+        public string title;
+        public string text;
+    }
+    
     public class TaskProgress
     {
         public int CurrentStep;
+
+        // public delegate void LogsAddedHandler(TaskProgress task, string logs);
+        //
+        // public LogsAddedHandler onAddLogs;
+        
+        public readonly List<TaskLogs> Logs = new List<TaskLogs>();
 
         public float ShouldSleepForSeconds;
         public int TotalSteps;
@@ -17,8 +31,8 @@
         public TaskProgress Log(string text)
         {
             LatestLog = text;
-            //todo:re-enable logs
             //TaskManager.AddLogs(text);
+            Logs.Add(new TaskLogs {text = text});
             return this;
         }
 
