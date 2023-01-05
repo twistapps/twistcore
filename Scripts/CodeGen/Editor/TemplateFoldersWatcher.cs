@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using TwistCore.CodeGen.Editor;
-using TwistCore.DependencyManagement;
-using TwistCore.PackageRegistry;
+using TwistCore.Editor;
+using TwistCore.PackageRegistry.Editor;
 using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
-using UnityEngine;
 
-namespace TwistCore.CodeGen
+namespace TwistCore.CodeGen.Editor
 {
     public static class TemplateFoldersWatcher
     {
@@ -17,12 +14,12 @@ namespace TwistCore.CodeGen
         {
             const string templateFolderSlug = "ScriptTemplates";
             var sourceFolders = UPMCollection.Packages.Select(
-                package => Path.Combine(package.assetPath, templateFolderSlug))
+                    package => Path.Combine(package.assetPath, templateFolderSlug))
                 .Where(Directory.Exists)
                 .ToArray();
-            
+
             TaskManager.Enqueue(
-                FolderSync.SyncFoldersTask(CodeGenDefinitions.TemplatesFolder, true, sourceFolders), 
+                FolderSync.SyncFoldersTask(CodeGenDefinitions.TemplatesFolder, true, sourceFolders),
                 "Gathering templates");
         }
     }

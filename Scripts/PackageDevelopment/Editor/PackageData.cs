@@ -5,10 +5,10 @@
 
 using System;
 using TwistCore.PackageRegistry;
-using TwistCore.PackageRegistry.Versioning;
+using TwistCore.PackageRegistry.Editor;
 using UnityEditor.PackageManager;
 
-namespace TwistCore.PackageDevelopment
+namespace TwistCore.PackageDevelopment.Editor
 {
     [Serializable]
     public class PackageData
@@ -28,9 +28,9 @@ namespace TwistCore.PackageDevelopment
         public Author author;
 
         public Repository repository;
-        public VersionInfo VersionInfo => _versionInfo ??= new VersionInfo(version);
 
         private VersionComparer updateInfo;
+        public VersionInfo VersionInfo => _versionInfo ??= new VersionInfo(version);
         public VersionComparer UpdateInfo => updateInfo ??= GithubVersionControl.FetchUpdates(name);
 
         public static explicit operator PackageData(PackageInfo info)

@@ -1,14 +1,12 @@
 ﻿using System;
 
-namespace TwistCore.PackageRegistry.Versioning
+namespace TwistCore.PackageRegistry
 {
     [Serializable]
     public class VersionComparer
     {
         private const string Zero = "0.0.0";
         private readonly VersionInfo _current, _next;
-
-        public string NextVersion => _next.ToString();
 
         public VersionComparer(string currentVersion, string nextVersion)
         {
@@ -21,6 +19,8 @@ namespace TwistCore.PackageRegistry.Versioning
             _current = new VersionInfo(Zero);
             _next = new VersionInfo(Zero);
         }
+
+        public string NextVersion => _next.ToString();
 
         public bool HasUpdate => HasPatchUpdate();
 

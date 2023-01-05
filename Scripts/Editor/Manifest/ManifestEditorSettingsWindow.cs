@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using TwistCore.Editor;
-using TwistCore.PackageRegistry;
+using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore.DependencyManagement
+namespace TwistCore.Editor
 {
     public class ManifestEditorSettingsWindow : PackageSettingsWindow<ManifestEditorSettings>
     {
-
         private static string ManifestURL =>
             Settings.useCustomManifestURL ? Settings.manifestURL : ManifestEditor.DefaultManifestURL;
 
@@ -64,7 +62,7 @@ namespace TwistCore.DependencyManagement
                 }
                 else
                 {
-                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry", 
+                    LabelSuccess(manifestSource, Settings.useCustomManifestURL ? "Custom URL" : "TwistApps Registry",
                         !Settings.useCustomManifestURL,
                         new Button("Switch", ButtonStyles.Dimm, () =>
                         {
@@ -109,7 +107,7 @@ namespace TwistCore.DependencyManagement
                             InputField("Scripting Defines", ref Settings.editingPackageDefineSymbols);
 
                             ButtonLabel("",
-                                new Button("Cancel", () => { Settings.editingPackage = -1; }), 
+                                new Button("Cancel", () => { Settings.editingPackage = -1; }),
                                 new Button(
                                     "Save", () =>
                                     {
@@ -143,16 +141,16 @@ namespace TwistCore.DependencyManagement
                     }, foldout: true);
                 }
             });
-            
+
             GUILayout.Space(20);
             GUILayout.FlexibleSpace();
-            
+
             AddSection("Add Package to Manifest", () =>
             {
                 InputField("Full Name", ref Settings.newPackageName);
                 InputField("Git URL", ref Settings.newPackageGitURL);
                 InputField("Scripting Defines", ref Settings.newPackageDefineSymbols);
-                
+
                 var dependenciesStatus = $"Dependencies[{Settings.newPackageDependencies?.Count ?? 0}]";
                 ButtonLabelShrinkWidth(dependenciesStatus, 16,
                     new Button("Change", () => { DependencyPickerWindow.Show(null); }, 60));

@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEditor.PackageManager;
 
-namespace TwistCore.PackageRegistry
+namespace TwistCore.PackageRegistry.Editor
 {
     public static class UPMEvents
     {

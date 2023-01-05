@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TwistCore.DependencyManagement
+namespace TwistCore.Editor
 {
     public class ManifestEditorSettings : SettingsAsset
     {

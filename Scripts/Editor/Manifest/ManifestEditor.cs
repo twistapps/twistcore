@@ -2,29 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TwistCore.Editor;
 using TwistCore.PackageRegistry;
-using TwistCore.ProgressWindow.Editor;
+using TwistCore.PackageRegistry.Editor;
+using TwistCore.ProgressWindow;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore.DependencyManagement
+namespace TwistCore.Editor
 {
     public class ManifestEditor : ScriptableSingleton<ManifestEditor>
     {
-        internal static string ManifestPath => UPMCollection.Get(TwistCore.PackageName).source == PackageSource.Embedded
-            ? Path.Combine("Packages", TwistCore.PackageName, TwistCore.ManifestFilename)
-            : Path.Combine("Assets", "TwistApps", "Resources", TwistCore.ManifestFilename);
-        
         [SerializeField] private Manifest manifest;
         [SerializeField] public bool usingLocalManifest;
+
+        internal static string ManifestPath => UPMCollection.Get(global::TwistCore.TwistCore.PackageName).source == PackageSource.Embedded
+            ? Path.Combine("Packages", global::TwistCore.TwistCore.PackageName, global::TwistCore.TwistCore.ManifestFilename)
+            : Path.Combine("Assets", "TwistApps", "Resources", global::TwistCore.TwistCore.ManifestFilename);
 
         public static Manifest Manifest => instance.manifest ??= FetchManifest();
         private static ManifestEditorSettings Settings => SettingsUtility.Load<ManifestEditorSettings>();
 
         public static string DefaultManifestURL =>
-            Github.GetPackageRootURL(TwistCore.PackageName) + TwistCore.ManifestFilename;
+            Github.GetPackageRootURL(global::TwistCore.TwistCore.PackageName) + global::TwistCore.TwistCore.ManifestFilename;
 
         private static Manifest FetchManifest()
         {
@@ -64,15 +64,17 @@ namespace TwistCore.DependencyManagement
             while (coroutine.MoveNext()) yield return coroutine.Current;
             yield return new TaskProgress(2).Complete();
         }
-        
-        public static void RegisterPackage(string fullName, string url, IEnumerable<string> dependencies, string scriptingDefines)
+
+        public static void RegisterPackage(string fullName, string url, IEnumerable<string> dependencies,
+            string scriptingDefines)
         {
             var source = url.StartsWith("https://github.com/") ? "github" : "other";
             RegisterPackage(fullName, url, source, dependencies, scriptingDefines);
             SaveManifest();
         }
 
-        public static void RegisterPackage(string fullName, string url, string source, IEnumerable<string> dependencies, string scriptingDefines)
+        public static void RegisterPackage(string fullName, string url, string source, IEnumerable<string> dependencies,
+            string scriptingDefines)
         {
             var package = new Manifest.Package
             {
@@ -103,7 +105,7 @@ namespace TwistCore.DependencyManagement
             var oldSymbols = pkg.scriptingDefineSymbols;
             pkg.scriptingDefineSymbols = newSymbols;
             Manifest.packages[index] = pkg;
-            
+
             SaveManifest();
             ScriptingDefinesSetter.RemoveSymbols(oldSymbols);
             ScriptingDefinesSetter.RefreshAllSymbols();

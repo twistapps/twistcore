@@ -1,4 +1,4 @@
-﻿namespace TwistCore.ProgressWindow.Editor
+﻿namespace TwistCore.ProgressWindow
 {
     public class TaskProgress
     {
@@ -6,13 +6,13 @@
 
         public float ShouldSleepForSeconds;
         public int TotalSteps;
-        
-        public string LatestLog { get; private set; }
 
         public TaskProgress(int totalSteps = 0)
         {
             TotalSteps = totalSteps;
         }
+
+        public string LatestLog { get; private set; }
 
         public TaskProgress Log(string text)
         {

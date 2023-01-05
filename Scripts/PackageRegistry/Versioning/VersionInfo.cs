@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace TwistCore.PackageRegistry.Versioning
+namespace TwistCore.PackageRegistry
 {
     public class VersionInfo
     {

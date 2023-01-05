@@ -6,7 +6,7 @@ using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 
-namespace TwistCore.DependencyManagement
+namespace TwistCore.Editor
 {
     [Serializable]
     public class Manifest
@@ -40,7 +40,7 @@ namespace TwistCore.DependencyManagement
 
         public int IndexOf(string name)
         {
-            return Array.FindIndex(packages,p => p.name == name);
+            return Array.FindIndex(packages, p => p.name == name);
         }
 
         public void Save()

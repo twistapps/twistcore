@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TwistCore.PackageDevelopment;
-using TwistCore.PackageRegistry;
+using TwistCore.PackageDevelopment.Editor;
+using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace TwistCore.Editor.UIComponents
 {
     public class PackagesInProjectWidget : GuiWidget<TwistCoreSettings>
     {
-
         private void DrawUpToDatePackages(List<PackageData> packages)
         {
             if (packages.Count < 1) return;
@@ -23,7 +21,7 @@ namespace TwistCore.Editor.UIComponents
                 //Window.Divider();
             }
         }
-        
+
         private void DrawOutdatedPackages(List<PackageData> packages)
         {
             if (packages.Count < 1) return;
@@ -34,12 +32,12 @@ namespace TwistCore.Editor.UIComponents
                 Window.StatusLabel("Full Name", package.name, GUIStyles.DefaultLabel);
                 Window.LabelWarning("Version", package.version, true);
                 Window.StatusLabel("New Version", package.UpdateInfo.NextVersion, EditorStyles.linkLabel);
-                Window.ButtonLabel("",  new Button("Download Update",
+                Window.ButtonLabel("", new Button("Download Update",
                     () =>
                     {
                         UPMInterface.Update(package.name);
                         UPMCollection.PurgeCache();
-                    }, widthOverride:120));
+                    }, 120));
                 EditorGUI.indentLevel--;
                 //Window.Divider();
             }
@@ -49,13 +47,13 @@ namespace TwistCore.Editor.UIComponents
         {
             if (packages.Count < 1) return;
             Window.Heading("Other Packages");
-            
+
             foreach (var packageData in packages)
             {
                 var nameParts = packageData.name.Split('.');
                 var organization = nameParts[1];
                 var packageName = nameParts[2];
-                
+
                 Window.AddSection(packageData.name, () =>
                 {
                     Window.StatusLabel("Name", packageName, GUIStyles.DefaultLabel);
@@ -79,11 +77,10 @@ namespace TwistCore.Editor.UIComponents
                 var otherPackages = new List<PackageData>();
 
                 foreach (var packageData in packages)
-                {
                     if (PackageLock.IsGithubPackage(packageData.name))
                     {
                         //Debug.Log($"[{packageData.name}] - {packageData.UpdateInfo.NewVersion}");
-                        
+
                         if (packageData.UpdateInfo.HasUpdate)
                             outdatedPackages.Add(packageData);
                         else
@@ -93,8 +90,7 @@ namespace TwistCore.Editor.UIComponents
                     {
                         otherPackages.Add(packageData);
                     }
-                }
-                
+
                 DrawOutdatedPackages(outdatedPackages);
                 DrawUpToDatePackages(upToDatePackages);
                 DrawOtherPackages(otherPackages);

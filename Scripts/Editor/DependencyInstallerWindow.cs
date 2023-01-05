@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using TwistCore.DependencyManagement;
-using TwistCore.Editor;
-using TwistCore.PackageDevelopment;
-using TwistCore.PackageRegistry;
+using TwistCore.PackageDevelopment.Editor;
+using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore
+namespace TwistCore.Editor
 {
     public class DependencyInstallerWindow : PackageSettingsWindow<TwistCoreSettings>
     {
@@ -65,6 +63,7 @@ namespace TwistCore
                     GUILayout.FlexibleSpace();
                     CheckboxSmall("don't show this again", ref Settings.dontAutoShowDependencyInstaller);
                 }
+
                 GUILayout.Space(-15);
             });
         }
@@ -72,11 +71,11 @@ namespace TwistCore
         private void DrawInfo(Manifest.Package package)
         {
             AddSection(package.name, () =>
-                {
-                    StatusLabel("Source:", 90, package.source,
-                        buttons: new Button("Resolve", () => { InstallPackage(package); }));
-                    StatusLabel("Parent:", 90, package.url);
-                }, foldout: true);
+            {
+                StatusLabel("Source:", 90, package.source,
+                    buttons: new Button("Resolve", () => { InstallPackage(package); }));
+                StatusLabel("Parent:", 90, package.url);
+            }, foldout: true);
         }
 
         [InitializeOnLoadMethod]
@@ -129,7 +128,7 @@ namespace TwistCore
 
         public static void OnReloadAssets()
         {
-            if (Settings == null) Settings = SettingsUtility.Load<TwistCoreSettings>(); 
+            if (Settings == null) Settings = SettingsUtility.Load<TwistCoreSettings>();
             if (_somePackagesNotInstalled && !Settings.dontAutoShowDependencyInstaller)
                 ShowSettings();
         }

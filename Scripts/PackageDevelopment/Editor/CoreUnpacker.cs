@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using TwistCore.DependencyManagement;
-using TwistCore.PackageDevelopment.Editor;
-using TwistCore.PackageRegistry;
+using TwistCore.Editor;
+using TwistCore.PackageRegistry.Editor;
+using TwistCore.ProgressWindow;
 using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
-using UnityEditor.Compilation;
 using UnityEngine;
 
-namespace TwistCore.PackageDevelopment
+namespace TwistCore.PackageDevelopment.Editor
 {
     public static class CoreUnpacker
     {
@@ -98,7 +97,7 @@ namespace TwistCore.PackageDevelopment
                         excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s),
                             SearchOption.AllDirectories));
                 }
-                
+
                 var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
                 found = found.Except(excludeFromSearch).ToArray();
 
@@ -140,14 +139,12 @@ namespace TwistCore.PackageDevelopment
 
             yield return progress.Next("Redirecting dependencies...");
             RemoveAsmdefDependency(packageName, packageToUnpack);
-            
+
             //add dependencies of embedded package
             foreach (var dependency in ManifestEditor.Manifest.Get(packageToUnpack).dependencies)
-            {
                 AddExternalAsmdefDependency(packageName, dependency);
-                //AddAsmdefDependency(packageName, dependency);
-            }
- 
+            //AddAsmdefDependency(packageName, dependency);
+
             yield return progress.Next().Sleep(1);
 
             yield return progress.Next("Requesting asset db refresh...").Sleep(.5f);
@@ -188,13 +185,11 @@ namespace TwistCore.PackageDevelopment
             yield return progress;
 
             AddAsmdefDependency(packageName, unpackedPackage);
-            
+
             //remove dependencies of embedded package
             foreach (var dependency in ManifestEditor.Manifest.Get(unpackedPackage).dependencies)
-            {
                 RemoveExternalAsmdefDependency(packageName, dependency);
-            }
-            
+
             progress.Log("Requesting asset db refresh...");
             TaskManager.ExecuteOnCompletion(AssetDatabase.Refresh);
             yield return progress.Next().Sleep(.5f);
@@ -241,18 +236,18 @@ namespace TwistCore.PackageDevelopment
                 return;
 
             var dependencyGuid = GetExternalPackageGuid(dependencyName);
-            
+
             var asmdef = package.Asmdef();
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
-            
+
             if (references.IndexOf(dependencyGuid) != -1) return;
             references.Add(dependencyGuid);
 
             o["references"] = new JArray(references);
             File.WriteAllText(asmdef, o.ToString());
         }
-        
+
         public static void RemoveExternalAsmdefDependency(string packageName, string dependencyName)
         {
             var package = UPMCollection.GetFromAllPackages(packageName);
@@ -274,7 +269,7 @@ namespace TwistCore.PackageDevelopment
 
             File.WriteAllText(asmdef, json);
         }
-        
+
         public static void AddAsmdefDependency(string packageName, string dependencyName)
         {
             var package = UPMCollection.GetFromAllPackages(packageName);
@@ -289,7 +284,7 @@ namespace TwistCore.PackageDevelopment
             var dependencyGuid = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid();
 
             //CompilationPipeline.GUIDToAssemblyDefinitionReferenceGUID()
-            
+
             if (references.IndexOf(dependencyGuid) != -1) return;
             references.Add(dependencyGuid);
 

@@ -1,19 +1,19 @@
 using System;
 using System.Linq;
-using TwistCore.DependencyManagement;
+using TwistCore.Editor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore.PackageRegistry
+namespace TwistCore.PackageRegistry.Editor
 {
     public static class UPMCollection
     {
         private static PackageInfo[] _packages;
         private static PackageCollection _allPackages;
+
+        public static Action CachePurgedEvent;
         public static PackageInfo[] Packages => _packages ?? ListPackages();
         public static PackageCollection AllPackages => _allPackages ?? ListAllPackages();
-
-        public static Action CachePurgedEvent; 
 
         public static PackageInfo[] ListPackages()
         {

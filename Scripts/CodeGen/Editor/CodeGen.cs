@@ -12,13 +12,14 @@ namespace TwistCore.CodeGen.Editor
     public static class CodeGen
     {
         public delegate void BeforeCsFileGeneration(CodeGenTemplateBuilder builder, Type type);
+
         public delegate bool ShouldGenerateCsCheck(Type type);
 
         private static CodeGenSettings _settings;
-        private static CodeGenSettings Settings => _settings ??= SettingsUtility.Load<CodeGenSettings>();
-        
+
         public static BeforeCsFileGeneration OnBeforeCsFileGeneration;
         public static ShouldGenerateCsCheck ShouldGenerateCs;
+        private static CodeGenSettings Settings => _settings ??= SettingsUtility.Load<CodeGenSettings>();
 
         public static string FindTxtTemplate(Type type)
         {
@@ -41,7 +42,7 @@ namespace TwistCore.CodeGen.Editor
         {
             return Path.ChangeExtension(Path.Combine(CodeGenDefinitions.GeneratedFolder, type.Name), ".cs");
         }
-        
+
         private static string GetTxtPath(params string[] pathParts)
         {
             return Path.ChangeExtension(Path.Combine(pathParts), ".txt");

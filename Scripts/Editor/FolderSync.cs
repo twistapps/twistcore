@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TwistCore.ProgressWindow;
 using TwistCore.ProgressWindow.Editor;
 
-namespace TwistCore
+namespace TwistCore.Editor
 {
     public static class FolderSync
     {
@@ -60,21 +61,24 @@ namespace TwistCore
             File.Copy(pathToFile, Path.Combine(outputFolderPath, filename), overwrite);
         }
 
-        public static void Clone(string path, string oldRoot, string newRoot, string ignoreMask=null)
+        public static void Clone(string path, string oldRoot, string newRoot, string ignoreMask = null)
         {
             CloneTask(path, oldRoot, newRoot, ignoreMask).FinishSynchronously();
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="path"></param>
         /// <param name="oldRoot"></param>
         /// <param name="newRoot"></param>
-        /// <param name="ignoreMask">Filter all files containing this string. Add * in the beginning to check files' extension only.</param>
+        /// <param name="ignoreMask">
+        ///     Filter all files containing this string. Add * in the beginning to check files' extension
+        ///     only.
+        /// </param>
         /// <param name="initialTotalSteps"></param>
         /// <returns></returns>
-        public static IEnumerator<TaskProgress> CloneTask(string path, string oldRoot, string newRoot, string ignoreMask=null, int initialTotalSteps=0)
+        public static IEnumerator<TaskProgress> CloneTask(string path, string oldRoot, string newRoot,
+            string ignoreMask = null, int initialTotalSteps = 0)
         {
             var progress = new TaskProgress(initialTotalSteps);
             yield return progress.Log("Counting files...");
@@ -105,6 +109,7 @@ namespace TwistCore
                         continue;
                     }
                 }
+
                 CloneFile(file, oldRoot, newRoot);
                 yield return progress.Next();
             }
@@ -117,16 +122,17 @@ namespace TwistCore
             SyncFoldersTask(outputFolder, inputFolders).FinishSynchronously();
         }
 
-        public static IEnumerator<TaskProgress> SyncFoldersTask(string outputFolder,  bool ignoreMetafiles, params string[] inputFolders)
+        public static IEnumerator<TaskProgress> SyncFoldersTask(string outputFolder, bool ignoreMetafiles,
+            params string[] inputFolders)
         {
-            const string metafileMask = "*.meta"; 
-            
+            const string metafileMask = "*.meta";
+
             // overallProgress = new TaskProgress(inputFolders.Length);
             var progress = new TaskProgress(inputFolders.Length);
             yield return progress.Log($"Syncing {inputFolders.Length} folders...").Sleep(1.3f);
 
             var ignoreMask = ignoreMetafiles ? "*.meta" : null;
-            
+
             var previousStepsSummary = 0;
             foreach (var inputFolder in inputFolders)
             {
@@ -139,9 +145,7 @@ namespace TwistCore
                     if (current.LatestLog == DoneCountingFiles)
                         current.ClearLatestLogField();
                     else
-                    {
                         progress.TotalSteps = current.TotalSteps + previousStepsSummary;
-                    }
                     progress.CurrentStep = current.CurrentStep + previousStepsSummary;
 
                     yield return progress.Sleep(current.ShouldSleepForSeconds + SleepTimeBetweenFileCopyActions);

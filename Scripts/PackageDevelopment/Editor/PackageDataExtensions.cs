@@ -1,15 +1,15 @@
 ﻿using System.IO;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.Compilation;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace TwistCore.PackageDevelopment
+namespace TwistCore.PackageDevelopment.Editor
 {
     public static class PackageDataExtensions
     {
         private const string EmptyGuid = "GUID:00000000000000000000000000000000";
+
         public static string Alias(this PackageInfo package)
         {
             return package.name.Split('.').LastOrDefault();

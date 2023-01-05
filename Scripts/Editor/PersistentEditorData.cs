@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TwistCore.DependencyManagement;
-using TwistCore.PackageDevelopment;
+using TwistCore.PackageDevelopment.Editor;
 using TwistCore.PackageRegistry;
-using TwistCore.PackageRegistry.Versioning;
+using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
@@ -25,7 +24,7 @@ namespace TwistCore.Editor
 
         private static VersionComparer FetchCoreUpdates()
         {
-            var package = UPMCollection.Get(TwistCore.PackageName);
+            var package = UPMCollection.Get(global::TwistCore.TwistCore.PackageName);
             return GithubVersionControl.FetchUpdates(package);
         }
 
@@ -52,10 +51,15 @@ namespace TwistCore.Editor
 
         public static IEnumerable<PackageData> PackagesInProjectCached =>
             instance.packagesInProject ??= UPMCollection.Packages.Select(ToPackageData).ToArray();
-        
-        public static IEnumerable<PackageData> PackagesInProject => UPMCollection.Packages.Select(ToPackageData).ToArray();
 
-        private static PackageData ToPackageData(PackageInfo packageInfo) => (PackageData)packageInfo;
+        public static IEnumerable<PackageData> PackagesInProject =>
+            UPMCollection.Packages.Select(ToPackageData).ToArray();
+
+        private static PackageData ToPackageData(PackageInfo packageInfo)
+        {
+            return (PackageData)packageInfo;
+        }
+
         public static Manifest.Package FindManifestPackage(PackageData package)
         {
             return ManifestEditor.Manifest.Get(package.name);
@@ -66,7 +70,7 @@ namespace TwistCore.Editor
         {
             UPMCollection.CachePurgedEvent += PurgePackagesInProjectCache;
         }
-        
+
         private static void PurgePackagesInProjectCache()
         {
             instance.packagesInProject = null;

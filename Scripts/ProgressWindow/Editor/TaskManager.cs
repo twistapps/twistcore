@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-#if EDITOR_COROUTINES
-using System.Collections;
 using Unity.EditorCoroutines.Editor;
+#if EDITOR_COROUTINES
 #endif
 
 namespace TwistCore.ProgressWindow.Editor
@@ -90,7 +90,7 @@ namespace TwistCore.ProgressWindow.Editor
         public static void ExecuteOnCompletion(Action action)
         {
             _onComplete.Add(action);
-            
+
 #if EDITOR_COROUTINES
             if (CurrentTask == null && Queue.Count == 0)
                 InvokeAllOnCompleteActions();

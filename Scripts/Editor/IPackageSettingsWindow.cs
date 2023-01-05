@@ -42,8 +42,14 @@ namespace TwistCore.Editor
             bool expandWidth = false,
             GUIStyle style = null);
 
+        // void Checkbox(Rect rect, string text, ref bool value, Action<bool> onValueChanged = null,
+        //     bool disabled = false, GUIStyle style = null);
+
         void EnumPopup<T>(string text, ref T value, Action<T> onValueChanged = null, bool forceEnabled = false)
             where T : Enum;
+
+        // void EnumPopup<T>(Rect rect, string text, ref T value, Action<T> onValueChanged = null, bool disabled = false)
+        //     where T : Enum;
 
         void ButtonLabel(string labelText, params Button[] buttons);
 

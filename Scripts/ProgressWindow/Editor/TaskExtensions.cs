@@ -7,10 +7,7 @@ namespace TwistCore.ProgressWindow.Editor
         public static TaskProgress FinishSynchronously(this IEnumerator<TaskProgress> task)
         {
             var progress = task.Current;
-            while (task.MoveNext())
-            {
-                progress = task.Current;
-            }
+            while (task.MoveNext()) progress = task.Current;
 
             return progress;
         }

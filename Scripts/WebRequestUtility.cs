@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using TwistCore.ProgressWindow.Editor;
+using TwistCore.ProgressWindow;
 using UnityEngine;
 using UnityEngine.Networking;
 

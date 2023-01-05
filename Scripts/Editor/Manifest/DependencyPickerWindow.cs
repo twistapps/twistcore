@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using TwistCore.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore.DependencyManagement
+namespace TwistCore.Editor
 {
     public class DependencyPickerWindow : PackageSettingsWindow<ManifestEditorSettings>
     {
@@ -30,6 +29,7 @@ namespace TwistCore.DependencyManagement
                 _editingPackage.dependencies.RemoveAll(pkg => pkg == manifestPackageName);
                 return;
             }
+
             if (!_editingPackage.dependencies.Contains(manifestPackageName))
                 _editingPackage.dependencies.Add(manifestPackageName);
         }
@@ -52,16 +52,16 @@ namespace TwistCore.DependencyManagement
                     if (_editingPackage.dependencies.Contains(_newDependencyName))
                     {
                         var packageName = _editingPackage?.name;
-                        if (!string.IsNullOrEmpty(packageName)) 
+                        if (!string.IsNullOrEmpty(packageName))
                             packageName += " ";
-                        else 
+                        else
                             packageName = "";
                         EditorUtility.DisplayDialog("Dependency not added",
                             $"Package {packageName}already contains {_newDependencyName} as its dependency",
                             "Ok");
                         return;
                     }
-                    
+
                     var existingIndex = ManifestEditor.Manifest.IndexOf(_newDependencyName);
                     if (existingIndex > -1)
                     {
@@ -72,6 +72,7 @@ namespace TwistCore.DependencyManagement
                     {
                         _editingPackage.dependencies.Add(_newDependencyName);
                     }
+
                     _newDependencyName = "";
                 }, 24);
             if (string.IsNullOrEmpty(_newDependencyName))
@@ -104,12 +105,12 @@ namespace TwistCore.DependencyManagement
                     var dependency = _editingPackage.dependencies[i];
                     if (ManifestEditor.Manifest.PackageExists(dependency)) continue;
                     StatusLabel($"[{i}]", 35, dependency, GUIStyles.DefaultLabel, null,
-                        buttons: MakeRemoveButtonForDependency(dependency));
+                        MakeRemoveButtonForDependency(dependency));
                 }
 
-                InputField($"[{_editingPackage.dependencies.Count}]", 35, ref _newDependencyName, 
+                InputField($"[{_editingPackage.dependencies.Count}]", 35, ref _newDependencyName,
                     buttons: MakeAddDependencyButton());
-                
+
                 GUILayout.FlexibleSpace();
                 HorizontalButton(new Button("Done", Close));
             });

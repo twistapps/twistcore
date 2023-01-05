@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using TwistCore.DependencyManagement;
-using TwistCore.PackageRegistry;
+using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
-using UnityEngine;
 using UnityEditor.PackageManager;
+using UnityEngine;
 
 namespace TwistCore.Editor
 {
     public class ScriptingDefinesSetter : ScriptableSingleton<ScriptingDefinesSetter>
     {
-        [SerializeField] private bool startupInitializationComplete = false;
-        
+        [SerializeField] private bool startupInitializationComplete;
+
         [InitializeOnLoadMethod]
         private static void RefreshSymbolsOnStartup()
         {
@@ -37,7 +35,7 @@ namespace TwistCore.Editor
                     RemoveSymbols(manifestPackage.scriptingDefineSymbols);
             }
         }
-        
+
         public static void RefreshAllSymbols()
         {
             var packagesInProject = UPMCollection.Packages;
@@ -47,16 +45,12 @@ namespace TwistCore.Editor
                     continue;
                 var package = packagesInProject.FirstOrDefault(pkg => pkg.name == manifestPackage.name);
                 if (package == default)
-                {
                     RemoveSymbols(manifestPackage.scriptingDefineSymbols);
-                }
                 else
-                {
                     AddSymbols(manifestPackage.scriptingDefineSymbols);
-                }
             }
         }
-        
+
         public static void AddSymbols(string entry)
         {
             if (string.IsNullOrEmpty(entry)) return;
@@ -64,7 +58,7 @@ namespace TwistCore.Editor
 
             var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
             var symbolsHashSet = new HashSet<string>(symbols.Split(';'));
-            
+
             symbolsHashSet.UnionWith(entry.Split(';'));
 
             var modifiedSymbols = string.Join(";", symbolsHashSet);

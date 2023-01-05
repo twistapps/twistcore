@@ -4,7 +4,7 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace TwistCore.PackageRegistry
+namespace TwistCore.PackageRegistry.Editor
 {
     public static class UPMInterface
     {
