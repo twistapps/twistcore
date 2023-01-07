@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 
@@ -8,6 +9,7 @@ namespace TwistCore.CodeGen.Editor
     public class CodeGenBuilder
     {
         public const char SeparatorSymbol = '$';
+        private const string Semicolon = ";";
         private const char Indent = ' ';
         private const int IndentAmountPerStep = 4;
         protected readonly StringBuilder StringBuilder;
@@ -24,6 +26,19 @@ namespace TwistCore.CodeGen.Editor
         }
 
         public void Class(Scope scope, string name, Type parentClass = null, bool @abstract = false,
+            bool partial = false, bool @static = false)
+        {
+            var parentClassString = parentClass?.Name;
+            if (parentClass != null)
+            {
+                var genericArguments = parentClass.GenericTypeArguments.Select(type => type.Name);
+                var genericArgumentsString = string.Join(", ", genericArguments);
+                if (parentClass.ContainsGenericParameters) parentClassString += $"<{genericArgumentsString}>";
+            }
+            Class(scope, name, parentClassString, @abstract, partial, @static);
+        }
+
+        public void Class(Scope scope, string name, string parentClass = null, bool @abstract = false,
             bool partial = false, bool @static = false)
         {
             switch (scope)
@@ -46,7 +61,7 @@ namespace TwistCore.CodeGen.Editor
             if (@abstract) Append("abstract ");
             if (partial) Append("partial ");
             Append("class $", name);
-            if (parentClass != null) Append(" : $", parentClass.Name);
+            if (parentClass != null) Append(" : $", parentClass);
             OpenCurly();
         }
 
@@ -79,10 +94,25 @@ namespace TwistCore.CodeGen.Editor
             return this;
         }
 
+        public CodeGenBuilder AppendLine(string line, bool assureSemicolon, params string[] lineInsertions)
+        {
+            AppendLine(line, lineInsertions);
+            if (assureSemicolon) AssureSemicolon();
+            
+            return this;
+        }
+
         public CodeGenBuilder AppendLine(bool ignoreIndent = false)
         {
             StringBuilder.AppendLine();
             if (!ignoreIndent) StringBuilder.Append(GetIndent());
+            return this;
+        }
+
+        public CodeGenBuilder AssureSemicolon()
+        {
+            if (!StringBuilder.ToString().EndsWith(Semicolon))
+                Append(Semicolon);
             return this;
         }
 
