@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 #if EDITOR_COROUTINES
+using Unity.EditorCoroutines.Editor;
 #endif
 
 namespace TwistCore.ProgressWindow.Editor
@@ -12,7 +12,7 @@ namespace TwistCore.ProgressWindow.Editor
     public static class TaskManager
     {
 #if EDITOR_COROUTINES
-        private const float WaitSecondsAfterAllTasksDone = 1;
+        private const float WaitSecondsAfterAllTasksDone = .4f;
 
         public static readonly Queue<Task> Queue = new Queue<Task>();
         public static readonly List<TaskLogs> Logs = new List<TaskLogs>();
@@ -119,7 +119,7 @@ namespace TwistCore.ProgressWindow.Editor
         {
             foreach (var action in _onComplete)
                 action?.Invoke();
-            _onComplete = new List<Action>();
+            _onComplete.Clear();
         }
     }
 }
