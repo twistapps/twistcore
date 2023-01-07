@@ -7,6 +7,8 @@ namespace TwistCore.Editor
     {
         private const string CORE_DEBUG = "TWISTCORE_DEBUG";
 
+        private static bool initialized;
+
         public HashSet<string> toAdd = new HashSet<string>();
         public HashSet<string> toRemove = new HashSet<string>();
 
@@ -21,19 +23,18 @@ namespace TwistCore.Editor
         public static CustomScriptingDefines GetAll()
         {
             var defines = new CustomScriptingDefines();
-            
-        /////////////////////
-        // add any custom defines below
-        //
-            defines.Test(CORE_DEBUG, SettingsUtility.Load<TwistCoreSettings>().debug); 
-        //
-        // use 'Test' method for easier management
-        /////////////////////
-        
+
+            /////////////////////
+            // add any custom defines below
+            //
+            defines.Test(CORE_DEBUG, SettingsUtility.Load<TwistCoreSettings>().debug);
+            //
+            // use 'Test' method for easier management
+            /////////////////////
+
             return defines;
         }
 
-        private static bool initialized = false;
         [InitializeOnLoadMethod]
         private static void Init()
         {
@@ -45,15 +46,9 @@ namespace TwistCore.Editor
         public static void SetAll()
         {
             var defines = GetAll();
-            
-            foreach (var symbol in defines.toAdd)
-            {
-                ScriptingDefinesSetter.AddSymbols(symbol);
-            }
-            foreach (var symbol in defines.toRemove)
-            {
-                ScriptingDefinesSetter.RemoveSymbols(symbol);
-            }
+
+            foreach (var symbol in defines.toAdd) ScriptingDefinesSetter.AddSymbols(symbol);
+            foreach (var symbol in defines.toRemove) ScriptingDefinesSetter.RemoveSymbols(symbol);
         }
     }
 }

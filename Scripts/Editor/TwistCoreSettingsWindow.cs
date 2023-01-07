@@ -3,7 +3,6 @@ using TwistCore.Editor.UIComponents;
 using TwistCore.PackageDevelopment.Editor;
 using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
-using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace TwistCore.Editor
@@ -63,7 +62,7 @@ namespace TwistCore.Editor
                 //     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
                 //         150));
 
-                Checkbox("Core Debug Mode", ref Settings.debug, (val) =>
+                Checkbox("Core Debug Mode", ref Settings.debug, val =>
                 {
                     CustomScriptingDefines.SetAll();
                     //CompilationPipeline.RequestScriptCompilation();

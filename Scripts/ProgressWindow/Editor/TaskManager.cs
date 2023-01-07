@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using UnityEditor;
 #if EDITOR_COROUTINES
 using Unity.EditorCoroutines.Editor;
 #endif
@@ -69,13 +68,11 @@ namespace TwistCore.ProgressWindow.Editor
         private static void GatherLogsFrom(Task task)
         {
             foreach (var log in task.Progress.Logs)
-            {
                 Logs.Add(new TaskLogs
                 {
                     title = CurrentTask.Description,
                     text = log.text
                 });
-            }
             task.Progress.Logs.Clear();
         }
 #else
@@ -95,7 +92,7 @@ namespace TwistCore.ProgressWindow.Editor
         {
         }
 #endif
-        private static List<Action> _onComplete = new List<Action>();
+        private static readonly List<Action> _onComplete = new List<Action>();
 
         /// <summary>
         ///     Actions that will be performed synchronously after all tasks are done:

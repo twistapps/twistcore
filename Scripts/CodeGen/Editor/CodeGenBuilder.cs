@@ -35,6 +35,7 @@ namespace TwistCore.CodeGen.Editor
                 var genericArgumentsString = string.Join(", ", genericArguments);
                 if (parentClass.ContainsGenericParameters) parentClassString += $"<{genericArgumentsString}>";
             }
+
             Class(scope, name, parentClassString, @abstract, partial, @static);
         }
 
@@ -98,7 +99,7 @@ namespace TwistCore.CodeGen.Editor
         {
             AppendLine(line, lineInsertions);
             if (assureSemicolon) AssureSemicolon();
-            
+
             return this;
         }
 

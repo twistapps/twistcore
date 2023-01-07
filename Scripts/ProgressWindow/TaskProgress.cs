@@ -7,16 +7,15 @@ namespace TwistCore.ProgressWindow
         public string title;
         public string text;
     }
-    
+
     public class TaskProgress
     {
-        public int CurrentStep;
-
         // public delegate void LogsAddedHandler(TaskProgress task, string logs);
         //
         // public LogsAddedHandler onAddLogs;
-        
+
         public readonly List<TaskLogs> Logs = new List<TaskLogs>();
+        public int CurrentStep;
 
         public float ShouldSleepForSeconds;
         public int TotalSteps;
@@ -32,7 +31,7 @@ namespace TwistCore.ProgressWindow
         {
             LatestLog = text;
             //TaskManager.AddLogs(text);
-            Logs.Add(new TaskLogs {text = text});
+            Logs.Add(new TaskLogs { text = text });
             return this;
         }
 
