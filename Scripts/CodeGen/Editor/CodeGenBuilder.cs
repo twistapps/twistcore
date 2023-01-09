@@ -6,6 +6,13 @@ using UnityEditor;
 
 namespace TwistCore.CodeGen.Editor
 {
+    public enum ClassModifier
+    {
+        Abstract,
+        Static,
+        Partial
+    }
+
     public class CodeGenBuilder
     {
         public const char SeparatorSymbol = '$';
@@ -25,8 +32,7 @@ namespace TwistCore.CodeGen.Editor
             AppendLine("using $;", name);
         }
 
-        public void Class(Scope scope, string name, Type parentClass = null, bool @abstract = false,
-            bool partial = false, bool @static = false)
+        public void Class(Scope scope, string name, Type parentClass = null, params ClassModifier[] modifiers)
         {
             var parentClassString = parentClass?.Name;
             if (parentClass != null)
@@ -36,11 +42,15 @@ namespace TwistCore.CodeGen.Editor
                 if (parentClass.ContainsGenericParameters) parentClassString += $"<{genericArgumentsString}>";
             }
 
-            Class(scope, name, parentClassString, @abstract, partial, @static);
+            Class(scope, name, parentClassString, modifiers);
         }
 
-        public void Class(Scope scope, string name, string parentClass = null, bool @abstract = false,
-            bool partial = false, bool @static = false)
+        public void Class(Scope scope, string name, params ClassModifier[] modifiers)
+        {
+            Class(scope, name, "", modifiers);
+        }
+
+        public void Class(Scope scope, string name, string parentClass = null, params ClassModifier[] modifiers)
         {
             switch (scope)
             {
@@ -58,11 +68,26 @@ namespace TwistCore.CodeGen.Editor
             }
 
             Space();
-            if (@static) Append("static ");
-            if (@abstract) Append("abstract ");
-            if (partial) Append("partial ");
+            
+            foreach (var classModifier in modifiers)
+            {
+                switch (classModifier)
+                {
+                    case ClassModifier.Abstract:
+                        Append("abstract ");
+                        break;
+                    case ClassModifier.Static:
+                        Append("static ");
+                        break;
+                    case ClassModifier.Partial:
+                        Append("partial ");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
             Append("class $", name);
-            if (parentClass != null) Append(" : $", parentClass);
+            if (!string.IsNullOrEmpty(parentClass)) Append(" : $", parentClass);
             OpenCurly();
         }
 
