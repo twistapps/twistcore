@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using TwistCore.Editor.GuiWidgets;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace TwistCore.Editor
 
         protected readonly FoldoutManager FoldoutManager = new FoldoutManager();
 
-        private Section _currentSection;
+        internal Section CurrentSection;
         private Vector2 _scrollPosition;
         private int _sectionDepth;
 
@@ -42,6 +43,13 @@ namespace TwistCore.Editor
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             GUILayout.Space(5);
             DrawGUI();
+            #if TWISTCORE_DEBUG
+            AddSection("Development", () =>
+            {
+                this.DrawCachedComponent("EmbedThisWidget");
+                this.DrawCachedComponent("SelectPackageWidget");
+            });
+            #endif
             EditorGUILayout.EndScrollView();
             WatchChangesAbove();
         }
@@ -98,9 +106,9 @@ namespace TwistCore.Editor
 
             if (foldout && FoldoutManager.CurrentElementIsOpen) Space(5);
 
-            _currentSection = new Section { Disabled = forceDisabled };
+            CurrentSection = new Section { Disabled = forceDisabled };
             _sectionDepth++;
-            if (_sectionDepth == 1) _topSection = _currentSection;
+            if (_sectionDepth == 1) _topSection = CurrentSection;
         }
 
         public void BeginSection(string heading, ref bool enabled, bool addDivider = false,
@@ -126,9 +134,9 @@ namespace TwistCore.Editor
             EditorGUI.indentLevel++;
             EditorGUIUtility.labelWidth = 80;
 
-            _currentSection = new Section { Disabled = !enabled };
+            CurrentSection = new Section { Disabled = !enabled };
             _sectionDepth++;
-            if (_sectionDepth == 1) _topSection = _currentSection;
+            if (_sectionDepth == 1) _topSection = CurrentSection;
         }
 
         public void EndSection()
@@ -150,7 +158,7 @@ namespace TwistCore.Editor
 
             FoldoutManager.SectionEnd();
             _sectionDepth--;
-            _currentSection = _sectionDepth == 1 ? _topSection : null;
+            CurrentSection = _sectionDepth == 1 ? _topSection : null;
             if (_sectionDepth == 0) _topSection = null;
         }
 
@@ -159,7 +167,7 @@ namespace TwistCore.Editor
             GUIStyle style = null)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
             {
                 using (var l = new EditorGUILayout.HorizontalScope())
                 {
@@ -191,7 +199,7 @@ namespace TwistCore.Editor
             if (!FoldoutManager.CurrentElementIsOpen) return;
             var memWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 0;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
             {
                 var oldValue = value;
                 value = (T)EditorGUILayout.EnumPopup(text, value);
@@ -277,7 +285,7 @@ namespace TwistCore.Editor
             bool forceDisabled = false, params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled || forceDisabled))
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled || forceDisabled))
             {
                 if (text != null)
                     EditorGUILayout.LabelField(text + ":", EditorStyles.boldLabel);
@@ -298,7 +306,7 @@ namespace TwistCore.Editor
         public void HorizontalButtons(params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(_currentSection?.Disabled ?? false))
+            using (new EditorGUI.DisabledScope(CurrentSection?.Disabled ?? false))
             {
                 GUILayout.Space(HorizontalButtonsMargin);
                 // Horizontally centered
@@ -366,7 +374,7 @@ namespace TwistCore.Editor
             GUIStyle style = null)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
             {
                 var oldValue = value;
                 value = style == null
@@ -394,7 +402,7 @@ namespace TwistCore.Editor
             bool expandWidth = false, GUIStyle style = null)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled))
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled))
             {
                 using (var l = new EditorGUILayout.HorizontalScope())
                 {
@@ -421,7 +429,7 @@ namespace TwistCore.Editor
             var memWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 0;
 
-            using (new EditorGUI.DisabledScope(_currentSection.Disabled))
+            using (new EditorGUI.DisabledScope(CurrentSection.Disabled))
             {
                 var oldValue = content.SelectedIndex;
 
@@ -474,7 +482,7 @@ namespace TwistCore.Editor
         private void ButtonLabel(string labelText, bool shrinkWidth, int marginLeft = 30, params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(_currentSection.Disabled))
+            using (new EditorGUI.DisabledScope(CurrentSection.Disabled))
             {
                 using (var l = new EditorGUILayout.HorizontalScope())
                 {
@@ -546,7 +554,7 @@ namespace TwistCore.Editor
             bool forceDisabled = false, params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(!forceEnabled && _currentSection.Disabled || forceDisabled))
+            using (new EditorGUI.DisabledScope(!forceEnabled && CurrentSection.Disabled || forceDisabled))
             {
                 using (var l = new EditorGUILayout.HorizontalScope())
                 {
@@ -596,7 +604,7 @@ namespace TwistCore.Editor
         public void ButtonsLeft(params Button[] buttons)
         {
             if (!FoldoutManager.CurrentElementIsOpen) return;
-            using (new EditorGUI.DisabledScope(_currentSection?.Disabled ?? false))
+            using (new EditorGUI.DisabledScope(CurrentSection?.Disabled ?? false))
             {
                 GUILayout.Space(HorizontalButtonsMargin);
                 // Horizontally centered
