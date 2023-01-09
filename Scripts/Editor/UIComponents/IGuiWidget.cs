@@ -1,4 +1,4 @@
-﻿namespace TwistCore.Editor.UIComponents
+﻿namespace TwistCore.Editor.GuiWidgets
 {
     public interface IGuiWidget<out T> where T : SettingsAsset
     {

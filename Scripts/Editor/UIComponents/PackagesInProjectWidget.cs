@@ -4,8 +4,9 @@ using TwistCore.PackageDevelopment.Editor;
 using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
 
-namespace TwistCore.Editor.UIComponents
+namespace TwistCore.Editor.GuiWidgets
 {
+    [WidgetIncludesSection(true)]
     public class PackagesInProjectWidget : GuiWidget<TwistCoreSettings>
     {
         private void DrawUpToDatePackages(List<PackageData> packages)

@@ -4,8 +4,7 @@ using System.Reflection;
 
 namespace TwistCore.Editor.GuiWidgets
 {
-    //GuiWidgetFramework
-    public static class SettingsUIFramework
+    public static class GuiWidgetFramework
     {
         private static readonly Dictionary<IPackageSettingsWindow<SettingsAsset>,
                 Dictionary<string, IGuiWidget<SettingsAsset>>>

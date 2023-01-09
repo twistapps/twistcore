@@ -1,7 +1,8 @@
+using TwistCore.Editor.GuiWidgets;
 using TwistCore.ProgressWindow.Editor;
 
 // ReSharper disable once CheckNamespace
-namespace TwistCore.Editor.UIComponents
+namespace TwistCore.Editor.GuiWidgets
 {
     public class ManifestEditorWidget : GuiWidget<TwistCoreSettings>
     {
@@ -13,7 +14,7 @@ namespace TwistCore.Editor.UIComponents
 
         public override void Draw()
         {
-            Window.ButtonLabel("Dependency Manager Settings",
+            Window.ButtonLabel("Manifest Editor",
                 new Button("Open", Open));
         }
     }

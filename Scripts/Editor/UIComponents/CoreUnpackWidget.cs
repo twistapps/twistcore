@@ -2,7 +2,7 @@
 using TwistCore.ProgressWindow.Editor;
 using UnityEngine;
 
-namespace TwistCore.Editor.UIComponents
+namespace TwistCore.Editor.GuiWidgets
 {
     public class CoreUnpackWidget<T> : GuiWidget<T> where T : SettingsAsset
     {
