@@ -14,8 +14,11 @@ namespace TwistCore.Editor
 
         public static Type[] GetDerivedFrom<T>(params Type[] ignored)
         {
+            #if TWISTCORE_DEBUG
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+            #endif
+            
             Type[] foundArr;
             if (DerivativesCache.ContainsKey(typeof(T)))
             {
@@ -36,9 +39,14 @@ namespace TwistCore.Editor
             if (ignored != null)
                 foundArr = foundArr.Where(t => !ignored.Contains(t)).ToArray();
 
+            #if TWISTCORE_DEBUG
             stopwatch.Stop();
             if (stopwatch.ElapsedMilliseconds > 0 && Settings.debug)
+            {
                 Debug.Log($"GetDerivedFrom<{typeof(T).Name}>() took {stopwatch.ElapsedMilliseconds}ms to execute");
+                stopwatch.Reset();
+            }
+            #endif
 
             return foundArr;
         }
