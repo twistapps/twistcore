@@ -1,3 +1,10 @@
+# [0.22.0](https://github.com/twistapps/twistcore/compare/0.21.0...0.22.0) (2023-01-09)
+
+
+### Features
+
+* ClassModifier params ([51f39f4](https://github.com/twistapps/twistcore/commit/51f39f43a7cddf6e63660525f9cd400f443c2a74))
+
 # [0.21.0](https://github.com/twistapps/twistcore/compare/0.20.0...0.21.0) (2023-01-09)
 
 
