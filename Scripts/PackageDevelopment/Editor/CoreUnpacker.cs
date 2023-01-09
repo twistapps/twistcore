@@ -65,19 +65,11 @@ namespace TwistCore.PackageDevelopment.Editor
             var package = UPMCollection.GetFromAllPackages(packageName);
             var packagePath = package.assetPath;
 
-            var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
+            unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
             Debug.Log($"Unpacked core path: {unpackedCorePath}");
 
             var ignore = File.ReadAllLines(Path.Combine(corePath, UnpackIgnore));
             var ignoredFiles = new List<string>();
-
-            // if (!PackageRegistryUtils.IsEmbedded(core.name))
-            // {
-            //     progress.TotalSteps++;
-            //     yield return progress.Log("Embedding source pkg...");
-            //     UPMInterface.Embed(core.name);
-            //     yield return progress.Next("Done embedding").Sleep(1);
-            // }
 
             yield return progress.Log("Filtering ignored files...");
 
@@ -97,7 +89,9 @@ namespace TwistCore.PackageDevelopment.Editor
                         excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s),
                             SearchOption.AllDirectories));
                 }
-
+                
+                if (pattern.EndsWith("/*") && !Directory.Exists(Path.Combine(pattern))) continue;
+                
                 var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
                 found = found.Except(excludeFromSearch).ToArray();
 
@@ -139,11 +133,14 @@ namespace TwistCore.PackageDevelopment.Editor
 
             yield return progress.Next("Redirecting dependencies...");
             RemoveAsmdefDependency(packageName, packageToUnpack);
+            RemoveAsmdefDependency(packageName, packageToUnpack, true);
+            RedirectAsmdefReferences(packageName, packageToUnpack, true);
+            ReplaceEditorAsmdefWithReference(packageName, packageToUnpack);
+            
 
             //add dependencies of embedded package
             foreach (var dependency in ManifestEditor.Manifest.Get(packageToUnpack).dependencies)
                 AddExternalAsmdefDependency(packageName, dependency);
-            //AddAsmdefDependency(packageName, dependency);
 
             yield return progress.Next().Sleep(1);
 
@@ -165,7 +162,7 @@ namespace TwistCore.PackageDevelopment.Editor
             var package = UPMCollection.GetFromAllPackages(packageName);
             var packagePath = package.assetPath;
 
-            var unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
+            unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
             var files = Directory.EnumerateFiles(unpackedCorePath, "*", SearchOption.AllDirectories);
 
             progress.TotalSteps = 150;
@@ -185,36 +182,19 @@ namespace TwistCore.PackageDevelopment.Editor
             yield return progress;
 
             AddAsmdefDependency(packageName, unpackedPackage);
+            AddAsmdefDependency(packageName, unpackedPackage, true);
 
             //remove dependencies of embedded package
-            foreach (var dependency in ManifestEditor.Manifest.Get(unpackedPackage).dependencies)
+            var manifestPackage = ManifestEditor.Manifest.Get(packageName);
+            foreach (var dependency in ManifestEditor.Manifest.Get(unpackedPackage)
+                         .dependencies.Except(manifestPackage.dependencies))
+            {
                 RemoveExternalAsmdefDependency(packageName, dependency);
+            }
 
             progress.Log("Requesting asset db refresh...");
             TaskManager.ExecuteOnCompletion(AssetDatabase.Refresh);
             yield return progress.Next().Sleep(.5f);
-        }
-
-        public static void RemoveAsmdefDependency(string packageName, string dependencyName)
-        {
-            var package = UPMCollection.GetFromAllPackages(packageName);
-            var asmdef = package.Asmdef();
-
-            if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
-                return;
-
-            var dependencyGuid = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid();
-
-            var o = JObject.Parse(File.ReadAllText(asmdef));
-            var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
-
-            var index = references.IndexOf(dependencyGuid);
-            if (index != -1) references.RemoveAt(index);
-
-            o["references"] = new JArray(references);
-            var json = o.ToString();
-
-            File.WriteAllText(asmdef, json);
         }
 
         private static string GetExternalPackageGuid(string packageName)
@@ -235,6 +215,7 @@ namespace TwistCore.PackageDevelopment.Editor
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
+            Debug.Log("Adding dependency " + dependencyName);
             var dependencyGuid = GetExternalPackageGuid(dependencyName);
 
             var asmdef = package.Asmdef();
@@ -270,26 +251,88 @@ namespace TwistCore.PackageDevelopment.Editor
             File.WriteAllText(asmdef, json);
         }
 
-        public static void AddAsmdefDependency(string packageName, string dependencyName)
+        public static void AddAsmdefDependency(string packageName, string dependencyName, bool editor = false)
         {
             var package = UPMCollection.GetFromAllPackages(packageName);
 
             if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
                 return;
 
-            var asmdef = package.Asmdef();
+            var asmdef = package.Asmdef(editor);
             var o = JObject.Parse(File.ReadAllText(asmdef));
             var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
 
             var dependencyGuid = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid();
+            var dependencyGuidEditor = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid(editor);
 
-            //CompilationPipeline.GUIDToAssemblyDefinitionReferenceGUID()
 
-            if (references.IndexOf(dependencyGuid) != -1) return;
-            references.Add(dependencyGuid);
+            if (references.IndexOf(dependencyGuid) == -1)
+                references.Add(dependencyGuid);
+            if (references.IndexOf(dependencyGuidEditor) == -1)
+                references.Add(dependencyGuidEditor);
 
             o["references"] = new JArray(references);
             File.WriteAllText(asmdef, o.ToString());
+        }
+        
+        public static void RemoveAsmdefDependency(string packageName, string dependencyName, bool editor=false)
+        {
+            var package = UPMCollection.GetFromAllPackages(packageName);
+            var asmdef = package.Asmdef(editor);
+
+            if (!PackageLock.IsInDevelopmentMode(package)) //requested package is not in development mode
+                return;
+
+            var dependencyGuid = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid();
+            var dependencyGuidEditor = "GUID:" + UPMCollection.GetFromAllPackages(dependencyName).AsmdefGuid(editor);
+
+            var o = JObject.Parse(File.ReadAllText(asmdef));
+            var references = o["references"]?.Values<string>().ToList() ?? new List<string>();
+
+            references.RemoveAll(d => d == dependencyGuid || d == dependencyGuidEditor);
+
+            o["references"] = new JArray(references);
+            var json = o.ToString();
+
+            File.WriteAllText(asmdef, json);
+        }
+
+        private static string unpackedCorePath;
+
+        public static void RedirectAsmdefReferences(string packageName, string dependencyName, bool editor=false)
+        {
+            var dependency = UPMCollection.GetFromAllPackages(dependencyName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
+            var references = dependency.AsmdefReferences(editor);
+            
+            foreach (var reference in references)
+            {
+                reference.file = FolderSync.MakeRelativePath(reference.file, dependency.assetPath);
+                reference.file = Path.Combine(unpackedCorePath, reference.file);
+                reference.reference = "GUID:" + package.AsmdefGuid(editor);
+                reference.WriteToFile();
+            }
+        }
+
+        public static void ReplaceEditorAsmdefWithReference(string packageName, string dependencyName)
+        {
+            var dependency = UPMCollection.GetFromAllPackages(dependencyName);
+            var package = UPMCollection.GetFromAllPackages(packageName);
+
+            var asmdef = dependency.Asmdef(true);
+            if (asmdef == null) return;
+            var asmdefRelative = FolderSync.MakeRelativePath(asmdef, dependency.assetPath);
+            asmdefRelative = Path.Combine(unpackedCorePath, asmdefRelative);
+            if (!string.IsNullOrEmpty(asmdefRelative) && File.Exists(asmdefRelative))
+            {
+                File.Delete(asmdefRelative);
+                File.Delete(asmdefRelative + ".meta");
+            }
+
+            var asmref = new AsmdefReferenceObject();
+            asmref.reference = "GUID:" + package.AsmdefGuid(true);
+            asmref.file = Path.ChangeExtension(asmdefRelative, ".asmref");
+            asmref.WriteToFile();
         }
     }
 }

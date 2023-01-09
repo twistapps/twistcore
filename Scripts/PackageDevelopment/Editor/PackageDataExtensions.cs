@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -6,54 +8,82 @@ using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore.PackageDevelopment.Editor
 {
+    [Serializable]
+    public class AsmdefReferenceObject
+    {
+        [SerializeField]
+        public string reference;
+        [NonSerialized] public string file;
+        
+        public void WriteToFile()
+        {
+            var json = JsonUtility.ToJson(this);
+            File.WriteAllText(file, json);
+        }
+
+        public AsmdefReferenceObject()
+        {
+        }
+    }
+    
     public static class PackageDataExtensions
     {
         private const string EmptyGuid = "GUID:00000000000000000000000000000000";
+        public const string EditorAsmdefSuffix = ".editor";
 
         public static string Alias(this PackageInfo package)
         {
             return package.name.Split('.').LastOrDefault();
         }
 
-        public static string Alias(this PackageData package)
+        public static string Asmdef(this PackageInfo package, bool editor=false)
         {
-            return package.name.Split('.').LastOrDefault();
-        }
-
-        public static string Asmdef(this PackageInfo package)
-        {
+            var editorSuffix = editor ? EditorAsmdefSuffix : string.Empty;
+            
+            bool FileMatch(string file)
+            {
+                Debug.Log("Looking for " + package.Alias() + editorSuffix + ".asmdef");
+                return file.ToLower().EndsWith(package.Alias() + editorSuffix + ".asmdef");
+            }
+            
             var packageFolder = package.assetPath;
-            var files = Directory.GetFiles(packageFolder);
-            var asmdef = files.FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
-            if (!string.IsNullOrEmpty(asmdef)) return asmdef;
-            // Debug.Log($"Looking for {package.Alias()}");
-            // foreach (var assembly in CompilationPipeline.GetAssemblies())
-            // {
-            //     if (assembly.name.ToLower().Contains(package.Alias()))
-            //         return assembly.outputPath;
-            // }
-            // Debug.Log($"{package.Alias()} not found");
-
-            return null;
+            var files = Directory.GetFiles(packageFolder, "*.asmdef", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                Debug.Log("Found " + file);
+            }
+            var asmdef = files.FirstOrDefault(FileMatch);
+            //if (editor && string.IsNullOrEmpty(asmdef)) return Asmdef(package, false);
+            return !string.IsNullOrEmpty(asmdef) ? asmdef : null;
         }
 
-        public static string Asmdef(this PackageData package)
+        public static List<AsmdefReferenceObject> AsmdefReferences(this PackageInfo package, bool editor = false)
         {
+            var guid = "GUID:" + package.AsmdefGuid(editor);
+            
             var packageFolder = package.assetPath;
-            return Directory.GetFiles(packageFolder)
-                .FirstOrDefault(file => file.ToLower().EndsWith(package.Alias() + ".asmdef"));
+            var files = Directory.GetFiles(packageFolder, "*.asmref", SearchOption.AllDirectories);
+
+            var references = new List<AsmdefReferenceObject>();
+            
+            foreach (var file in files)
+            {
+                var refObject = JsonUtility.FromJson<AsmdefReferenceObject>(File.ReadAllText(file));
+                if (refObject.reference != guid) continue;
+                
+                refObject.file = file;
+                references.Add(refObject);
+            }
+
+            return references;
         }
 
-        public static string AsmdefGuid(this PackageInfo package)
+        public static string AsmdefGuid(this PackageInfo package, bool editor = false)
         {
-            Debug.Log($"[asmdef]{package.name}: {Asmdef(package)} -- {AssetDatabase.AssetPathToGUID(Asmdef(package))}");
-            return AssetDatabase.AssetPathToGUID(Asmdef(package));
+            var asmdef = Asmdef(package, editor);
+            Debug.Log($"[asmdef]{package.name}: {asmdef} -- {AssetDatabase.AssetPathToGUID(asmdef)}");
+            return AssetDatabase.AssetPathToGUID(Asmdef(package, editor));
             //return AssetDatabase.GUIDFromAssetPath(Asmdef(package));
-        }
-
-        public static GUID AsmdefGuid(this PackageData package)
-        {
-            return AssetDatabase.GUIDFromAssetPath(Asmdef(package));
         }
     }
 }
