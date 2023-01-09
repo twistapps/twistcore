@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Compilation;
 
 namespace TwistCore.Editor
 {
@@ -45,10 +46,17 @@ namespace TwistCore.Editor
 
         public static void SetAll()
         {
+            var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
+            var symbolsBefore = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
+            
             var defines = GetAll();
 
             foreach (var symbol in defines.ToAdd) ScriptingDefinesSetter.AddSymbols(symbol);
             foreach (var symbol in defines.ToRemove) ScriptingDefinesSetter.RemoveSymbols(symbol);
+
+            var symbolsAfter = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
+            if (symbolsBefore != symbolsAfter)
+                CompilationPipeline.RequestScriptCompilation();
         }
     }
 }
