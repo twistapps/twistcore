@@ -1,3 +1,19 @@
+# [0.23.0](https://github.com/twistapps/twistcore/compare/0.22.0...0.23.0) (2023-01-09)
+
+
+### Bug Fixes
+
+* Force recompile on change to reduce wait time ([6891add](https://github.com/twistapps/twistcore/commit/6891adda0cfc93e94498f509f8b65c4f92bcafca))
+* Optimize debug mode ([56546b2](https://github.com/twistapps/twistcore/commit/56546b2884dbda44d4bfbffd5911989bd323241b))
+
+
+### Features
+
+* Add debug mode widgets ([5b483df](https://github.com/twistapps/twistcore/commit/5b483df1556797b2c519915594f6acf5413385ae))
+* Attr specify if widget needs to be inside section ([91244da](https://github.com/twistapps/twistcore/commit/91244da19f5be5a9f4cf0897f0448eee89c6f75c))
+* ConditionalDefineSymbols ([2c03154](https://github.com/twistapps/twistcore/commit/2c0315418fc61955846c40ce6b6d1649255a405f))
+* Select pkg in project view widget ([b5456f1](https://github.com/twistapps/twistcore/commit/b5456f1a9e207de3a9cf86b8e58444623acf5dc8))
+
 # [0.22.0](https://github.com/twistapps/twistcore/compare/0.21.0...0.22.0) (2023-01-09)
 
 
