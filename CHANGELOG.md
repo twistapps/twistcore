@@ -1,3 +1,10 @@
+## [0.23.1](https://github.com/twistapps/twistcore/compare/0.23.0...0.23.1) (2023-01-09)
+
+
+### Bug Fixes
+
+* Remove empty folder ([9de97fc](https://github.com/twistapps/twistcore/commit/9de97fc41247d88a64281ac8da032e0922c6a193))
+
 # [0.23.0](https://github.com/twistapps/twistcore/compare/0.22.0...0.23.0) (2023-01-09)
 
 
