@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace TwistCore.Editor.UIComponents
+namespace TwistCore.Editor.GuiWidgets
 {
+    //GuiWidgetFramework
     public static class SettingsUIFramework
     {
         private static readonly Dictionary<IPackageSettingsWindow<SettingsAsset>,
@@ -14,7 +15,7 @@ namespace TwistCore.Editor.UIComponents
 
         private static Type GetTypeByName(string name)
         {
-            return Type.GetType($"TwistCore.Editor.UIComponents.{name}, {Assembly.GetCallingAssembly().GetName()}");
+            return Type.GetType($"TwistCore.Editor.GuiWidgets.{name}, {Assembly.GetCallingAssembly().GetName()}");
             //return Type.GetType($"TwistCore.Editor.UIComponents.{name}, TwistCore");
         }
 
@@ -41,6 +42,16 @@ namespace TwistCore.Editor.UIComponents
                 if (type.IsGenericTypeDefinition)
                     resultingType = type.MakeGenericType(typeof(T));
 
+                if (bind.CurrentSection == null)
+                {
+                    if (type.GetCustomAttribute<WidgetIncludesSectionAttribute>()
+                            ?.SectionIsIncluded != true)
+                    {
+                        SetupCachedComponent(bind, Activator.CreateInstance<NotInsideSectionNotification>(), component);
+                        return;
+                    }
+                }
+
                 if (Activator.CreateInstance(resultingType) is IGuiWidget<T> instance)
                     SetupCachedComponent(bind, instance, component);
                 else
@@ -49,6 +60,14 @@ namespace TwistCore.Editor.UIComponents
                 return;
             }
 
+            /*bug: NullReferenceException, reproduction:
+             widget is present in cache,
+             WidgetIncludesSectionAttribute.SectionIsIncluded != true 
+             and current section is null.
+             
+             to fix, we should check for current section every time we try to draw component
+             but it's expensive.
+             */
             Cache[bind][component].Draw();
         }
     }
