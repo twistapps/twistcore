@@ -1,3 +1,18 @@
+# [0.21.0](https://github.com/twistapps/twistcore/compare/0.20.0...0.21.0) (2023-01-09)
+
+
+### Bug Fixes
+
+* Automated Cleanup ([7536e6b](https://github.com/twistapps/twistcore/commit/7536e6bd01b5e6985902a2094ae26bb3455c202b))
+* less window idle time ([9d6c156](https://github.com/twistapps/twistcore/commit/9d6c1564ed400fdc2507caf0092bcdd063c8285b))
+* revamped PopupContent ([b0eacef](https://github.com/twistapps/twistcore/commit/b0eacefbfa9e205d16cb80859ec76a7cd05197e6))
+* update release action ([db53d56](https://github.com/twistapps/twistcore/commit/db53d56a1fb099d1e9a916bfce742ef37b4e4518))
+
+
+### Features
+
+* parentClass as string, generics support ([7a70c78](https://github.com/twistapps/twistcore/commit/7a70c78d408b736f22057343d2272f5c5d5fd5f1))
+
 # [0.20.0](https://github.com/twistapps/twistcore/compare/0.19.5...0.20.0) (2023-01-05)
 
 
