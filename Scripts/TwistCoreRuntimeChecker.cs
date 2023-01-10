@@ -1,3 +1,4 @@
+#if TMPRO
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,3 +19,4 @@ namespace TwistCore
         }
     }
 }
+#endif
