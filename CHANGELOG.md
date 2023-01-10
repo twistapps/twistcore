@@ -1,3 +1,10 @@
+## [0.24.3](https://github.com/twistapps/twistcore/compare/0.24.2...0.24.3) (2023-01-10)
+
+
+### Bug Fixes
+
+* add missing references ([4c7fb13](https://github.com/twistapps/twistcore/commit/4c7fb13caf32448c9e537d50bb89f6942437a436))
+
 ## [0.24.2](https://github.com/twistapps/twistcore/compare/0.24.1...0.24.2) (2023-01-10)
 
 
