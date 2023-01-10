@@ -1,3 +1,10 @@
+## [0.24.1](https://github.com/twistapps/twistcore/compare/0.24.0...0.24.1) (2023-01-10)
+
+
+### Bug Fixes
+
+* logs not showing before task is done ([9da8e8c](https://github.com/twistapps/twistcore/commit/9da8e8cf44d72324f54d24f5308b7dd27602f964))
+
 # [0.24.0](https://github.com/twistapps/twistcore/compare/0.23.2...0.24.0) (2023-01-10)
 
 
