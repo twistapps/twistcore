@@ -1,7 +1,5 @@
-using TwistCore.Editor.GuiWidgets;
 using TwistCore.ProgressWindow.Editor;
 
-// ReSharper disable once CheckNamespace
 namespace TwistCore.Editor.GuiWidgets
 {
     public class ManifestEditorWidget : GuiWidget<TwistCoreSettings>

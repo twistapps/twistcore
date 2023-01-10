@@ -54,7 +54,7 @@ namespace TwistCore.Editor
         public static void AddSymbols(string entry)
         {
             if (string.IsNullOrEmpty(entry)) return;
-            
+
             var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
             var symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
             var symbolsHashSet = new HashSet<string>(symbols.Split(';'));

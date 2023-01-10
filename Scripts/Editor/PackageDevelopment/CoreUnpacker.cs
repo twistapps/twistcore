@@ -17,6 +17,8 @@ namespace TwistCore.PackageDevelopment.Editor
         private const string UnpackedCoreDirName = "TwistCore";
         private const string UnpackIgnore = ".unpackignore";
 
+        private static string unpackedCorePath;
+
         public static PackageData GetUnpackedCorePackage(string packageName)
         {
             Debug.Log(packageName);
@@ -89,9 +91,9 @@ namespace TwistCore.PackageDevelopment.Editor
                         excludeFromSearch.AddRange(Directory.GetFiles(corePath, Path.Combine(s),
                             SearchOption.AllDirectories));
                 }
-                
+
                 if (pattern.EndsWith("/*") && !Directory.Exists(Path.Combine(pattern))) continue;
-                
+
                 var found = Directory.GetFiles(corePath, Path.Combine(pattern), SearchOption.AllDirectories);
                 found = found.Except(excludeFromSearch).ToArray();
 
@@ -136,7 +138,7 @@ namespace TwistCore.PackageDevelopment.Editor
             RemoveAsmdefDependency(packageName, packageToUnpack, true);
             RedirectAsmdefReferences(packageName, packageToUnpack, true);
             ReplaceEditorAsmdefWithReference(packageName, packageToUnpack);
-            
+
 
             //add dependencies of embedded package
             foreach (var dependency in ManifestEditor.Manifest.Get(packageToUnpack).dependencies)
@@ -188,9 +190,7 @@ namespace TwistCore.PackageDevelopment.Editor
             var manifestPackage = ManifestEditor.Manifest.Get(packageName);
             foreach (var dependency in ManifestEditor.Manifest.Get(unpackedPackage)
                          .dependencies.Except(manifestPackage.dependencies))
-            {
                 RemoveExternalAsmdefDependency(packageName, dependency);
-            }
 
             progress.Log("Requesting asset db refresh...");
             TaskManager.ExecuteOnCompletion(AssetDatabase.Refresh);
@@ -274,8 +274,8 @@ namespace TwistCore.PackageDevelopment.Editor
             o["references"] = new JArray(references);
             File.WriteAllText(asmdef, o.ToString());
         }
-        
-        public static void RemoveAsmdefDependency(string packageName, string dependencyName, bool editor=false)
+
+        public static void RemoveAsmdefDependency(string packageName, string dependencyName, bool editor = false)
         {
             var package = UPMCollection.GetFromAllPackages(packageName);
             var asmdef = package.Asmdef(editor);
@@ -297,14 +297,12 @@ namespace TwistCore.PackageDevelopment.Editor
             File.WriteAllText(asmdef, json);
         }
 
-        private static string unpackedCorePath;
-
-        public static void RedirectAsmdefReferences(string packageName, string dependencyName, bool editor=false)
+        public static void RedirectAsmdefReferences(string packageName, string dependencyName, bool editor = false)
         {
             var dependency = UPMCollection.GetFromAllPackages(dependencyName);
             var package = UPMCollection.GetFromAllPackages(packageName);
             var references = dependency.AsmdefReferences(editor);
-            
+
             foreach (var reference in references)
             {
                 reference.file = FolderSync.MakeRelativePath(reference.file, dependency.assetPath);

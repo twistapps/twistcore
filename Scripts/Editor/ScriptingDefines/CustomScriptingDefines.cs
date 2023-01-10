@@ -15,6 +15,7 @@ namespace TwistCore.Editor
 
         // ReSharper disable once MemberCanBePrivate.Global
         public readonly HashSet<string> ToAdd = new HashSet<string>();
+
         // ReSharper disable once MemberCanBePrivate.Global
         public readonly HashSet<string> ToRemove = new HashSet<string>();
 
@@ -45,28 +46,35 @@ namespace TwistCore.Editor
         {
             if (_initialized) return;
             _initialized = true;
-            
+
             SetAll();
-            
+
             // This causes the method to be invoked after the Editor registers the new list of packages.
             Events.registeringPackages += OnRegisteringPackages;
         }
-        
+
         public static void OnRegisteringPackages(PackageRegistrationEventArgs args)
         {
             var conditionalDefines = EditorUtils.GetDerivedTypesExcludingSelf<ConditionalDefineSymbols>();
-            
+
             foreach (var type in conditionalDefines)
             {
                 var name = type.GetCustomAttribute<PackageNameAttribute>()?.PackageName;
                 if (string.IsNullOrEmpty(name)) continue;
-                
-                bool Match(PackageInfo pkg) => pkg.name == name;
-                string GetSymbols() => ((ConditionalDefineSymbols)Activator.CreateInstance(type)).GetSymbols();
-                
+
+                bool Match(PackageInfo pkg)
+                {
+                    return pkg.name == name;
+                }
+
+                string GetSymbols()
+                {
+                    return ((ConditionalDefineSymbols)Activator.CreateInstance(type)).GetSymbols();
+                }
+
                 if (args.removed.FirstOrDefault(Match) != null)
                     ScriptingDefinesSetter.RemoveSymbols(GetSymbols());
-            
+
                 else if (args.added.FirstOrDefault(Match) != null)
                     ScriptingDefinesSetter.AddSymbols(GetSymbols());
             }
@@ -76,7 +84,7 @@ namespace TwistCore.Editor
         {
             var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
             var symbolsBefore = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
-            
+
             var defines = GetAll();
 
             foreach (var symbol in defines.ToAdd) ScriptingDefinesSetter.AddSymbols(symbol);

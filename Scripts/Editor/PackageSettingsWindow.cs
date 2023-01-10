@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using TwistCore.Editor.GuiWidgets;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,12 +24,12 @@ namespace TwistCore.Editor
         // };
 
         protected readonly FoldoutManager FoldoutManager = new FoldoutManager();
-
-        internal Section CurrentSection;
         private Vector2 _scrollPosition;
         private int _sectionDepth;
 
         private Section _topSection;
+
+        internal Section CurrentSection;
 
         private static GUILayoutOption[] DefaultLabelLayoutOptions =>
             new[] { GUILayout.ExpandWidth(false), GUILayout.MinWidth(38) };
@@ -43,13 +42,13 @@ namespace TwistCore.Editor
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             GUILayout.Space(5);
             DrawGUI();
-            #if TWISTCORE_DEBUG
+#if TWISTCORE_DEBUG
             AddSection("Development", () =>
             {
                 this.DrawCachedComponent("EmbedThisWidget");
                 this.DrawCachedComponent("SelectPackageWidget");
             });
-            #endif
+#endif
             EditorGUILayout.EndScrollView();
             WatchChangesAbove();
         }

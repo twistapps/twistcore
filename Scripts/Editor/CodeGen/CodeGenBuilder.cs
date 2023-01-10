@@ -68,9 +68,8 @@ namespace TwistCore.CodeGen.Editor
             }
 
             Space();
-            
+
             foreach (var classModifier in modifiers)
-            {
                 switch (classModifier)
                 {
                     case ClassModifier.Abstract:
@@ -85,7 +84,7 @@ namespace TwistCore.CodeGen.Editor
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
+
             Append("class $", name);
             if (!string.IsNullOrEmpty(parentClass)) Append(" : $", parentClass);
             OpenCurly();

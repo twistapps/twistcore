@@ -8,6 +8,7 @@ namespace TwistCore.Editor
         // ReSharper disable once IdentifierTypo
         private const string TMPRO = "TMPRO";
         private const string PackageName = "com.unity.textmeshpro";
+
         public override string GetSymbols()
         {
             return TMPRO;

@@ -42,14 +42,12 @@ namespace TwistCore.Editor.GuiWidgets
                     resultingType = type.MakeGenericType(typeof(T));
 
                 if (bind.CurrentSection == null)
-                {
                     if (type.GetCustomAttribute<WidgetIncludesSectionAttribute>()
                             ?.SectionIsIncluded != true)
                     {
                         SetupCachedComponent(bind, Activator.CreateInstance<NotInsideSectionNotification>(), component);
                         return;
                     }
-                }
 
                 if (Activator.CreateInstance(resultingType) is IGuiWidget<T> instance)
                     SetupCachedComponent(bind, instance, component);

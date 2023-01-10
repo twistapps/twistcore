@@ -54,11 +54,7 @@ namespace TwistCore.Editor
 
             AddSection("Package Development", () =>
             {
-
-                Checkbox("Core Debug Mode", ref Settings.debug, val =>
-                {
-                    CustomScriptingDefines.SetAll();
-                });
+                Checkbox("Core Debug Mode", ref Settings.debug, val => { CustomScriptingDefines.SetAll(); });
                 this.DrawCachedComponent("ManifestEditorWidget");
             });
 

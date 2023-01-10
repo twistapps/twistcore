@@ -7,6 +7,7 @@ namespace TwistCore.Editor
     {
         private const string EDITOR_COROUTINES = "EDITOR_COROUTINES";
         private const string PackageName = "com.unity.editorcoroutines";
+
         public override string GetSymbols()
         {
             return EDITOR_COROUTINES;
