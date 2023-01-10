@@ -1,3 +1,17 @@
+# [0.24.0](https://github.com/twistapps/twistcore/compare/0.23.2...0.24.0) (2023-01-10)
+
+
+### Bug Fixes
+
+* Update manifest ([3e60221](https://github.com/twistapps/twistcore/commit/3e6022192ca95053bc4b941f56fbe8a744938896))
+
+
+### Features
+
+* Change defines on UPM install/remove ([288a1f0](https://github.com/twistapps/twistcore/commit/288a1f028a40ad50360618ceb56f1fdc62fb2460))
+* Symbols setter for TMPro ([5806649](https://github.com/twistapps/twistcore/commit/5806649eb89737690b74f1b4db98c212eb416db1))
+* Symbols setter rewrite for editorcoroutines ([d7ab7f9](https://github.com/twistapps/twistcore/commit/d7ab7f959ab94400664c5fa4bb20381bd6c93679))
+
 ## [0.23.2](https://github.com/twistapps/twistcore/compare/0.23.1...0.23.2) (2023-01-09)
 
 
