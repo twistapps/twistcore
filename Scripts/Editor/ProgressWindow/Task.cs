@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 
 namespace TwistCore.Editor
 {
@@ -26,6 +27,8 @@ namespace TwistCore.Editor
             {
                 ProgressAmount = (float)Progress.CurrentStep / Progress.TotalSteps;
                 window.Repaint();
+
+                TaskManager.GatherLogsFrom(_coroutine);
 
                 yield return Progress.ShouldSleepForSeconds > 0
                     ? new EditorWaitForSeconds(Progress.ShouldSleepForSeconds)

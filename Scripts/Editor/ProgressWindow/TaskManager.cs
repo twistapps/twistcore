@@ -22,17 +22,11 @@ namespace TwistCore.Editor
 
         private static ProgressWindow _window;
 
-
-        // public static void AddLogs(string text)
-        // {
-        //     Logs.Add(CurrentTask.Description + ": " + text);
-        // }
-
         public static void Enqueue(IEnumerator<TaskProgress> coroutine, string description,
             Action onComplete = null)
         {
             Queue.Enqueue(new Task(coroutine, description));
-            if (onComplete != null) _onComplete.Add(onComplete);
+            if (onComplete != null) OnComplete.Add(onComplete);
 
             if (_window == null)
             {
@@ -51,7 +45,6 @@ namespace TwistCore.Editor
             {
                 CurrentTask = Queue.Dequeue();
                 yield return CurrentTask.Execute(_window);
-                GatherLogsFrom(CurrentTask);
             }
 
             yield return new EditorWaitForSeconds(WaitSecondsAfterAllTasksDone);
@@ -65,15 +58,15 @@ namespace TwistCore.Editor
             QueueRunnerCoroutine = null;
         }
 
-        private static void GatherLogsFrom(Task task)
+        internal static void GatherLogsFrom(IEnumerator<TaskProgress> task)
         {
-            foreach (var log in task.Progress.Logs)
+            foreach (var log in task.Current.Logs)
                 Logs.Add(new TaskLogs
                 {
-                    title = CurrentTask.Description,
-                    text = log.text
+                    Title = CurrentTask.Description,
+                    Text = log.Text
                 });
-            task.Progress.Logs.Clear();
+            task.Current.Logs.Clear();
         }
 #else
         private static bool _hasInProgressTasks = false;
@@ -92,7 +85,7 @@ namespace TwistCore.Editor
         {
         }
 #endif
-        private static readonly List<Action> _onComplete = new List<Action>();
+        private static readonly List<Action> OnComplete = new List<Action>();
 
         /// <summary>
         ///     Actions that will be performed synchronously after all tasks are done:
@@ -101,7 +94,7 @@ namespace TwistCore.Editor
         /// <param name="action"></param>
         public static void ExecuteOnCompletion(Action action)
         {
-            _onComplete.Add(action);
+            OnComplete.Add(action);
 
 #if EDITOR_COROUTINES
             if (CurrentTask == null && Queue.Count == 0)
@@ -114,9 +107,9 @@ namespace TwistCore.Editor
 
         private static void InvokeAllOnCompleteActions()
         {
-            foreach (var action in _onComplete)
+            foreach (var action in OnComplete)
                 action?.Invoke();
-            _onComplete.Clear();
+            OnComplete.Clear();
         }
     }
 }
