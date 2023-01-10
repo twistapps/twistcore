@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TwistCore.ProgressWindow.Editor
+namespace TwistCore.Editor
 {
     public static class TaskExtensions
     {

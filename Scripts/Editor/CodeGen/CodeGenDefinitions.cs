@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     public static class CodeGenDefinitions
     {

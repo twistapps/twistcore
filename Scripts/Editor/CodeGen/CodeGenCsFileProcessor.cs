@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     public class CodeGenCsFileProcessor : AssetPostprocessor
     {

@@ -1,7 +1,6 @@
-﻿using TwistCore.Editor;
-using UnityEditor;
+﻿using UnityEditor;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     internal class CodeGenWindow : PackageSettingsWindow<CodeGenSettings>
     {

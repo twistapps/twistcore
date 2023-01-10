@@ -4,11 +4,9 @@
 // ReSharper disable UnassignedField.Global
 
 using System;
-using TwistCore.PackageRegistry;
-using TwistCore.PackageRegistry.Editor;
 using UnityEditor.PackageManager;
 
-namespace TwistCore.PackageDevelopment.Editor
+namespace TwistCore.Editor
 {
     [Serializable]
     public class PackageData

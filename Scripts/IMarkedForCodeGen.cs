@@ -1,4 +1,4 @@
-﻿namespace TwistCore.CodeGen
+﻿namespace TwistCore
 {
     /// <summary>
     ///     Used as a mark for code generator.

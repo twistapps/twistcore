@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 
-namespace TwistCore.ProgressWindow.Editor
+namespace TwistCore.Editor
 {
     public static class TasksCommon
     {

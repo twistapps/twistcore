@@ -1,11 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
-using TwistCore.Editor;
-using TwistCore.PackageRegistry.Editor;
-using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     public static class TemplateFoldersWatcher
     {

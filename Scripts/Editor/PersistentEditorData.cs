@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TwistCore.PackageDevelopment.Editor;
-using TwistCore.PackageRegistry;
-using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;

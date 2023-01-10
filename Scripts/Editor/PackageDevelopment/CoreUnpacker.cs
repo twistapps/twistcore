@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using TwistCore.Editor;
-using TwistCore.PackageRegistry.Editor;
-using TwistCore.ProgressWindow;
-using TwistCore.ProgressWindow.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore.PackageDevelopment.Editor
+namespace TwistCore.Editor
 {
     public static class CoreUnpacker
     {

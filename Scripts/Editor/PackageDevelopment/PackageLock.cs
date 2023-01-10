@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using Newtonsoft.Json.Linq;
-using TwistCore.PackageRegistry.Editor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore.PackageDevelopment.Editor
+namespace TwistCore.Editor
 {
     public static class PackageLock
     {

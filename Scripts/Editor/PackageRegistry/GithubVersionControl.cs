@@ -1,8 +1,7 @@
-﻿using TwistCore.PackageDevelopment.Editor;
-using UnityEditor.PackageManager;
+﻿using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore.PackageRegistry.Editor
+namespace TwistCore.Editor
 {
     public static class GithubVersionControl
     {

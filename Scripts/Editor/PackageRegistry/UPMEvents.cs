@@ -1,8 +1,7 @@
-﻿using TwistCore.Editor;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.PackageManager;
 
-namespace TwistCore.PackageRegistry.Editor
+namespace TwistCore.Editor
 {
     public static class UPMEvents
     {

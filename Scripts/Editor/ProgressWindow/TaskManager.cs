@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using Unity.EditorCoroutines.Editor;
 #endif
 
-namespace TwistCore.ProgressWindow.Editor
+namespace TwistCore.Editor
 {
     public static class TaskManager
     {

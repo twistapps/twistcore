@@ -1,4 +1,4 @@
-﻿namespace TwistCore.CodeGen.Editor
+﻿namespace TwistCore.Editor.CodeGen
 {
     public enum Scope
     {

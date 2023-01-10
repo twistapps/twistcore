@@ -1,6 +1,4 @@
-﻿using TwistCore.PackageDevelopment.Editor;
-using TwistCore.ProgressWindow.Editor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TwistCore.Editor.GuiWidgets
 {

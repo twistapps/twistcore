@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace TwistCore.PackageDevelopment.Editor
+namespace TwistCore.Editor
 {
     [Serializable]
     public class AsmdefReferenceObject

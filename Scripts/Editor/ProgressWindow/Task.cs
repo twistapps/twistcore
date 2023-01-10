@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.EditorCoroutines.Editor;
 
-namespace TwistCore.ProgressWindow.Editor
+namespace TwistCore.Editor
 {
     public class Task
     {

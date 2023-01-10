@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TwistCore.PackageDevelopment.Editor;
-using TwistCore.PackageRegistry.Editor;
 using UnityEditor;
 
 namespace TwistCore.Editor.GuiWidgets

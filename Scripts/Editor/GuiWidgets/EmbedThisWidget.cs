@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using TwistCore.PackageRegistry.Editor;
 
 namespace TwistCore.Editor.GuiWidgets
 {

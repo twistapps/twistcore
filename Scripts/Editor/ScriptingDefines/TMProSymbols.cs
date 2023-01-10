@@ -1,6 +1,4 @@
-﻿using TwistCore.PackageRegistry.Editor;
-
-namespace TwistCore.Editor
+﻿namespace TwistCore.Editor
 {
     [PackageName(PackageName)]
     public class TMProSymbols : ConditionalDefineSymbols

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TwistCore.ProgressWindow
+namespace TwistCore
 {
     public struct TaskLogs
     {

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     public class ScriptInfo
     {

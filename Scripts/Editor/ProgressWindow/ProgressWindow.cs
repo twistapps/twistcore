@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace TwistCore.ProgressWindow.Editor
+namespace TwistCore.Editor
 {
     public class ProgressWindow : EditorWindow
     {

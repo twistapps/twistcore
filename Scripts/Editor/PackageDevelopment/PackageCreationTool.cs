@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
-using TwistCore.CodeGen.Editor;
-using TwistCore.Editor;
+using TwistCore.Editor.CodeGen;
 using UnityEditor.PackageManager;
 
-namespace TwistCore.PackageDevelopment.Editor
+namespace TwistCore.Editor
 {
     public static class PackageCreationTool
     {

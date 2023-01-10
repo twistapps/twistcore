@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TwistCore.ProgressWindow;
-using TwistCore.ProgressWindow.Editor;
 
 namespace TwistCore.Editor
 {

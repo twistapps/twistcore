@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     /// <summary>
     ///     Generates example MonoBehaviour that prints "Hello World" to console on Start().

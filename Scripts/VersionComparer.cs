@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TwistCore.PackageRegistry
+namespace TwistCore
 {
     [Serializable]
     public class VersionComparer

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TwistCore.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace TwistCore.CodeGen.Editor
+namespace TwistCore.Editor.CodeGen
 {
     public static class CodeGen
     {

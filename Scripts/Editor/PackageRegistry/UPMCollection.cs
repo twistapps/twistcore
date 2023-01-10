@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-using TwistCore.Editor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-namespace TwistCore.PackageRegistry.Editor
+namespace TwistCore.Editor
 {
     public static class UPMCollection
     {

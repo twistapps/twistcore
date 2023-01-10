@@ -1,5 +1,3 @@
-using TwistCore.ProgressWindow.Editor;
-
 namespace TwistCore.Editor.GuiWidgets
 {
     public class ManifestEditorWidget : GuiWidget<TwistCoreSettings>
