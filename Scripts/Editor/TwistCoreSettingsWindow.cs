@@ -54,18 +54,10 @@ namespace TwistCore.Editor
 
             AddSection("Package Development", () =>
             {
-                // if (!Settings.packageDevelopment)
-                //     HorizontalButton(new Button("Enter Development Mode", () => { Settings.packageDevelopment = true; },
-                //         150));
-                //
-                // if (Settings.packageDevelopment)
-                //     HorizontalButton(new Button("Exit Development Mode", () => { Settings.packageDevelopment = false; },
-                //         150));
 
                 Checkbox("Core Debug Mode", ref Settings.debug, val =>
                 {
                     CustomScriptingDefines.SetAll();
-                    //CompilationPipeline.RequestScriptCompilation();
                 });
                 this.DrawCachedComponent("ManifestEditorWidget");
             });

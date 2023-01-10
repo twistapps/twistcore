@@ -96,7 +96,7 @@ namespace TwistCore.CodeGen.Editor
             var parts = line.Split(SeparatorSymbol);
 
             var counter = 0;
-            foreach (var (text, insertion) in parts.ToTuplesWith(lineInsertions, true))
+            foreach (var (text, insertion) in Tuples.Make(parts, lineInsertions, true))
             {
                 StringBuilder.Append(text + insertion);
                 counter++;

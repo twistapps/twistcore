@@ -10,6 +10,7 @@ namespace TwistCore.Editor.GuiWidgets
         {
             Window.ButtonLabel("Focus project view on this package", new Button("Ping", () =>
             {
+                EditorUtility.FocusProjectWindow();
                 Selection.activeObject =
                     AssetDatabase.LoadAssetAtPath<Object>(Path.Combine("Packages", PackageName, "package.json"));
             }));
