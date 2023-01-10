@@ -17,7 +17,6 @@ namespace TwistCore.Editor
         /// </summary>
         /// <param name="path">Absolute path to requested file/dir.</param>
         /// <param name="newRootFolder">New root directory. Has to be part of initial path.</param>
-        /// <returns>Initial 'path' trimmed to be relative to newRootFolder</returns>
         public static string MakeRelativePath(string path, string newRootFolder)
         {
             var index = path.IndexOf(newRootFolder, StringComparison.Ordinal);
@@ -31,7 +30,6 @@ namespace TwistCore.Editor
         /// <param name="pathToFile">Path to modify</param>
         /// <param name="oldRootFolder">Directory after which relative part of the path begins which shouldn't be changed.</param>
         /// <param name="newRootFolder"></param>
-        /// <returns></returns>
         public static string ChangeRootDirectoryOfPath(string pathToFile, string oldRootFolder, string newRootFolder)
         {
             var relativePathToFile = MakeRelativePath(pathToFile, oldRootFolder);

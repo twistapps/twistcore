@@ -26,6 +26,7 @@ namespace TwistCore.Editor
             }
             else
             {
+                //todo: extract to its own method
                 var status = "Up to date";
                 var version = PersistentEditorData.PackagesInProjectCached
                     .FirstOrDefault(p => p.name == TwistCore.PackageName)
@@ -51,7 +52,7 @@ namespace TwistCore.Editor
 
             AddSection("Package Development", () =>
             {
-                Checkbox("Core Debug Mode", ref Settings.debug, val => { CustomScriptingDefines.SetAll(); });
+                Checkbox("Core Debug Mode", ref Settings.debug, val => { CustomScriptingDefines.UpdateAll(); });
                 this.DrawCachedComponent("ManifestEditorWidget");
             });
 

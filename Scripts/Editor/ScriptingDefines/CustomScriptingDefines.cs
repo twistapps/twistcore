@@ -19,26 +19,24 @@ namespace TwistCore.Editor
         // ReSharper disable once MemberCanBePrivate.Global
         public readonly HashSet<string> ToRemove = new HashSet<string>();
 
-        private void Test(string symbol, bool condition)
+        private void Test(string symbol, ShouldSetDefinesDelegate condition)
         {
-            if (condition)
+            if (condition())
                 ToAdd.Add(symbol);
             else
                 ToRemove.Add(symbol);
         }
 
-        public static CustomScriptingDefines GetAll()
+        private CustomScriptingDefines TestAll()
         {
-            var defines = new CustomScriptingDefines();
-
             var conditionalDefines = EditorUtils.GetDerivedTypesExcludingSelf<ConditionalDefineSymbols>();
             foreach (var type in conditionalDefines)
             {
                 var instance = Activator.CreateInstance(type) as ConditionalDefineSymbols;
-                defines.Test(instance!.GetSymbols(), instance.ShouldSetDefines());
+                Test(instance!.GetSymbols(), instance.ShouldSetDefines);
             }
 
-            return defines;
+            return this;
         }
 
         [InitializeOnLoadMethod]
@@ -47,13 +45,28 @@ namespace TwistCore.Editor
             if (_initialized) return;
             _initialized = true;
 
-            SetAll();
+            UpdateAll();
 
             // This causes the method to be invoked after the Editor registers the new list of packages.
             Events.registeringPackages += OnRegisteringPackages;
         }
 
-        public static void OnRegisteringPackages(PackageRegistrationEventArgs args)
+        public static void UpdateAll()
+        {
+            var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
+            var symbolsBefore = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
+
+            var defines = new CustomScriptingDefines().TestAll();
+
+            foreach (var symbol in defines.ToAdd) ScriptingDefinesSetter.AddSymbols(symbol);
+            foreach (var symbol in defines.ToRemove) ScriptingDefinesSetter.RemoveSymbols(symbol);
+
+            var symbolsAfter = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
+            if (symbolsBefore != symbolsAfter)
+                CompilationPipeline.RequestScriptCompilation();
+        }
+
+        private static void OnRegisteringPackages(PackageRegistrationEventArgs args)
         {
             var conditionalDefines = EditorUtils.GetDerivedTypesExcludingSelf<ConditionalDefineSymbols>();
 
@@ -80,19 +93,6 @@ namespace TwistCore.Editor
             }
         }
 
-        public static void SetAll()
-        {
-            var buildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
-            var symbolsBefore = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
-
-            var defines = GetAll();
-
-            foreach (var symbol in defines.ToAdd) ScriptingDefinesSetter.AddSymbols(symbol);
-            foreach (var symbol in defines.ToRemove) ScriptingDefinesSetter.RemoveSymbols(symbol);
-
-            var symbolsAfter = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
-            if (symbolsBefore != symbolsAfter)
-                CompilationPipeline.RequestScriptCompilation();
-        }
+        private delegate bool ShouldSetDefinesDelegate();
     }
 }

@@ -26,12 +26,15 @@ namespace TwistCore.Editor
 
         private void OnGUI()
         {
-            _sectionDepth = 0;
             if (Settings == null) Settings = SettingsUtility.Load<TSettings>();
-            FoldoutManager.GUICycle();
+
+            _sectionDepth = 0;
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             GUILayout.Space(5);
+
+            FoldoutManager.GUICycle();
             DrawGUI();
+
 #if TWISTCORE_DEBUG
             AddSection("Development", () =>
             {
@@ -39,6 +42,7 @@ namespace TwistCore.Editor
                 this.DrawCachedComponent("SelectPackageWidget");
             });
 #endif
+
             EditorGUILayout.EndScrollView();
             WatchChangesAbove();
         }

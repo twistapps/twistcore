@@ -1,15 +1,13 @@
 #if TMPRO
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace TwistCore
 {
     public class TwistCoreRuntimeChecker : MonoBehaviour
     {
-        [FormerlySerializedAs("gitVersionLabel")]
         public TextMeshProUGUI status;
-        
+
         private void Start()
         {
             var settings = SettingsUtility.Load<TwistCoreSettings>();

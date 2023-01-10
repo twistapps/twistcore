@@ -48,6 +48,7 @@ namespace TwistCore.Editor
             return foundArr;
         }
 
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
         public static Type[] GetDerivedTypesExcludingSelf<T>(params Type[] ignored)
         {
             return GetDerivedFrom<T>(ignored.Append(typeof(T)).ToArray());

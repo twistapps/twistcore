@@ -1,29 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore.Editor
 {
     public class PersistentEditorData : ScriptableSingleton<PersistentEditorData>
     {
+        #region Git
+
         [SerializeField] private bool gitInitialized;
         [SerializeField] private bool gitAvailable;
         [SerializeField] private string gitVersion;
 
-        [SerializeField] private VersionComparer coreUpdateInfo;
-
-        public VersionComparer CoreUpdateInfo => coreUpdateInfo ??= FetchCoreUpdates();
-
         public bool GitAvailable => gitInitialized ? gitAvailable : InitializeGit() != null;
         public string GitVersion => gitInitialized ? gitVersion : InitializeGit();
-
-        private static VersionComparer FetchCoreUpdates()
-        {
-            var package = UPMCollection.Get(TwistCore.PackageName);
-            return GithubVersionControl.FetchUpdates(package);
-        }
 
         private string InitializeGit()
         {
@@ -42,20 +32,17 @@ namespace TwistCore.Editor
             return gitVersion;
         }
 
+        #endregion
+
         #region Dependency Management
 
         [SerializeField] private PackageData[] packagesInProject;
 
         public static IEnumerable<PackageData> PackagesInProjectCached =>
-            instance.packagesInProject ??= UPMCollection.Packages.Select(ToPackageData).ToArray();
+            instance.packagesInProject ??= UPMCollection.Packages.ToPackageData();
 
         public static IEnumerable<PackageData> PackagesInProject =>
-            UPMCollection.Packages.Select(ToPackageData).ToArray();
-
-        private static PackageData ToPackageData(PackageInfo packageInfo)
-        {
-            return (PackageData)packageInfo;
-        }
+            UPMCollection.Packages.ToPackageData();
 
         public static Manifest.Package FindManifestPackage(PackageData package)
         {
@@ -74,5 +61,14 @@ namespace TwistCore.Editor
         }
 
         #endregion
+
+        // [SerializeField] private VersionComparer coreUpdateInfo;
+        // public VersionComparer CoreUpdateInfo => coreUpdateInfo ??= FetchCoreUpdates();
+
+        // private static VersionComparer FetchCoreUpdates()
+        // {
+        //     var package = UPMCollection.Get(TwistCore.PackageName);
+        //     return GithubVersionControl.FetchUpdates(package);
+        // }
     }
 }

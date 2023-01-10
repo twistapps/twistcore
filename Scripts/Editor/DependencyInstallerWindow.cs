@@ -8,21 +8,19 @@ namespace TwistCore.Editor
     {
         private static bool _somePackagesNotInstalled, _somePackagesHaveUpdates;
         private static List<Manifest.Package> _notInstalled = new List<Manifest.Package>();
-        private static List<Manifest.Package> _haveUpdates = new List<Manifest.Package>();
+        private static List<Manifest.Package> _availableUpdates = new List<Manifest.Package>();
 
         private static bool ActionRequired => _somePackagesNotInstalled || _somePackagesHaveUpdates;
 
         protected override void DrawGUI()
         {
-            var heading = ActionRequired ? "Some dependencies require to be installed" : "yaay";
+            var heading = ActionRequired ? "Some dependencies require to be installed" : "No updates available";
             AddSection(heading, () =>
             {
                 if (!ActionRequired)
                 {
-                    //Heading("No updates required.", true, true, new Button("Close", ButtonStyles.Dimm, Close));
-                    //HorizontalButton(new Button("Close this window", ButtonStyles.Dimm, Close));
                     GUILayout.Space(15);
-                    Heading("Everything is up to date!", true, true);
+                    Heading("Everything's up to date!", true, true);
                 }
                 else
                 {
@@ -38,7 +36,7 @@ namespace TwistCore.Editor
                     {
                         Heading("Have updates");
                         EditorGUI.indentLevel++;
-                        foreach (var package in _haveUpdates) DrawInfo(package);
+                        foreach (var package in _availableUpdates) DrawInfo(package);
                         EditorGUI.indentLevel--;
                     }
                 }
@@ -80,7 +78,7 @@ namespace TwistCore.Editor
         private static void ListMissingDependencies()
         {
             _notInstalled = new List<Manifest.Package>();
-            _haveUpdates = new List<Manifest.Package>();
+            _availableUpdates = new List<Manifest.Package>();
 
             foreach (var packageData in PersistentEditorData.PackagesInProject)
             {
@@ -100,12 +98,12 @@ namespace TwistCore.Editor
                     }
 
                     if (dependencyInfo.UpdateInfo.HasUpdate)
-                        _haveUpdates.Add(ManifestEditor.Manifest.Get(dependency));
+                        _availableUpdates.Add(ManifestEditor.Manifest.Get(dependency));
                 }
             }
 
             _somePackagesNotInstalled = _notInstalled.Count > 0;
-            _somePackagesHaveUpdates = _haveUpdates.Count > 0;
+            _somePackagesHaveUpdates = _availableUpdates.Count > 0;
         }
 
         private static void InstallPackage(Manifest.Package package)
@@ -121,7 +119,7 @@ namespace TwistCore.Editor
 
         private static void UpdateAllDependencies()
         {
-            foreach (var package in _haveUpdates) InstallPackage(package);
+            foreach (var package in _availableUpdates) InstallPackage(package);
         }
 
         public static void OnReloadAssets()
