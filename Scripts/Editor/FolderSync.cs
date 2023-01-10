@@ -81,8 +81,6 @@ namespace TwistCore.Editor
             var progress = new TaskProgress(initialTotalSteps);
             yield return progress.Log("Counting files...");
 
-            // var fileCount = (from file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-            //     select file).Count();
             var fileCount = Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
             progress = new TaskProgress(fileCount);
             yield return progress.Log($"Found {fileCount} to clone").Log(DoneCountingFiles).Sleep(1);
@@ -123,7 +121,6 @@ namespace TwistCore.Editor
         public static IEnumerator<TaskProgress> SyncFoldersTask(string outputFolder, bool ignoreMetafiles,
             params string[] inputFolders)
         {
-            // overallProgress = new TaskProgress(inputFolders.Length);
             var progress = new TaskProgress(inputFolders.Length);
             yield return progress.Log($"Syncing {inputFolders.Length} folders...").Sleep(1.3f);
 

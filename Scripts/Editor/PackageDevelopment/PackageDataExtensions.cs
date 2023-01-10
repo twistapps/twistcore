@@ -13,18 +13,18 @@ namespace TwistCore.Editor
     {
         [SerializeField] public string reference;
 
-        [NonSerialized] public string file;
+        [NonSerialized] public string File;
 
         public void WriteToFile()
         {
             var json = JsonUtility.ToJson(this);
-            File.WriteAllText(file, json);
+            System.IO.File.WriteAllText(File, json);
         }
     }
 
     public static class PackageDataExtensions
     {
-        private const string EmptyGuid = "GUID:00000000000000000000000000000000";
+        //private const string EmptyGuid = "GUID:00000000000000000000000000000000";
         public const string EditorAsmdefSuffix = ".editor";
 
         public static string Alias(this PackageInfo package)
@@ -46,7 +46,6 @@ namespace TwistCore.Editor
             var files = Directory.GetFiles(packageFolder, "*.asmdef", SearchOption.AllDirectories);
             foreach (var file in files) Debug.Log("Found " + file);
             var asmdef = files.FirstOrDefault(FileMatch);
-            //if (editor && string.IsNullOrEmpty(asmdef)) return Asmdef(package, false);
             return !string.IsNullOrEmpty(asmdef) ? asmdef : null;
         }
 
@@ -64,7 +63,7 @@ namespace TwistCore.Editor
                 var refObject = JsonUtility.FromJson<AsmdefReferenceObject>(File.ReadAllText(file));
                 if (refObject.reference != guid) continue;
 
-                refObject.file = file;
+                refObject.File = file;
                 references.Add(refObject);
             }
 
@@ -76,7 +75,6 @@ namespace TwistCore.Editor
             var asmdef = Asmdef(package, editor);
             Debug.Log($"[asmdef]{package.name}: {asmdef} -- {AssetDatabase.AssetPathToGUID(asmdef)}");
             return AssetDatabase.AssetPathToGUID(Asmdef(package, editor));
-            //return AssetDatabase.GUIDFromAssetPath(Asmdef(package));
         }
     }
 }

@@ -19,7 +19,6 @@ namespace TwistCore.Editor
                 // ReSharper disable once RedundantCheckBeforeAssignment
                 if (progress.CurrentStep != elapsed)
                     progress.CurrentStep = elapsed;
-                //TaskManager.AddLogs(elapsed + " seconds elapsed.");
                 now = EditorApplication.timeSinceStartup;
                 yield return progress;
             }

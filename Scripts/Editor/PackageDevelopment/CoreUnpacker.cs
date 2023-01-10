@@ -13,12 +13,11 @@ namespace TwistCore.Editor
         private const string UnpackedCoreDirName = "TwistCore";
         private const string UnpackIgnore = ".unpackignore";
 
-        private static string unpackedCorePath;
+        private static string _unpackedCorePath;
 
         public static PackageData GetUnpackedCorePackage(string packageName)
         {
             Debug.Log(packageName);
-            //var packageInfo = PackageRegistry.Collection.FirstOrDefault(p => p.name == packageName);
             var packageInfo = PackageLock.GetInfo(packageName);
             if (packageInfo == null) return null;
 
@@ -63,8 +62,8 @@ namespace TwistCore.Editor
             var package = UPMCollection.GetFromAllPackages(packageName);
             var packagePath = package.assetPath;
 
-            unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
-            Debug.Log($"Unpacked core path: {unpackedCorePath}");
+            _unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
+            Debug.Log($"Unpacked core path: {_unpackedCorePath}");
 
             var ignore = File.ReadAllLines(Path.Combine(corePath, UnpackIgnore));
             var ignoredFiles = new List<string>();
@@ -108,7 +107,7 @@ namespace TwistCore.Editor
                 if (ignoredFiles.Contains(sourcePath)) continue;
 
                 var relativePath = FolderSync.MakeRelativePath(sourcePath, corePath);
-                var outputPath = Path.Combine(unpackedCorePath, relativePath);
+                var outputPath = Path.Combine(_unpackedCorePath, relativePath);
                 var outputDirectory = Path.GetDirectoryName(outputPath);
                 if (outputDirectory != null && !Directory.Exists(outputDirectory))
                     Directory.CreateDirectory(outputDirectory);
@@ -121,10 +120,10 @@ namespace TwistCore.Editor
             progress.TotalSteps++;
             yield return progress.Log("Removing excess files");
 
-            var outputFiles = Directory.GetFiles(unpackedCorePath, "*.*", SearchOption.AllDirectories);
+            var outputFiles = Directory.GetFiles(_unpackedCorePath, "*.*", SearchOption.AllDirectories);
             foreach (var unpackedFile in outputFiles)
             {
-                var relativePath = FolderSync.MakeRelativePath(unpackedFile, unpackedCorePath);
+                var relativePath = FolderSync.MakeRelativePath(unpackedFile, _unpackedCorePath);
                 var sourcePath = Path.Combine(corePath, relativePath);
                 if (!File.Exists(sourcePath)) File.Delete(unpackedFile);
             }
@@ -160,8 +159,8 @@ namespace TwistCore.Editor
             var package = UPMCollection.GetFromAllPackages(packageName);
             var packagePath = package.assetPath;
 
-            unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
-            var files = Directory.EnumerateFiles(unpackedCorePath, "*", SearchOption.AllDirectories);
+            _unpackedCorePath = Path.Combine(packagePath, outputDirectoryName);
+            var files = Directory.EnumerateFiles(_unpackedCorePath, "*", SearchOption.AllDirectories);
 
             progress.TotalSteps = 150;
             foreach (var path in files)
@@ -171,7 +170,7 @@ namespace TwistCore.Editor
             }
 
             progress.Log("Removing root folder .meta");
-            File.Delete(Path.ChangeExtension(unpackedCorePath, ".meta"));
+            File.Delete(Path.ChangeExtension(_unpackedCorePath, ".meta") ?? throw new InvalidOperationException());
 
             yield return progress.Sleep(.5f);
             progress.Log("Adding " + unpackedPackage.Split('.').Last() + " ref to asmdef");
@@ -195,8 +194,6 @@ namespace TwistCore.Editor
 
         private static string GetExternalPackageGuid(string packageName)
         {
-            var alias = UPMCollection.GetFromAllPackages(packageName).Alias();
-
             var files = Directory.GetFiles(Path.Combine("Packages", packageName), "*.asmdef",
                 SearchOption.AllDirectories);
             if (files.Length < 1) return null;
@@ -301,8 +298,8 @@ namespace TwistCore.Editor
 
             foreach (var reference in references)
             {
-                reference.file = FolderSync.MakeRelativePath(reference.file, dependency.assetPath);
-                reference.file = Path.Combine(unpackedCorePath, reference.file);
+                reference.File = FolderSync.MakeRelativePath(reference.File, dependency.assetPath);
+                reference.File = Path.Combine(_unpackedCorePath, reference.File);
                 reference.reference = "GUID:" + package.AsmdefGuid(editor);
                 reference.WriteToFile();
             }
@@ -316,7 +313,7 @@ namespace TwistCore.Editor
             var asmdef = dependency.Asmdef(true);
             if (asmdef == null) return;
             var asmdefRelative = FolderSync.MakeRelativePath(asmdef, dependency.assetPath);
-            asmdefRelative = Path.Combine(unpackedCorePath, asmdefRelative);
+            asmdefRelative = Path.Combine(_unpackedCorePath, asmdefRelative);
             if (!string.IsNullOrEmpty(asmdefRelative) && File.Exists(asmdefRelative))
             {
                 File.Delete(asmdefRelative);
@@ -325,7 +322,7 @@ namespace TwistCore.Editor
 
             var asmref = new AsmdefReferenceObject();
             asmref.reference = "GUID:" + package.AsmdefGuid(true);
-            asmref.file = Path.ChangeExtension(asmdefRelative, ".asmref");
+            asmref.File = Path.ChangeExtension(asmdefRelative, ".asmref");
             asmref.WriteToFile();
         }
     }

@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-// ReSharper disable InconsistentNaming
-
 namespace TwistCore.Editor
 {
     [Serializable]

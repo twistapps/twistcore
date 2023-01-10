@@ -22,7 +22,7 @@ namespace TwistCore.Editor.CodeGen
 
         public static string FindTxtTemplate(Type type)
         {
-            var parts = type.BaseType.Name.Split('`');
+            var parts = type.BaseType!.Name.Split('`');
             var parentClassName = parts.FirstOrDefault();
             var hasGenericTypes = int.TryParse(parts.LastOrDefault(), out var genericArgsAmount);
 
@@ -60,7 +60,6 @@ namespace TwistCore.Editor.CodeGen
         /// <returns>Array of types derived from any abstract class implementing IMarkedForCodegen.</returns>
         public static IEnumerable<Type> GetTypes()
         {
-            //string baseType = "Fetch`1";
             return EditorUtils.GetDerivedFrom<IMarkedForCodeGen>(typeof(IMarkedForCodeGen))
                 .Where(type => !type.Name.Contains('`') && !type.IsAbstract);
         }

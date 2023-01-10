@@ -18,7 +18,6 @@ namespace TwistCore.Editor
                     new Button("Fix", () => { Application.OpenURL("https://git-scm.com/"); }));
 
 
-            // var corePackageName = TwistCoreDefinitions.PackageName;
             var corePackage = UPMCollection.Get(TwistCore.PackageName);
 
             if (PackageLock.IsInDevelopmentMode(TwistCore.PackageName))

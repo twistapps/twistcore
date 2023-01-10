@@ -114,6 +114,7 @@ namespace TwistCore.Editor
                                             $"com.{Settings.editingPackageOrganization}.{Settings.editingPackageName}";
                                         // ReSharper disable once AccessToModifiedClosure
                                         ManifestEditor.EditPackage(i, fullName, Settings.editingPackageURL);
+                                        // ReSharper disable once AccessToModifiedClosure
                                         ManifestEditor.SetDefineSymbols(i, Settings.editingPackageDefineSymbols);
                                         Settings.editingPackage = -1;
                                     }));

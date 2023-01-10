@@ -17,7 +17,6 @@ namespace TwistCore.Editor.GuiWidgets
                 Window.StatusLabel("Full Name", package.name, GUIStyles.DefaultLabel);
                 Window.LabelSuccess("Version", package.version, true);
                 EditorGUI.indentLevel--;
-                //Window.Divider();
             }
         }
 
@@ -38,7 +37,6 @@ namespace TwistCore.Editor.GuiWidgets
                         UPMCollection.PurgeCache();
                     }, 120));
                 EditorGUI.indentLevel--;
-                //Window.Divider();
             }
         }
 
@@ -68,7 +66,6 @@ namespace TwistCore.Editor.GuiWidgets
             Window.AddSection("Packages In Project:", () =>
             {
                 Window.ButtonLabel("Reload Packages", new Button("Refresh", UPMCollection.PurgeCache));
-                //Window.Space(10);
                 var packages = PersistentEditorData.PackagesInProjectCached.ToArray();
 
                 var upToDatePackages = new List<PackageData>();
@@ -78,8 +75,6 @@ namespace TwistCore.Editor.GuiWidgets
                 foreach (var packageData in packages)
                     if (PackageLock.IsGithubPackage(packageData.name))
                     {
-                        //Debug.Log($"[{packageData.name}] - {packageData.UpdateInfo.NewVersion}");
-
                         if (packageData.UpdateInfo.HasUpdate)
                             outdatedPackages.Add(packageData);
                         else

@@ -22,7 +22,7 @@ namespace TwistCore.Editor
             EditorGUI.ProgressBar(progressBarRect, currentTask?.ProgressAmount ?? 0, statusText);
             EditorGUILayout.Space(40);
 
-            var logs = TaskManager.Logs.Select(l => $"{l.title}: {l.text}").ToArray();
+            var logs = TaskManager.Logs.Select(l => $"{l.Title}: {l.Text}").ToArray();
             for (var i = logs.Length - 1; i >= 0; i--)
                 EditorGUILayout.LabelField(logs[i]);
         }

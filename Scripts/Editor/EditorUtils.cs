@@ -8,7 +8,6 @@ namespace TwistCore.Editor
     {
         //cache results of GetDerivedFrom() because it's a pretty expensive method
         private static readonly Dictionary<Type, Type[]> DerivativesCache = new Dictionary<Type, Type[]>();
-        private static TwistCoreSettings Settings => SettingsUtility.Load<TwistCoreSettings>();
 
         public static Type[] GetDerivedFrom<T>(params Type[] ignored)
         {

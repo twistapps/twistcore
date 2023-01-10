@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-//[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/SpawnManagerScriptableObject", order = 1)]
 namespace TwistCore
 {
     public class CodeGenSettings : SettingsAsset

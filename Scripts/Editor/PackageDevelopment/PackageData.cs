@@ -19,7 +19,6 @@ namespace TwistCore.Editor
 
         public string name;
 
-        //public string unity;
         public string version;
         private VersionInfo _versionInfo;
 

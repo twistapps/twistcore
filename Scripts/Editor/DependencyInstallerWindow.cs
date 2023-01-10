@@ -56,7 +56,7 @@ namespace TwistCore.Editor
                 else
                     HorizontalButton(new Button("Done", Close));
                 Divider();
-                using (var l = new EditorGUILayout.HorizontalScope())
+                using (new EditorGUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
                     CheckboxSmall("don't show this again", ref Settings.dontAutoShowDependencyInstaller);

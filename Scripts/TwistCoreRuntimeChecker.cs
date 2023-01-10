@@ -9,8 +9,7 @@ namespace TwistCore
     {
         [FormerlySerializedAs("gitVersionLabel")]
         public TextMeshProUGUI status;
-
-        // Start is called before the first frame update
+        
         private void Start()
         {
             var settings = SettingsUtility.Load<TwistCoreSettings>();

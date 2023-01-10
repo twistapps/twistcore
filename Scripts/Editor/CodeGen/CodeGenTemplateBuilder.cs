@@ -14,7 +14,6 @@ namespace TwistCore.Editor.CodeGen
 
         //todo: move so called 'cursor' to position of a variable and ability to perform standard Builder's actions from that position,
         // then reset cursor
-        private string _mem;
         public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
 
         public string[] VariableNames => Variables.Keys.ToArray();
@@ -78,7 +77,6 @@ namespace TwistCore.Editor.CodeGen
 
         public void MoveCursorToVariable(string variableName)
         {
-            var generated = StringBuilder.ToString();
         }
     }
 }

@@ -15,7 +15,6 @@ namespace TwistCore.Editor.GuiWidgets
         private static Type GetTypeByName(string name)
         {
             return Type.GetType($"TwistCore.Editor.GuiWidgets.{name}, {Assembly.GetCallingAssembly().GetName()}");
-            //return Type.GetType($"TwistCore.Editor.UIComponents.{name}, TwistCore");
         }
 
         private static void SetupCachedComponent<T>(IPackageSettingsWindow<T> boundWindow,

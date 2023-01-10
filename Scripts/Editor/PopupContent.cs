@@ -18,8 +18,6 @@ namespace TwistCore.Editor
             Entries = entries.Select(e => new GUIContent(e)).ToArray();
         }
 
-        public string prevSelection { get; private set; }
-
         public int SelectedIndex
         {
             get => _selectedIndex;
@@ -30,7 +28,6 @@ namespace TwistCore.Editor
 
         private PopupContent Select(int index)
         {
-            prevSelection = Selected;
             _selectedIndex = index;
             return this;
         }

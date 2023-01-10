@@ -4,16 +4,12 @@ namespace TwistCore
 {
     public struct TaskLogs
     {
-        public string title;
-        public string text;
+        public string Title;
+        public string Text;
     }
 
     public class TaskProgress
     {
-        // public delegate void LogsAddedHandler(TaskProgress task, string logs);
-        //
-        // public LogsAddedHandler onAddLogs;
-
         public readonly List<TaskLogs> Logs = new List<TaskLogs>();
         public int CurrentStep;
 
@@ -30,8 +26,7 @@ namespace TwistCore
         public TaskProgress Log(string text)
         {
             LatestLog = text;
-            //TaskManager.AddLogs(text);
-            Logs.Add(new TaskLogs { text = text });
+            Logs.Add(new TaskLogs { Text = text });
             return this;
         }
 

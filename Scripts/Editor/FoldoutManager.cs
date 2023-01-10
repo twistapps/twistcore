@@ -7,7 +7,6 @@ namespace TwistCore.Editor
         private readonly Dictionary<int, bool> _state = new Dictionary<int, bool>();
 
         private bool _currentElementIsActive;
-        //private readonly Dictionary<string, bool> _stateByName = new Dictionary<string, bool>();
 
         private int _foldoutCounter;
         private int _prevFoldoutCount;
@@ -25,16 +24,6 @@ namespace TwistCore.Editor
             _state[_foldoutCounter] = isOpen;
         }
 
-        // public void SetStateByName(string sectionName, bool isOpen)
-        // {
-        //     _stateByName[sectionName] = isOpen;
-        // }
-
-        // public void SetOpenByName(string sectionName)
-        // {
-        //     _stateByName[sectionName] = true;
-        // }
-
         public void Reset()
         {
             _state.Clear();
@@ -49,18 +38,10 @@ namespace TwistCore.Editor
             _foldoutCounter = 0;
         }
 
-        //private string currentElementName;
-
         public void NextSectionStart(string sectionName = null)
         {
             _foldoutCounter++;
             _currentElementIsActive = true;
-
-            //currentElementName = sectionName;
-            //if (sectionName == null || !_stateByName.ContainsKey(sectionName)) return;
-            //Debug.Log("Yes");
-            //_state[_foldoutCounter] = _stateByName[sectionName];
-            //_stateByName.Remove(sectionName);
         }
 
         public void SectionEnd()
