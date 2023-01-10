@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.Compilation;
+using UnityEditor.PackageManager;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace TwistCore.Editor
 {
@@ -40,8 +44,32 @@ namespace TwistCore.Editor
         private static void Init()
         {
             if (_initialized) return;
-            SetAll();
             _initialized = true;
+            
+            SetAll();
+            
+            // This causes the method to be invoked after the Editor registers the new list of packages.
+            Events.registeringPackages += OnRegisteringPackages;
+        }
+        
+        public static void OnRegisteringPackages(PackageRegistrationEventArgs args)
+        {
+            var conditionalDefines = EditorUtils.GetDerivedTypesExcludingSelf<ConditionalDefineSymbols>();
+            
+            foreach (var type in conditionalDefines)
+            {
+                var name = type.GetCustomAttribute<PackageNameAttribute>()?.PackageName;
+                if (string.IsNullOrEmpty(name)) continue;
+                
+                bool Match(PackageInfo pkg) => pkg.name == name;
+                string GetSymbols() => ((ConditionalDefineSymbols)Activator.CreateInstance(type)).GetSymbols();
+                
+                if (args.removed.FirstOrDefault(Match) != null)
+                    ScriptingDefinesSetter.RemoveSymbols(GetSymbols());
+            
+                else if (args.added.FirstOrDefault(Match) != null)
+                    ScriptingDefinesSetter.AddSymbols(GetSymbols());
+            }
         }
 
         public static void SetAll()
