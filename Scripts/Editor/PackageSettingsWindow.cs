@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using TwistCore.Editor.GuiWidgets;
 
 namespace TwistCore.Editor
 {

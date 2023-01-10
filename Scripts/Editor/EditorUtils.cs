@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Debug = UnityEngine.Debug;
 
 namespace TwistCore.Editor
 {
@@ -8,6 +10,7 @@ namespace TwistCore.Editor
     {
         //cache results of GetDerivedFrom() because it's a pretty expensive method
         private static readonly Dictionary<Type, Type[]> DerivativesCache = new Dictionary<Type, Type[]>();
+        private static TwistCoreSettings Settings => SettingsUtility.Load<TwistCoreSettings>();
 
         public static Type[] GetDerivedFrom<T>(params Type[] ignored)
         {
@@ -15,7 +18,6 @@ namespace TwistCore.Editor
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 #endif
-
             Type[] foundArr;
             if (DerivativesCache.ContainsKey(typeof(T)))
             {
