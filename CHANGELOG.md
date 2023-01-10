@@ -1,3 +1,10 @@
+## [0.24.2](https://github.com/twistapps/twistcore/compare/0.24.1...0.24.2) (2023-01-10)
+
+
+### Bug Fixes
+
+* Refactor code structure ([573f5a5](https://github.com/twistapps/twistcore/commit/573f5a55840427e33e5896420ee3229ece7ba831))
+
 ## [0.24.1](https://github.com/twistapps/twistcore/compare/0.24.0...0.24.1) (2023-01-10)
 
 
