@@ -75,7 +75,7 @@ namespace TwistCore.Editor
             Action onComplete = null)
         {
             _hasInProgressTasks = true;
-            if (onComplete != null) _onComplete.Add(onComplete);
+            if (onComplete != null) OnComplete.Add(onComplete);
             coroutine.FinishSynchronously();
             InvokeAllOnCompleteActions();
             _hasInProgressTasks = false;
