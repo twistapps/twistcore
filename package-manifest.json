@@ -7,7 +7,8 @@
             "scriptingDefineSymbols": "TWISTCORE",
             "dependencies": [
                 "com.unity.editorcoroutines",
-                "com.twistapps.modula"
+                "com.twistapps.modula",
+                "com.unity.textmeshpro"
             ]
         },
         {
